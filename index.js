@@ -39,7 +39,7 @@ fs.readdir("./src/client/events/", (err, files) => {
 });
 
 client
-  .login("Nzg4MzE3MDA4MDUwNzgyMjM5.X9hvbA.L5mBqJ8WwHGzq7VOK70e5tLo0PM")
+  .login("SEU TOKEN)
   .then(() => {
     logger.sucess(`(BOT): Index Carregada com Sucesso.`);
   });
