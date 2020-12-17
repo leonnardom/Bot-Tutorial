@@ -40,6 +40,14 @@ fs.readdir("./src/client/events/", (err, files) => {
   });
 });
 
+<<<<<<< HEAD
 client.login(process.env.TOKEN).then(() => {
   logger.sucess(`(BOT): Index Carregada com Sucesso.`);
 });
+=======
+client
+  .login("SEU TOKEN)
+  .then(() => {
+    logger.sucess(`(BOT): Index Carregada com Sucesso.`);
+  });
+>>>>>>> 95da9e3b7154797076cf9f8a702e97b6671cf89b
