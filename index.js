@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const logger = require("./src/utils/logger.js");
@@ -5,7 +7,7 @@ const logger = require("./src/utils/logger.js");
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
-const modules = ["Information", "Config", "Owner"];
+const modules = ["Information", "Config", "Owner", "Economy"];
 const fs = require("fs");
 const dbIndex = require("./src/database/index.js");
 dbIndex.start();
@@ -38,8 +40,6 @@ fs.readdir("./src/client/events/", (err, files) => {
   });
 });
 
-client
-  .login("Nzg4MzE3MDA4MDUwNzgyMjM5.X9hvbA.L5mBqJ8WwHGzq7VOK70e5tLo0PM")
-  .then(() => {
-    logger.sucess(`(BOT): Index Carregada com Sucesso.`);
-  });
+client.login(process.env.TOKEN).then(() => {
+  logger.sucess(`(BOT): Index Carregada com Sucesso.`);
+});
