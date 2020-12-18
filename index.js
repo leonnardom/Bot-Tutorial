@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const { APIMessage, Message } = require("discord.js");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const logger = require("./src/utils/logger.js");
@@ -40,14 +41,29 @@ fs.readdir("./src/client/events/", (err, files) => {
   });
 });
 
-<<<<<<< HEAD
+Message.prototype.quote = async function (content, options) {
+  const message_reference = {
+    message_id:
+      (!!content && !options
+        ? typeof content === "object" && content.messageID
+        : options && options.messageID) || this.id,
+    message_channel: this.channel.id,
+  };
+
+  const { data: parsed, files } = await APIMessage.create(
+    this,
+    content,
+    options
+  )
+    .resolveData()
+    .resolveFiles();
+
+  this.client.api.channels[this.channel.id].messages.post({
+    data: { ...parsed, message_reference },
+    files,
+  });
+};
+
 client.login(process.env.TOKEN).then(() => {
   logger.sucess(`(BOT): Index Carregada com Sucesso.`);
 });
-=======
-client
-  .login("SEU TOKEN)
-  .then(() => {
-    logger.sucess(`(BOT): Index Carregada com Sucesso.`);
-  });
->>>>>>> 95da9e3b7154797076cf9f8a702e97b6671cf89b
