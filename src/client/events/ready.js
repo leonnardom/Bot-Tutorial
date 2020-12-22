@@ -1,5 +1,5 @@
 module.exports = (client) => {
-  const status = [
+  /*const status = [
     {
       name: "Bot Tutorial",
     },
@@ -11,12 +11,12 @@ module.exports = (client) => {
   function setStats() {
     var randomStatus = status[Math.floor(Math.random() * status.length)];
     client.user.setActivity(randomStatus.name);
-  }
+  }*/
 
   client.user.setStatus("dnd");
-
+/*
   setStats();
   setInterval(() => {
     setStats();
-  }, 10 * 1000);
+  }, 10 * 1000);*/
 };

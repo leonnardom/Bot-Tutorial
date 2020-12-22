@@ -5,7 +5,7 @@ module.exports = {
     start(){
         try{
 
-            mongoose.connect('mongodb+srv://admin:admin@bot-tutorial.ygt72.mongodb.net/Tutorial?retryWrites=true&w=majority', {
+            mongoose.connect(process.env.DATABASE_CONNECT, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
                 useFindAndModify: false
