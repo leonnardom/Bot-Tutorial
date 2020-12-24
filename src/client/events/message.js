@@ -6,10 +6,14 @@ const GetMention = (id) => new RegExp(`^<@!?${id}>( |)$`);
 module.exports = async (client, message) => {
   try {
     User.findOne({ _id: message.author.id }, async function (err, user) {
+      Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+
       if (message.author.bot == true) return;
 
       if (user) {
-        var prefix = "z!";
+        if(server) {
+        var prefix = prefix;
+        prefix = server.prefix
 
         if (message.content.match(GetMention(client.user.id))) {
           message.channel.send(
@@ -31,7 +35,12 @@ module.exports = async (client, message) => {
       } else {
         User.create({ _id: message.author.id });
       }
+    } else {
+      Guild.create({ _id: message.guild.id });
+    }
+
     });
+  })
   } catch (err) {
     if (err) console.error(err);
   }
