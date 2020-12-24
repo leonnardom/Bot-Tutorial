@@ -32,12 +32,12 @@ module.exports = async (client, message) => {
         if (cmdFile) {
           return cmdFile.run(client, message, args);
         }
+    } else {
+        Guild.create({ _id: message.guild.id });
+      }
       } else {
         User.create({ _id: message.author.id });
       }
-    } else {
-      Guild.create({ _id: message.guild.id });
-    }
 
     });
   })
