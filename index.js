@@ -8,7 +8,7 @@ const logger = require("./src/utils/logger.js")
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
-const modules = ["Information", "Config", "Owner", "Utils"];
+const modules = ["Information", "Config", "Owner", "Utils", "Economy"];
 const fs = require("fs");
 const dbIndex = require("./src/database/index.js");
 dbIndex.start();

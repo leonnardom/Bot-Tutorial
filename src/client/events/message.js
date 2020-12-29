@@ -21,6 +21,25 @@ module.exports = async (client, message) => {
           );
         }
 
+        let xp = user.Exp.xp;
+        let level = user.Exp.level;
+        let nextLevel = user.Exp.nextLevel * level;
+
+        if(user.Exp.id == "null") {
+          await User.findOneAndUpdate({_id: message.author.id}, {$set: {'Exp.id': message.author.id}})
+        }
+
+        let xpGive = Math.floor(Math.random() * 5) + 1;
+
+        await User.findOneAndUpdate({_id: message.author.id}, {$set: {'Exp.xp': xp + xpGive, "Exp.user": message.author.tag}})
+
+        if(xp >= nextLevel) {
+          await User.findOneAndUpdate({_id: message.author.id}, {$set: {'Exp.xp': 0, 'Exp.level': level + 1}})
+
+          message.quote(`${message.author}, você acaba de subir para o level **${level + 1}**.`)
+          message.react("⬆️")
+        }
+
         if (message.content.indexOf(prefix) !== 0) return;
         let messageArray = message.content.split(" ");
         let cmd = messageArray[0];
