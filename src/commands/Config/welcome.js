@@ -3,6 +3,10 @@ const Discord = require("discord.js");
 
 exports.run = (client, message, args) => {
   Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+
+    if(!message.member.hasPermission("MANAGE_GUILD")) return message.channel.send(`${message.author} você não tem permissão de executar este comando.`)
+
+    
     if (args[0] == "canal") {
       let canal =
         message.mentions.channels.first() ||

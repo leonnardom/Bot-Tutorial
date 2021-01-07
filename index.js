@@ -3,12 +3,19 @@ require("dotenv").config();
 const { APIMessage, Message } = require("discord.js");
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const logger = require("./src/utils/logger.js")
+const logger = require("./src/utils/logger.js");
 
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 
-const modules = ["Information", "Config", "Owner", "Utils", "Economy"];
+const modules = [
+  "Information",
+  "Config",
+  "Owner",
+  "Utils",
+  "Economy",
+  "Moderation",
+];
 const fs = require("fs");
 const dbIndex = require("./src/database/index.js");
 dbIndex.start();
