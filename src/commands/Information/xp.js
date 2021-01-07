@@ -16,29 +16,29 @@ exports.run = (client, message, args) => {
         if (err) throw err;
         let Exp = res.map((x) => x.Exp).sort((x, f) => f.level - x.level);
 
-        let ranking = [...Exp.values()].findIndex((x) => x.id === USER.id) + 1;
+        let ranking = [...Exp.values()].findIndex((x) => x.id === message.author.id) + 1;
 
         let xp = user.Exp.xp;
         let level = user.Exp.level;
         let nextLevel = user.Exp.nextLevel * level;
 
         const rank = new CanvaCord.Rank()
-          .setAvatar(USER.displayAvatarURL({ format: "jpg" }))
+          .setAvatar(message.author.displayAvatarURL({ format: "jpg" }))
           .setCurrentXP(xp)
           .setRequiredXP(nextLevel)
           .setRank(ranking, "Rank", true)
           .setLevel(level)
-          .setStatus(USER.presence.status)
+          .setStatus(message.author.presence.status)
           .setProgressBar(process.env.EMBED_COLOR, "COLOR")
-          .setUsername(USER.username)
-          .setDiscriminator(USER.discriminator);
+          .setUsername(message.author.username)
+          .setDiscriminator(message.author.discriminator);
 
         rank.build().then((data) => {
           const attachment = new Discord.MessageAttachment(
             data,
             `${USER.tag}--XP.png`
           );
-          message.quote(attachment);
+          message.channel.send(attachment);
         });
       });
   });

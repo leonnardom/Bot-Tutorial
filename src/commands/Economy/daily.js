@@ -8,7 +8,7 @@ exports.run = async (client, message, args) => {
     let daily = user.daily;
     let atual = user.coins;
 
-    if (daily !== nuill && cooldown - (Date.now() - daily) > 0) {
+    if (daily !== null && cooldown - (Date.now() - daily) > 0) {
       let time = ms(cooldown - (Date.now() - daily) > 0);
       let hours = time.hours;
       let minutes = time.minutes;
