@@ -109,4 +109,7 @@ exports.run = (client, message, args) => {
 exports.help = {
   name: "contador",
   aliases: [],
+  description: "Comando para configurar o sistema de contador em chat",
+  usage: "<prefix>contador",
+  category: "Config"
 };

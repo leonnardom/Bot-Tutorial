@@ -14,4 +14,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
   name: "eval",
   aliases: [],
+  description: "Comando para testar códigos",
+  usage: "<prefix>eval <código>",
+  category: "Owner"
 };

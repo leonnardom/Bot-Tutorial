@@ -12,7 +12,6 @@ const modules = [
   "Information",
   "Config",
   "Owner",
-  "Utils",
   "Economy",
   "Moderation",
 ];

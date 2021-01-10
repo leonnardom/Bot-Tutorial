@@ -140,4 +140,7 @@ exports.run = (client, message, args) => {
 exports.help = {
   name: "byebye",
   aliases: ["bye"],
+  description: "Comando para configurar o sistema de mensagens de saída",
+  usage: "<prefix>byebye",
+  category: "Config"
 };

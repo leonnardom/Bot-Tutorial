@@ -67,4 +67,7 @@ exports.run = (client, message, args) => {
 exports.help = {
   name: "ban",
   aliases: ["banir"],
+  description: "Comando para banir membros do seu servidor.",
+  usage: "<prefix>ban <@user> <motivo>",
+  category: "Moderation"
 };

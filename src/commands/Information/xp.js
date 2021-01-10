@@ -47,4 +47,7 @@ exports.run = (client, message, args) => {
 exports.help = {
   name: "xp",
   aliases: [],
+  description: "Comando para olhar seu xp",
+  usage: "<prefix>xp <@user>",
+  category: "Information"
 };

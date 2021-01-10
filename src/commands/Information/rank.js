@@ -46,4 +46,7 @@ exports.run = (client, message, args) => {
 exports.help = {
   name: "rank",
   aliases: [],
+  description: "Comando para olhar o rank de xp",
+  usage: "<prefix>rank",
+  category: "Information"
 };

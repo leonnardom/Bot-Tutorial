@@ -39,4 +39,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
   name: "daily",
   aliases: ["diario"],
+  description: "Comando para pegar seus coins diário",
+  usage: "<prefix>daily",
+  category: "Economy"
 };
