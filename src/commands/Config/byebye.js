@@ -1,5 +1,6 @@
 const Guild = require("../../database/Schemas/Guild");
 const Discord = require("discord.js");
+const Emojis = require('../../utils/Emojis');
 
 exports.run = (client, message, args) => {
   Guild.findOne({ _id: message.guild.id }, async function (err, server) {

@@ -19,6 +19,10 @@ let guildSchema = new Schema({
     channel: { type: String, default: "null" },
     msg: { type: String, default: "{contador}" },
   },
+  logs: {
+    channel: { type: String, default: "null" },
+    status: { type: Boolean, default: false },
+  },
 });
 
 let Guild = mongoose.model("Guilds", guildSchema);

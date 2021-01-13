@@ -1,6 +1,9 @@
 const Discord = require("discord.js");
+const Guild = require("../../database/Schemas/Guild");
 
 exports.run = (client, message, args) => {
+  Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+
   if (!message.member.hasPermission("KICK_MEMBERS"))
     return message.quote(
       `${message.author}, você não tem permissão para kickar membros.`
@@ -59,9 +62,15 @@ exports.run = (client, message, args) => {
         }
       );
 
-    message.quote(KICK);
+      if(!server.logs.status) {
+        message.quote(BAN);
+      } else {
+        let channel = message.guild.channels.cache.get(server.logs.channel);
+        channel.send(BAN)
+      }
     member.kick({ days: 7, reason: reason });
   }
+})
 };
 
 exports.help = {

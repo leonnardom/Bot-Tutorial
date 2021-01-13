@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.21.1",
     "canvacord": "^5.0.8",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "fs": "0.0.1-security",
+    "gamedig": "^2.0.24",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.11.8",
+    "node-fetch": "^2.6.1",
     "parse-ms": "^2.1.0"
   },
   "devDependencies": {},
