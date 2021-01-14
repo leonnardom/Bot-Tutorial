@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "canvacord": "^5.0.8",
+    "discord-tictactoe": "^2.0.7",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "fs": "0.0.1-security",
