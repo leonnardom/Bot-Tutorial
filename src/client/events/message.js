@@ -103,6 +103,7 @@ module.exports = async (client, message) => {
                         { $set: { usages: num } }
                       );
                     } else {
+                      if(!cmd) return
                       await Command.create({
                         _id: command,
                         usages: 1,
