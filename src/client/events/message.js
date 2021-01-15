@@ -18,14 +18,6 @@ module.exports = async (client, message) => {
                 var prefix = prefix;
                 prefix = server.prefix;
 
-                if (message.author.id !== process.env.OWNER_ID) {
-                  if (cliente.manutenção) {
-                    return message.quote(
-                      `${message.author}, no momento eu me encontro em manutenção, tente novamente mais tarde.\nMotivo: **${cliente.reason}**`
-                    );
-                  }
-                }
-
                 if (message.content.match(GetMention(client.user.id))) {
                   message.channel.send(
                     `Olá ${message.author}, meu prefixo no servidor é **${prefix}**.`
@@ -88,6 +80,19 @@ module.exports = async (client, message) => {
                           return message.quote(
                             `${message.author}, o comando **\`${command}\`** está em manutenção no momento.\nMotivo: **${comando.reason}**`
                           );
+
+                        if (cliente.manutenção) {
+                          return message.quote(
+                            `${message.author}, no momento eu me encontro em manutenção, tente novamente mais tarde.\nMotivo: **${cliente.reason}**`
+                          );
+                        }
+                      }
+                      if (
+                        cliente.blacklist.some((x) => x == message.author.id)
+                      ) {
+                        return message.quote(
+                          `${message.author}, você não pode me usar no momento. **\`Lista Negra\`**.`
+                        );
                       }
                       cmd.run(client, message, args);
                       var num = comando.usages;

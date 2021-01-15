@@ -4,7 +4,6 @@ const Guild = require("../../database/Schemas/Guild"),
 
 exports.run = async (client, message, args) => {
   Guild.findOne({ _id: message.guild.id }, async function (err, server) {
-    Command.findOne({ _id: args[0].toLowerCase() }, async function (err, cmd) {
       const Config = [];
       const Economy = [];
       const Information = [];
@@ -27,6 +26,8 @@ exports.run = async (client, message, args) => {
         .setThumbnail(client.user.displayAvatarURL({ size: 2048 }));
 
       if (args[0]) {
+        Command.findOne({ _id: args[0].toLowerCase() }, async function (err, cmd) {
+
         const name = args[0].toLowerCase();
         const comando =
           commands.get(name) ||
@@ -61,6 +62,7 @@ exports.run = async (client, message, args) => {
           AJUDA.addField(`Modo de Uso`, comando.help.usage);
 
         message.quote(AJUDA);
+      });
       } else {
         const HELP = new MessageEmbed()
           .setAuthor(
@@ -115,7 +117,7 @@ exports.run = async (client, message, args) => {
         message.quote(HELP);
       }
     });
-  });
+
 };
 
 exports.help = {

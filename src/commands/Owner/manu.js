@@ -34,12 +34,14 @@ exports.run = async (client, message, args) => {
     return;
   }
   if (args[0] == "set") {
-    let name = args[1].toLowerCase();
-    if (!name) {
+    if (!args[1]) {
       return message.quote(
         `${message.author}, insira o nome do comando para prosseguir.`
       );
     }
+
+    let name = args[1].toLowerCase();
+
 
     Command.findOne({ _id: name }, async function (err, comando) {
       if (comando) {
