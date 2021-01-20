@@ -3,7 +3,7 @@ const Guild = require("../../database/Schemas/Guild"),
   Command = require("../../database/Schemas/Command");
 
 exports.run = async (client, message, args) => {
-  Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+  Guild.findOne({ idS: message.guild.id }, async function (err, server) {
       const Config = [];
       const Economy = [];
       const Information = [];

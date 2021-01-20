@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const Emojis = require('../../utils/Emojis');
 
 exports.run = (client, message, args) => {
-  Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+  Guild.findOne({ idS: message.guild.id }, async function (err, server) {
     if (!message.member.hasPermission("MANAGE_GUILD"))
       return message.quote(
         `${message.author}, você precisa da permissão **MANAGE_GUILD** para executar este comando.`
@@ -27,7 +27,7 @@ exports.run = (client, message, args) => {
           `${message.author}, canal **<#${canal.id}>** setado como canal de **byebye** com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "byebye.channel": canal.id } }
         );
       }
@@ -54,7 +54,7 @@ exports.run = (client, message, args) => {
           `${message.author}, a mensagem de byebye do servidor foi alterada para\n\`\`\`diff\n- ${msg}\`\`\``
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "byebye.msg": msg } }
         );
       }
@@ -72,7 +72,7 @@ exports.run = (client, message, args) => {
           `${message.author}, sistema de byebye ativado com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "byebye.status": true } }
         );
       }
@@ -89,7 +89,7 @@ exports.run = (client, message, args) => {
           `${message.author}, sistema de byebye desativado com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "byebye.status": false } }
         );
       }

@@ -2,7 +2,7 @@ const User = require("../../database/Schemas/User");
 const ms = require("parse-ms");
 
 exports.run = async (client, message, args) => {
-  User.findOne({ _id: message.author.id }, async function (err, user) {
+  User.findOne({ idU: message.author.id }, async function (err, user) {
     let cooldown = 8.64e7;
     let coins = Math.floor(Math.random() * 100);
     let daily = user.daily;
@@ -29,7 +29,7 @@ exports.run = async (client, message, args) => {
         ).toLocaleString()}** coins.`
       );
       await User.findByIdAndUpdate(
-        { _id: message.author.id },
+        { idU: message.author.id },
         { $set: { coins: coins + atual, daily: cooldown + Date.now() } }
       );
     }

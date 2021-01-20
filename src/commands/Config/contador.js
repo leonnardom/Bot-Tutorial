@@ -2,7 +2,7 @@ const Guild = require("../../database/Schemas/Guild");
 const Discord = require("discord.js");
 
 exports.run = (client, message, args) => {
-  Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+  Guild.findOne({ idS: message.guild.id }, async function (err, server) {
     if (!message.member.hasPermission("MANAGE_GUILD"))
       return message.quote(
         `${message.author} você não tem permissão de executar este comando.`
@@ -26,7 +26,7 @@ exports.run = (client, message, args) => {
           `${message.author}, o canal de contador foi setado no canal de ID: **${channel.id} ( <#${channel.id}> ) ** com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "contador.channel": channel.id } }
         );
       }
@@ -51,7 +51,7 @@ exports.run = (client, message, args) => {
           `${message.author}, a mensagem foi alterada com sucesso!`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "contador.msg": msg, "contador.status": true } }
         );
       }

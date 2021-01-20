@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 let userSchema = new Schema({
-  _id: { type: String },
+  idU: { type: String },
+  idS: { type: String },
   coins: { type: Number, default: 0 },
   daily: { type: Number, default: 0 },
   Exp: {
@@ -11,6 +12,12 @@ let userSchema = new Schema({
     nextLevel: { type: Number, default: 100 },
     id: { type: String, default: "null" },
     user: { type: String, default: "null" },
+  },
+  registrador: {
+    registredBy: { type: String, default: "null" },
+    registredDate: { type: String, default: "null" },
+    registred: { type: Boolean, default: false },
+    registreds: { type: Number, default: 0 },
   },
 });
 

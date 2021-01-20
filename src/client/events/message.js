@@ -7,8 +7,8 @@ const GetMention = (id) => new RegExp(`^<@!?${id}>( |)$`);
 
 module.exports = async (client, message) => {
   try {
-    User.findOne({ _id: message.author.id }, async function (err, user) {
-      Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+    User.findOne({ idU: message.author.id, idS: message.guild.id }, async function (err, user) {
+      Guild.findOne({ idS: message.guild.id }, async function (err, server) {
         ClientS.findOne({ _id: client.user.id }, async function (err, cliente) {
           if (message.author.bot == true) return;
 
@@ -30,7 +30,7 @@ module.exports = async (client, message) => {
 
                 if (user.Exp.id == "null") {
                   await User.findOneAndUpdate(
-                    { _id: message.author.id },
+                    { idU: message.author.id },
                     { $set: { "Exp.id": message.author.id } }
                   );
                 }
@@ -38,7 +38,7 @@ module.exports = async (client, message) => {
                 let xpGive = Math.floor(Math.random() * 5) + 1;
 
                 await User.findOneAndUpdate(
-                  { _id: message.author.id },
+                  { idU: message.author.id },
                   {
                     $set: {
                       "Exp.xp": xp + xpGive,
@@ -49,7 +49,7 @@ module.exports = async (client, message) => {
 
                 if (xp >= nextLevel) {
                   await User.findOneAndUpdate(
-                    { _id: message.author.id },
+                    { idU: message.author.id },
                     { $set: { "Exp.xp": 0, "Exp.level": level + 1 } }
                   );
 
@@ -72,21 +72,21 @@ module.exports = async (client, message) => {
                   client.commands.get(client.aliases.get(command));
 
                 Command.findOne(
-                  { _id: command },
+                  { _id: cmd.help.name },
                   async function (err, comando) {
                     if (comando) {
-                      if (message.author.id !== process.env.OWNER_ID) {
-                        if (comando.manutenção)
-                          return message.quote(
-                            `${message.author}, o comando **\`${command}\`** está em manutenção no momento.\nMotivo: **${comando.reason}**`
-                          );
+                      //if (message.author.id !== process.env.OWNER_ID) {
+                      if (comando.manutenção)
+                        return message.quote(
+                          `${message.author}, o comando **\`${cmd.help.name}\`** está em manutenção no momento.\nMotivo: **${comando.reason}**`
+                        );
 
-                        if (cliente.manutenção) {
-                          return message.quote(
-                            `${message.author}, no momento eu me encontro em manutenção, tente novamente mais tarde.\nMotivo: **${cliente.reason}**`
-                          );
-                        }
+                      if (cliente.manutenção) {
+                        return message.quote(
+                          `${message.author}, no momento eu me encontro em manutenção, tente novamente mais tarde.\nMotivo: **${cliente.reason}**`
+                        );
                       }
+                      // }
                       if (
                         cliente.blacklist.some((x) => x == message.author.id)
                       ) {
@@ -99,18 +99,17 @@ module.exports = async (client, message) => {
                       num = num + 1;
 
                       await Command.findOneAndUpdate(
-                        { _id: command },
+                        { _id: cmd.help.name },
                         { $set: { usages: num } }
                       );
                     } else {
-                      if(!cmd) return
                       await Command.create({
-                        _id: command,
+                        _id: cmd.help.name,
                         usages: 1,
                         manutenção: false,
                       });
                       console.log(
-                        `O comando ${command} teve seu documento criado com sucesso.`
+                        `O comando ${cmd.help.name} teve seu documento criado com sucesso.`
                       );
                     }
                   }
@@ -123,10 +122,10 @@ module.exports = async (client, message) => {
                 });
               }
             } else {
-              Guild.create({ _id: message.guild.id });
+              Guild.create({ idS: message.guild.id });
             }
           } else {
-            User.create({ _id: message.author.id });
+            User.create({ idU: message.author.id, idS: message.guild.id });
           }
         });
       });

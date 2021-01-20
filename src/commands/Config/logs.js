@@ -3,7 +3,7 @@ const { MessageEmbed, Message } = require("discord.js");
 const Emojis = require("../../utils/Emojis");
 
 exports.run = (client, message, args) => {
-  Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+  Guild.findOne({ idS: message.guild.id }, async function (err, server) {
     const channel =
       message.guild.channels.cache.get((x) => x.id == args[1]) ||
       message.mentions.channels.first();
@@ -22,7 +22,7 @@ exports.run = (client, message, args) => {
           `${Emojis.Certo} - ${message.author}, o canal de logs foi alterado para **<#${channel.id}>** com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "logs.channel": channel.id } }
         );
       }
@@ -43,7 +43,7 @@ exports.run = (client, message, args) => {
           `${Emojis.Certo} - ${message.author}, sistema ativado com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "logs.status": true } }
         );
       }
@@ -60,7 +60,7 @@ exports.run = (client, message, args) => {
           `${Emojis.Certo} - ${message.author}, sistema desativado com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "logs.status": false } }
         );
       }

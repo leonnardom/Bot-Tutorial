@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 let guildSchema = new Schema({
-  _id: { type: String, required: true },
+  idS: { type: String, required: true },
   prefix: { type: String, default: "!" },
   welcome: {
     status: { type: Boolean, default: false },
@@ -22,6 +22,10 @@ let guildSchema = new Schema({
   logs: {
     channel: { type: String, default: "null" },
     status: { type: Boolean, default: false },
+  },
+  registrador: {
+    role: { type: String, default: "null" },
+    total: { type: Number, default: 0 },
   },
 });
 

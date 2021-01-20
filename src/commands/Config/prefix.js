@@ -1,7 +1,7 @@
 const Guild = require("../../database/Schemas/Guild");
 
 exports.run = (client, message, args) => {
-  Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+  Guild.findOne({ idS: message.guild.id }, async function (err, server) {
     let prefixos = args[0];
 
     if (!prefixos) {
@@ -22,7 +22,7 @@ exports.run = (client, message, args) => {
       );
 
       await Guild.findOneAndUpdate(
-        { _id: message.guild.id },
+        { idS: message.guild.id },
         { $set: { prefix: prefixos } }
       );
     }

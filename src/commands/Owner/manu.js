@@ -40,8 +40,12 @@ exports.run = async (client, message, args) => {
       );
     }
 
-    let name = args[1].toLowerCase();
+    const command = args[1].toLowerCase();
+    const cmd =
+      client.commands.get(command) ||
+      client.commands.get(client.aliases.get(command));
 
+    const name = cmd.help.name;
 
     Command.findOne({ _id: name }, async function (err, comando) {
       if (comando) {

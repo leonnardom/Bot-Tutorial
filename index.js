@@ -14,6 +14,7 @@ const modules = [
   "Owner",
   "Economy",
   "Moderation",
+  "Registrador"
 ];
 const fs = require("fs");
 const dbIndex = require("./src/database/index.js");

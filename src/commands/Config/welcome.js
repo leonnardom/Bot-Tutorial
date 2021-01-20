@@ -2,7 +2,7 @@ const Guild = require("../../database/Schemas/Guild");
 const Discord = require("discord.js");
 
 exports.run = (client, message, args) => {
-  Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+  Guild.findOne({ idS: message.guild.id }, async function (err, server) {
 
     if(!message.member.hasPermission("MANAGE_GUILD")) return message.channel.send(`${message.author} você não tem permissão de executar este comando.`)
 
@@ -25,7 +25,7 @@ exports.run = (client, message, args) => {
           `${message.author}, canal **<#${canal.id}>** setado como canal de **welcome** com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "welcome.channel": canal.id } }
         );
       }
@@ -52,7 +52,7 @@ exports.run = (client, message, args) => {
           `${message.author}, a mensagem de welcome do servidor foi alterada para\n\`\`\`diff\n- ${msg}\`\`\``
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "welcome.msg": msg } }
         );
       }
@@ -70,7 +70,7 @@ exports.run = (client, message, args) => {
           `${message.author}, sistema de welcome ativado com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "welcome.status": true } }
         );
       }
@@ -87,7 +87,7 @@ exports.run = (client, message, args) => {
           `${message.author}, sistema de welcome desativado com sucesso.`
         );
         await Guild.findOneAndUpdate(
-          { _id: message.guild.id },
+          { idS: message.guild.id },
           { $set: { "welcome.status": false } }
         );
       }
