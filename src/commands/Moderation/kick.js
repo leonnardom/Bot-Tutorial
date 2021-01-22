@@ -1,8 +1,28 @@
 const Discord = require("discord.js");
 const Guild = require("../../database/Schemas/Guild");
+const Command = require("../../structures/Command");
+const ClientEmbed = require("../../structures/ClientEmbed");
 
-exports.run = (client, message, args) => {
-  Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+module.exports = class Kick extends (
+  Command
+) {
+  constructor(client) {
+    super(client);
+    this.client = client;
+
+    this.name = "kick";
+    this.category = "Moderation";
+    this.description = "Comando para kickar membros do seu servidor";
+    this.usage = "kick <@user> <motivo>";
+    this.aliases = ["kickar"];
+
+    this.enabled = true;
+    this.guildOnly = true;
+  }
+
+  async run(message, args, prefix, author) {
+
+  Guild.findOne({ _id: message.guild.id }, async (err, server) => {
 
   if (!message.member.hasPermission("KICK_MEMBERS"))
     return message.quote(
@@ -27,18 +47,16 @@ exports.run = (client, message, args) => {
   } else if (member.id == message.author.id) {
     return message.quote(`${message.author}, você não pode si kickar.`);
   } else {
-    const KICK = new Discord.MessageEmbed()
+    const KICK = new ClientEmbed(author)
       .setAuthor(
         `${message.guild.name} - Membro Kickado`,
         message.guild.iconURL({ dynamic: true })
       )
-      .setColor(process.env.EMBED_COLOR)
       .setFooter(
         `Comando requisitado por ${message.author.username}`,
         message.author.displayAvatarURL({ dynamic: true })
       )
       .setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 2048 }))
-      .setTimestamp()
       .addFields(
         {
           name: "Membro",
@@ -72,11 +90,4 @@ exports.run = (client, message, args) => {
   }
 })
 };
-
-exports.help = {
-  name: "kick",
-  aliases: ["kickar"],
-  description: "Comando para kickar membros do seu servidor",
-  usage: "<prefix>kick <@user> <motivo>",
-  category: "Moderation"
 };

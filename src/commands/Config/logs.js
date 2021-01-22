@@ -1,8 +1,27 @@
 const Guild = require("../../database/Schemas/Guild");
 const { MessageEmbed, Message } = require("discord.js");
 const Emojis = require("../../utils/Emojis");
+const Command = require("../../structures/Command");
 
-exports.run = (client, message, args) => {
+module.exports = class Logs extends (
+  Command
+) {
+  constructor(client) {
+    super(client);
+    this.client = client;
+
+    this.name = "logs";
+    this.category = "Config";
+    this.description = "Comando para configurar o canal de logs do servidor";
+    this.usage = "logs <#channel>";
+    this.aliases = ["log"];
+
+    this.enabled = true;
+    this.guildOnly = true;
+  }
+
+  async run(message, args, prefix) {
+
   Guild.findOne({ idS: message.guild.id }, async function (err, server) {
     const channel =
       message.guild.channels.cache.get((x) => x.id == args[1]) ||
@@ -99,10 +118,4 @@ exports.run = (client, message, args) => {
   });
 };
 
-exports.help = {
-  name: "logs",
-  aliases: ["log"],
-  description: "Comando para configurar o canal de logs do servidor",
-  usage: "<prefix>logs <#channel>",
-  category: "Config",
 };

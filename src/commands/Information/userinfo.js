@@ -1,12 +1,31 @@
 const Discord = require("discord.js");
 const moment = require("moment");
+const Command = require("../../structures/Command");
+const ClientEmbed = require("../../structures/ClientEmbed");
 
-exports.run = (client, message, args) => {
+module.exports = class UserInfo extends (
+  Command
+) {
+  constructor(client) {
+    super(client);
+    this.client = client;
+
+    this.name = "userinfo";
+    this.category = "Information";
+    this.description = "Comando para ver informações de algum usuário";
+    this.usage = "userinfo <@user>";
+    this.aliases = ["ui"];
+
+    this.enabled = true;
+    this.guildOnly = true;
+  }
+ 
+  async run(message, args, prefix, author) {
   moment.locale("pt-BR");
 
   try {
     const user = message.guild.member(
-      client.users.cache.get(args[0]) ||
+      this.client.users.cache.get(args[0]) ||
         message.mentions.members.first() ||
         message.author
     );
@@ -49,13 +68,13 @@ exports.run = (client, message, args) => {
     )
       .startOf("day")
       .fromNow()} )`;
-    const created = `${moment(client.users.cache.get(user.id).createdAt).format(
+    const created = `${moment(this.client.users.cache.get(user.id).createdAt).format(
       "L"
-    )} ( ${moment(client.users.cache.get(user.id).createdAt)
+    )} ( ${moment(this.client.users.cache.get(user.id).createdAt)
       .startOf("day")
       .fromNow()} )`;
 
-    const USERINFO = new Discord.MessageEmbed()
+    const USERINFO = new ClientEmbed(author)
       .setAuthor(
         user.user.username,
         user.user.displayAvatarURL({ dynamic: true })
@@ -78,8 +97,6 @@ exports.run = (client, message, args) => {
         },
         { name: "É bot?", value: user.user.bot ? "Sim" : "Não", inline: true }
       )
-      .setColor(process.env.EMBED_COLOR)
-      .setTimestamp()
       .setThumbnail(user.user.displayAvatarURL({ dynamic: true }))
       .setFooter(
         `Pedido por: ${message.author.tag} || ID: ${message.author.id}`,
@@ -91,11 +108,4 @@ exports.run = (client, message, args) => {
     console.log(`ERRO NO COMANDO USERINFO\nERROR: ${err}`);
   }
 };
-
-exports.help = {
-  name: "userinfo",
-  aliases: ["ui"],
-  description: "Comando para ver informações de algum usuário",
-  usage: "<prefix>userinfo <@user>",
-  category: "Information"
 };

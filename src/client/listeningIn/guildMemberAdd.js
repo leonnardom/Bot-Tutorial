@@ -20,12 +20,18 @@ function traduzir(number) {
   return texto;
 }
 
-module.exports = (client, member) => {
+module.exports = class {
+  constructor(client) {
+    this.client = client;
+  }
+  
+  async run(member) {
+
   let guild = member.guild;
 
-  Guild.findOne({ _id: guild.id }, async function (err, server) {
+  Guild.findOne({ idS: guild.id }, async (err, server) => {
     if (server.welcome.status) {
-      client.channels.cache.get(server.welcome.channel).send(
+      this.client.channels.cache.get(server.welcome.channel).send(
         server.welcome.msg
           .replace(/{member}/g, `<@${member.id}>`)
           .replace(/{name}/g, `${member.user.username}`)
@@ -35,7 +41,7 @@ module.exports = (client, member) => {
     }
 
     if (server.contador.status) {
-      client.channels.cache
+      this.client.channels.cache
         .get(server.contador.channel)
         .setTopic(
           server.contador.msg.replace(
@@ -46,3 +52,4 @@ module.exports = (client, member) => {
     }
   });
 };
+}

@@ -1,7 +1,27 @@
 const Discord = require("discord.js");
 const moment = require("moment");
+const Command = require("../../structures/Command");
+const ClientEmbed = require("../../structures/ClientEmbed");
 
-exports.run = (client, message) => {
+module.exports = class ServerInfo extends (
+  Command
+) {
+  constructor(client) {
+    super(client);
+    this.client = client;
+
+    this.name = "serverinfo";
+    this.category = "Information";
+    this.description = "Comando para ver informações sobre o servidor";
+    this.usage = "serverinfo";
+    this.aliases = ["si"];
+
+    this.enabled = true;
+    this.guildOnly = true;
+  }
+
+  async run(message, args, prefix, author) {
+
   moment.locale("pt-br");
 
   try {
@@ -22,7 +42,7 @@ exports.run = (client, message) => {
       }`,
     ].join("\n");
 
-    const SERVERINFO = new Discord.MessageEmbed()
+    const SERVERINFO = new ClientEmbed(author)
       .setAuthor(message.guild.name, message.guild.iconURL({ dynamic: true }))
       .addFields(
         { name: "ID do Servidor:", value: message.guild.id, inline: true },
@@ -42,9 +62,9 @@ exports.run = (client, message) => {
         {
           name: "Data da minha Entrada:",
           value: `${moment(
-            message.guild.member(client.user.id).joinedAt
+            message.guild.member(this.client.user.id).joinedAt
           ).format("L")} ( ${moment(
-            message.guild.member(client.user.id).joinedAt
+            message.guild.member(this.client.user.id).joinedAt
           )
             .startOf("day")
             .fromNow()} )`,
@@ -69,18 +89,10 @@ exports.run = (client, message) => {
         }
       )
       .setThumbnail(message.guild.iconURL({ dynamic: true }))
-      .setColor(process.env.EMBED_COLOR);
 
     message.quote(SERVERINFO);
   } catch (err) {
     console.log(`ERRO NO COMANDO SERVERINFO\nERRO: ${err}`);
   }
 };
-
-exports.help = {
-  name: "serverinfo",
-  aliases: ["si"],
-  description: "Comando para ver informações sobre o servidor",
-  usage: "<prefix>serverinfo",
-  category: "Information"
 };

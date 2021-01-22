@@ -1,9 +1,13 @@
 const { MessageEmbed } = require("discord.js");
-const logger = require("../../utils/logger");
 const Guild = require("../../database/Schemas/Guild");
 
-module.exports = async (client, message) => {
-  Guild.findOne({ _id: message.guild.id }, async function (err, server) {
+module.exports = class {
+  constructor(client) {
+    this.client = client;
+  }
+  
+  async run(message) {
+      Guild.findOne({ idS: message.guild.id }, async function (err, server) {
     try {
       if (message.author.bot) return; // caso um bot tenha deletado alguma mensagem ele não vai mandar no canal de LOGS.
       const guild = message.guild;
@@ -40,7 +44,8 @@ module.exports = async (client, message) => {
         channel.send(UPDATE);
       }
     } catch (err) {
-      logger.error(`EVENTO: MessageDelete`);
+      console.log(`EVENTO: MessageDelete`);
     }
   });
 };
+}

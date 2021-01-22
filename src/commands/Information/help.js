@@ -1,9 +1,27 @@
-const { MessageEmbed } = require("discord.js");
 const Guild = require("../../database/Schemas/Guild"),
-  Command = require("../../database/Schemas/Command");
+  CommandC = require("../../database/Schemas/Command");
+const Command = require("../../structures/Command");
+const ClientEmbed = require("../../structures/ClientEmbed");
 
-exports.run = async (client, message, args) => {
-  Guild.findOne({ idS: message.guild.id }, async function (err, server) {
+module.exports = class Help extends (
+  Command
+) {
+  constructor(client) {
+    super(client);
+    this.client = client;
+
+    this.name = "help";
+    this.category = "Information";
+    this.description = "Comando para ver informações dos comandos do bot";
+    this.usage = "help";
+    this.aliases = ["ajuda"];
+
+    this.enabled = true;
+    this.guildOnly = true;
+  }
+
+  async run(message, args, prefix, author) {
+    Guild.findOne({ idS: message.guild.id }, async (err, server) => {
       const Config = [];
       const Economy = [];
       const Information = [];
@@ -12,83 +30,78 @@ exports.run = async (client, message, args) => {
 
       const { commands } = message.client;
 
-      const AJUDA = new MessageEmbed()
+      const AJUDA = new ClientEmbed(author)
         .setAuthor(
           `Central de Ajuda do Bot`,
-          client.user.displayAvatarURL({ size: 2048 })
+          this.client.user.displayAvatarURL({ size: 2048 })
         )
-        .setColor(process.env.EMBED_COLOR)
-        .setTimestamp()
         .setFooter(
           `Comando requisitado por ${message.author.username}`,
           message.author.displayAvatarURL({ dynamic: true })
         )
-        .setThumbnail(client.user.displayAvatarURL({ size: 2048 }));
+        .setThumbnail(this.client.user.displayAvatarURL({ size: 2048 }));
 
       if (args[0]) {
-        Command.findOne({ _id: args[0].toLowerCase() }, async function (err, cmd) {
+        CommandC.findOne({ _id: args[0].toLowerCase() }, async (err, cmd) => {
+          const name = args[0].toLowerCase();
+          const comando =
+            commands.get(name) ||
+            commands.find(
+              (cmd) => cmd.aliases && cmd.aliases.includes(name)
+            );
 
-        const name = args[0].toLowerCase();
-        const comando =
-          commands.get(name) ||
-          commands.find(
-            (cmd) => cmd.help.aliases && cmd.help.aliases.includes(name)
-          );
+          if (!comando) {
+            return message.quote(
+              `${message.author}, não achei nenhum comando com o nome/aliases **\`${name}\`**.`
+            );
+          }
 
-        if (!comando) {
-          return message.quote(
-            `${message.author}, não achei nenhum comando com o nome/aliases **\`${name}\`**.`
-          );
-        }
+          AJUDA.addField(`Comando:`, comando.name);
 
-        AJUDA.addField(`Comando:`, comando.help.name);
+          if (comando.aliases)
+            AJUDA.addField(
+              `Aliases`,
+              !comando.aliases.length
+                ? "Não tem Aliases"
+                : comando.aliases.join(", ")
+            );
+          if (comando.description)
+            AJUDA.addField(
+              `Descrição`,
+              !comando.description.length
+                ? "Não tem Descrição"
+                : comando.description
+            );
+          AJUDA.addField(`Usos`, !cmd ? "Comando não registrado" : cmd.usages == 0 ? "Nenhum Uso" : cmd.usages);
+          if (comando.usage)
+            AJUDA.addField(`Modo de Uso`, comando.usage);
 
-        if (comando.help.aliases)
-          AJUDA.addField(
-            `Aliases`,
-            !comando.help.aliases.length
-              ? "Não tem Aliases"
-              : comando.help.aliases.join(", ")
-          );
-        if (comando.help.description)
-          AJUDA.addField(
-            `Descrição`,
-            !comando.help.description.length
-              ? "Não tem Descrição"
-              : comando.help.description
-          );
-        AJUDA.addField(`Usos`, cmd.usages == 0 ? "Nenhum Uso" : cmd.usages);
-        if (comando.help.usage)
-          AJUDA.addField(`Modo de Uso`, comando.help.usage);
-
-        message.quote(AJUDA);
-      });
+          message.quote(AJUDA);
+        });
       } else {
-        const HELP = new MessageEmbed()
+        const HELP = new ClientEmbed(author)
           .setAuthor(
             `Central de Ajuda do Bot`,
-            client.user.displayAvatarURL({ size: 2048 })
+            this.client.user.displayAvatarURL({ size: 2048 })
           )
-          .setColor(process.env.EMBED_COLOR)
-          .setTimestamp()
           .setDescription(
-            `**${message.author.username}**, lista de todos os meus comandos.\nCaso queira saber mais sobre algum use **${server.prefix}help <comando/aliases>**.`
+            `**${message.author.username}**, lista de todos os meus comandos.\nCaso queira saber mais sobre algum use **${prefix}help <comando/aliases>**.`
           )
           .setFooter(
             `Comando requisitado por ${message.author.username}`,
             message.author.displayAvatarURL({ dynamic: true })
           )
-          .setThumbnail(client.user.displayAvatarURL({ size: 2048 }));
+          .setThumbnail(this.client.user.displayAvatarURL({ size: 2048 }));
 
         commands.map((cmd) => {
-          if (cmd.help.category === "Config") Config.push(cmd.help.name);
-          else if (cmd.help.category == "Economy") Economy.push(cmd.help.name);
-          else if (cmd.help.category == "Information")
-            Information.push(cmd.help.name);
-          else if (cmd.help.category == "Moderation")
-            Moderation.push(cmd.help.name);
-          else if (cmd.help.category == "Owner") Owner.push(cmd.help.name);
-          else Information.push(cmd.help.name);
+          if (cmd.category === "Config") Config.push(cmd.name);
+          else if (cmd.category == "Economy") Economy.push(cmd.name);
+          else if (cmd.category == "Information")
+            Information.push(cmd.name);
+          else if (cmd.category == "Moderation")
+            Moderation.push(cmd.name);
+          else if (cmd.category == "Owner") Owner.push(cmd.name);
+          else Information.push(cmd.name);
         });
 
         HELP.addFields(
@@ -117,13 +130,5 @@ exports.run = async (client, message, args) => {
         message.quote(HELP);
       }
     });
-
-};
-
-exports.help = {
-  name: "help",
-  aliases: ["ajuda"],
-  description: "Comando para ver informações dos comandos do bot",
-  usage: "<prefix>help",
-  category: "Information",
+  }
 };

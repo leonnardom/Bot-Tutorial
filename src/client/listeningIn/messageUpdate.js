@@ -1,9 +1,13 @@
 const { MessageEmbed } = require("discord.js");
-const logger = require("../../utils/logger");
 const Guild = require("../../database/Schemas/Guild");
 
-module.exports = async (client, oldMessage, newMessage) => {
-  Guild.findOne({ _id: newMessage.guild.id }, async function (err, server) {
+module.exports = class {
+  constructor(client) {
+    this.client = client;
+  }
+  
+  async run(oldMessage, newMessage) {
+      Guild.findOne({ idS: newMessage.guild.id }, async function (err, server) {
     try {
       if (newMessage.author.bot) return; // caso um bot tenha editado alguma mensagem ele não vai mandar no canal de LOGS.
       const guild = newMessage.guild;
@@ -44,7 +48,8 @@ module.exports = async (client, oldMessage, newMessage) => {
         channel.send(UPDATE);
       }
     } catch (err) {
-      logger.error(`EVENTO: MessageUpdate`);
+      console.log(`EVENTO: MessageUpdate`);
     }
   });
 };
+}

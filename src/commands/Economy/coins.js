@@ -1,22 +1,37 @@
 const User = require("../../database/Schemas/User");
-const ms = require("parse-ms");
+const Command = require("../../structures/Command");
 
-exports.run = async (client, message, args) => {
-  const USER = client.users.cache.get(args[0]) || message.mentions.members.first() || message.author;
+module.exports = class Coins extends (
+  Command
+) {
+  constructor(client) {
+    super(client);
+    this.client = client;
 
-  User.findOne({ idU: USER.id }, async function (err, user) {
-    let coins = user.coins;
+    this.name = "coins";
+    this.category = "Economy";
+    this.description = "Comando para olhar seus coins/do usuário";
+    this.usage = "coins <@user>";
+    this.aliases = ["money"];
 
-    message.channel.send(
-      `${message.author}, ${USER.id == message.author.id ? `você possui` : `o membro possui`} **${coins.toLocaleString()} coins** no momento.`
-    );
-  });
-};
+    this.enabled = true;
+    this.guildOnly = true;
+  }
 
-exports.help = {
-  name: "coins",
-  aliases: ["money"],
-  description: "Comando para olhar seus coins/do usuário",
-  usage: "<prefix>coins <@user>",
-  category: "Economy"
+  async run(message, args, prefix) {
+    const USER =
+      this.client.users.cache.get(args[0]) ||
+      message.mentions.members.first() ||
+      message.author;
+
+    User.findOne({ idU: USER.id }, async (err, user) => {
+      let coins = user.coins;
+
+      message.channel.send(
+        `${message.author}, ${
+          USER.id == message.author.id ? `você possui` : `o membro possui`
+        } **${coins.toLocaleString()} coins** no momento.`
+      );
+    });
+  }
 };
