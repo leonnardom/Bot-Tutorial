@@ -27,6 +27,7 @@ module.exports = class Help extends (
       const Information = [];
       const Moderation = [];
       const Owner = [];
+      const Miscellaneous = [];
 
       const { commands } = message.client;
 
@@ -101,6 +102,7 @@ module.exports = class Help extends (
           else if (cmd.category == "Moderation")
             Moderation.push(cmd.name);
           else if (cmd.category == "Owner") Owner.push(cmd.name);
+          else if (cmd.category == "Miscellaneous") Miscellaneous.push(cmd.name);
           else Information.push(cmd.name);
         });
 
@@ -120,6 +122,10 @@ module.exports = class Help extends (
           {
             name: "Moderation",
             value: Moderation.map((x) => `\`${x}\``).join(", "),
+          },
+          {
+            name: "Miscellaneous",
+            value: Miscellaneous.map((x) => `\`${x}\``).join(", "),
           },
           {
             name: "Owner",

@@ -26,7 +26,7 @@ module.exports = class XP extends (
       this.client.users.cache.get(args[0]) ||
       message.author;
 
-    User.findOne({ _id: USER.id }, async (err, user) => {
+    User.findOne({ idU: USER.id }, async (err, user) => {
       await require("mongoose")
         .connection.collection("users")
         .find({ "Exp.xp": { $gt: 5 } })

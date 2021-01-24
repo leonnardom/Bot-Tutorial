@@ -46,7 +46,7 @@ module.exports = class Daily extends (
             atual + coins
           ).toLocaleString()}** coins.`
         );
-        await User.findByIdAndUpdate(
+        await User.findOneAndUpdate(
           { idU: message.author.id },
           { $set: { coins: coins + atual, daily: cooldown + Date.now() } }
         );
