@@ -19,6 +19,14 @@ let userSchema = new Schema({
     registred: { type: Boolean, default: false },
     registreds: { type: Number, default: 0 },
   },
+  work: {
+    exp: { type: Number, default: 1 },
+    level: { type: Number, default: 1 },
+    nextLevel: { type: Number, default: 250 },
+    cooldown: { type: Number, default: 0 },
+    coins: { type: Number, default: 200 },
+    name: { type: String, default: "null" },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);
