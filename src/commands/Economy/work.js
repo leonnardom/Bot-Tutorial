@@ -1,6 +1,5 @@
 const User = require("../../database/Schemas/User");
 const Command = require("../../structures/Command");
-const ClientEmbed = require("../../structures/ClientEmbed");
 const moment = require("moment");
 require("moment-duration-format");
 const { MessageAttachment } = require("discord.js");
@@ -46,11 +45,6 @@ module.exports = class Work extends (
               .replace("minsutos", "minutos")}** até poder trabalhar novamente`
           );
         } else {
-          message.quote(
-            `${
-              message.author
-            }, você trabalhou com sucesso e obteve **${money.toLocaleString()} coins** e **${xp} de XP**.`
-          );
           if (user.work.exp + xp > nextlevel) {
             message.quote(
               `${
@@ -64,10 +58,26 @@ module.exports = class Work extends (
               {
                 $set: {
                   "work.cooldown": Date.now(),
-                  "work.exp":
-                    user.work.exp + xp > nextlevel ? 0 : user.work.exp + xp,
+                  "work.exp": 0,
                   coins: user.coins + money,
                   "work.level": user.work.level + 1,
+                },
+              }
+            );
+          } else {  
+            message.quote(
+              `${
+                message.author
+              }, você trabalhou com sucesso e obteve **${money.toLocaleString()} coins** e **${xp} de XP**.`
+            );
+            await User.findOneAndUpdate(
+              { idU: message.author.id },
+              {
+                $set: {
+                  "work.cooldown": Date.now(),
+                  "work.exp":
+                    user.work.exp + xp > nextlevel ? 0 : user.work.exp + xp,
+                    coins: user.coins + money,
                 },
               }
             );
@@ -107,19 +117,21 @@ module.exports = class Work extends (
     }
 
     if (["info", "informação"].includes(args[0].toLowerCase())) {
+
       const USER =
         this.client.users.cache.get(args[1]) ||
         message.mentions.users.first() ||
         message.author;
 
+
       User.findOne({ idU: USER.id }, async (err, user) => {
+
         const canvas = createCanvas(400, 600);
         const ctx = canvas.getContext("2d");
-        let xp = Math.floor(Math.random() * 50) + 1;
+
         let work = user.work.cooldown;
         let cooldown = 2.88e7;
         let money = Math.ceil(user.work.level * 2 * user.work.coins + 200);
-        let nextlevel = user.work.nextLevel * user.work.level;
         let works = work - (Date.now() - cooldown);
 
         const background = await loadImage(
@@ -127,96 +139,70 @@ module.exports = class Work extends (
         );
         ctx.drawImage(background, 0, 0, 400, 600);
 
-        //========================// Import Texts //========================//
+       //========================// Import Texts //========================//
 
-        ctx.textAlign = "center";
-        ctx.font = '40px "Montserrat"';
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText(
-          message.author.username.length > 20
-            ? message.author.username.slice(0, 20) + "..."
-            : message.author.username,
-          200,
-          210
-        );
+       ctx.textAlign = "center";
+       ctx.font = '40px "Montserrat"';
+       ctx.fillStyle = "#ffffff";
+       ctx.fillText(
+         USER.username.length > 20
+           ? USER.username.slice(0, 20) + "..."
+           : USER.username,
+         200,
+         210
+       );
 
-        ctx.textAlign = "left";
-        ctx.font = '30px "Segoe UI Black"';
-        ctx.fillStyle = "#000000";
-        ctx.fillText("Nome\nStatus\nLevel", 5, 260);
-        ctx.fillText("Salário", 5, 500);
+       ctx.textAlign = "left";
+       ctx.font = '30px "Segoe UI Black"';
+       ctx.fillStyle = "#000000";
+       ctx.fillText("Nome\nStatus\nLevel", 5, 260);
+       ctx.fillText("Salário", 5, 500);
 
-        ctx.textAlign = "right";
-        ctx.font = '25px "Segoe UI Black"';
-        ctx.fillStyle = "#000000";
-        ctx.fillText(
-          user.work.name.length > 15
-            ? user.work.name.slice(0, 15) + "..."
-            : user.work.name,
-          390,
-          260
-        );
-        ctx.fillText(
-          works < 0
-            ? "Pode Trabalhar"
-            : moment
-                .duration(cooldown - (Date.now() - work))
-                .format("h[h], m[m], s[s]"),
-          390,
-          300
-        );
-        ctx.fillText(user.work.level, 390, 340);
-        ctx.fillText(`${money.toLocaleString()} coins`, 390, 500);
+       ctx.textAlign = "right";
+       ctx.font = '25px "Segoe UI Black"';
+       ctx.fillStyle = "#000000";
+       ctx.fillText(
+         user.work.name.length > 15
+           ? user.work.name.slice(0, 15) + "..."
+           : user.work.name,
+         390,
+         260
+       );
 
-        //========================// Import ProgressBar //========================//
+       ctx.fillText(
+        works < 0
+          ? "Pode Trabalhar"
+          : moment
+              .duration(cooldown - (Date.now() - work))
+              .format("h[h], m[m], s[s]"),
+        390,
+        300
+      );
 
-        const need = user.work.level * user.work.nextLevel;
+      ctx.fillText(user.work.level, 390, 340);
+      ctx.fillText(`${money.toLocaleString()} coins`, 390, 500);
 
-        let widthXp = (user.work.exp * 350) / need;
-        if (user.work.exp > 350 - 18.5) user.work.xp = 200 - 18.5;
+      //========================// Import ProgressBar //========================//
+
+        const need = user.work.level * 250;
+
+        let widthXp = (user.work.exp * 335) / need;
+        if (user.work.exp > 335 - 18.5) user.work.xp = 200 - 18.5;
 
         ctx.beginPath();
         ctx.fillStyle = "#404040";
-        ctx.arc(
-          5 + 18.5,
-          340 + 18.5 + 36.25,
-          18.5,
-          1.5 * Math.PI,
-          0.5 * Math.PI,
-          true
-        );
+        ctx.arc(15 + 18.5, 340 + 18.5 + 36.25, 18.5, 1.5 * Math.PI, 0.5 * Math.PI, true);
         ctx.fill();
-        ctx.fillRect(5 + 18.5, 340 + 36.25, 350 - 18.5, 37.5);
-        ctx.arc(
-          5 + 350,
-          340 + 18.5 + 36.25,
-          18.75,
-          1.5 * Math.PI,
-          0.5 * Math.PI,
-          false
-        );
+        ctx.fillRect(15 + 18.5, 340 + 36.25, 350 - 18.5, 37.5);
+        ctx.arc(15 + 350, 340 + 18.5 + 36.25, 18.75, 1.5 * Math.PI, 0.5 * Math.PI,false);
         ctx.fill();
 
         ctx.beginPath();
         ctx.fillStyle = "#ff4d4d";
-        ctx.arc(
-          5 + 18.5,
-          340 + 18.5 + 36.25,
-          18.5,
-          1.5 * Math.PI,
-          0.5 * Math.PI,
-          true
-        );
+        ctx.arc(15 + 18.5, 340 + 18.5 + 36.25, 18.5, 1.5 * Math.PI,0.5 * Math.PI, true);
         ctx.fill();
-        ctx.fillRect(5 + 18.5, 340 + 36.25, widthXp, 37.5);
-        ctx.arc(
-          5 + 18.5 + widthXp,
-          340 + 18.5 + 36.25,
-          18.75,
-          1.5 * Math.PI,
-          0.5 * Math.PI,
-          false
-        );
+        ctx.fillRect(15 + 18.5, 340 + 36.25, widthXp, 37.5);
+        ctx.arc(15 + 18.5 + widthXp, 340 + 18.5 + 36.25, 18.75, 1.5 * Math.PI, 0.5 * Math.PI, false);
         ctx.fill();
 
         ctx.textAlign = "center";
@@ -230,7 +216,7 @@ module.exports = class Work extends (
           405
         );
 
-        //========================// Import Avatar //========================//
+      //========================// Import Avatar //========================//
 
         ctx.beginPath();
         ctx.arc(200, 70, 65, 0, Math.PI * 2, true);
@@ -245,7 +231,7 @@ module.exports = class Work extends (
         );
         ctx.drawImage(avatar, 135, 5, 130, 130);
 
-        //===============================// //================================//
+      //===============================// //================================//
 
         const attach = new MessageAttachment(
           canvas.toBuffer(),
@@ -253,7 +239,7 @@ module.exports = class Work extends (
         );
 
         message.quote(attach);
-      });
+      })
     }
   }
 };

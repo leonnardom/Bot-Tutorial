@@ -1,4 +1,3 @@
-const Discord = require("discord.js");
 const User = require("../../database/Schemas/User");
 const Command = require("../../structures/Command");
 const ClientEmbed = require("../../structures/ClientEmbed");
@@ -21,7 +20,7 @@ module.exports = class Rank extends (
   }
 
   async run(message, args, prefix, author) {
-    User.findOne({ _id: message.author.id }, async (err, user) => {
+    User.findOne({ idU: message.author.id }, async (err, user) => {
       await require("mongoose")
         .connection.collection("users")
         .find({ "Exp.xp": { $gt: 5 } })
