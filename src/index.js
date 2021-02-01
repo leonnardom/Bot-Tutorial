@@ -55,3 +55,7 @@ const onLoad = async () => {
 };
 
 onLoad();
+
+module.exports = {
+  Util: require('./utils/index.js')
+}

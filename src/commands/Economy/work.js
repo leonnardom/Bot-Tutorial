@@ -10,6 +10,7 @@ registerFont("src/assets/fonts/Segoe UI.ttf", { family: "Segoe UI" });
 registerFont("src/assets/fonts/Segoe UI Black.ttf", {
   family: "Segoe UI Black",
 });
+const Utils = require('../../utils/Util')
 
 module.exports = class Work extends (
   Command
@@ -131,7 +132,7 @@ module.exports = class Work extends (
 
         let work = user.work.cooldown;
         let cooldown = 2.88e7;
-        let money = Math.ceil(user.work.level * 2 * user.work.coins + 200);
+        let money = Utils.toAbbrev(Math.ceil(user.work.level * 2 * user.work.coins + 200));
         let works = work - (Date.now() - cooldown);
 
         const background = await loadImage(

@@ -7,6 +7,7 @@ registerFont("src/assets/fonts/Segoe UI.ttf", { family: "Segoe UI" });
 registerFont("src/assets/fonts/Segoe UI Black.ttf", {
   family: "Segoe UI Black",
 });
+const Utils = require("../../utils/Util");
 
 const { MessageAttachment } = require("discord.js");
 
@@ -73,11 +74,11 @@ module.exports = class Profile extends (
       ctx.textAlign = "left";
       ctx.font = '30px "Segoe UI"';
       ctx.fillStyle = "rgb(253, 255, 252)";
-      ctx.fillText(`${user.coins.toLocaleString()}`, 190, 120);
+      ctx.fillText(`${Utils.toAbbrev(user.coins)}`, 190, 120);
       ctx.fillText(
-        `#${
-          user.Exp.level
-        } | ${user.Exp.xp.toLocaleString()}/${nextLevel.toLocaleString()}`,
+        `#${user.Exp.level} | ${Utils.toAbbrev(user.Exp.xp)}/${Utils.toAbbrev(
+          nextLevel
+        )}`,
         190,
         185
       );

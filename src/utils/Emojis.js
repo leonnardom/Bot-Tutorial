@@ -1,4 +1,7 @@
 module.exports = {
   Errado: "❌",
-  Certo: "✅"
+  Certo: "✅",
+  Bank: "🏦",
+  Coins: "💵",
+  Economy: "💰"
 };

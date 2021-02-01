@@ -2,7 +2,6 @@ const Guild = require("../../database/Schemas/Guild"),
   User = require("../../database/Schemas/User"),
   Command = require("../../database/Schemas/Command"),
   ClientS = require("../../database/Schemas/Client");
-
 const GetMention = (id) => new RegExp(`^<@!?${id}>( |)$`);
 
 module.exports = class {
