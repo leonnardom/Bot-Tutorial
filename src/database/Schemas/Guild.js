@@ -27,6 +27,10 @@ let guildSchema = new Schema({
     role: { type: String, default: "null" },
     total: { type: Number, default: 0 },
   },
+  autorole: {
+    status: { type: Boolean, default: false },
+    roles: { type: Array, default: [] },
+  },
 });
 
 let Guild = mongoose.model("Guilds", guildSchema);

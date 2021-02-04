@@ -9,7 +9,7 @@ module.exports = class ByeBye extends (
     super(client);
     this.client = client;
 
-    this.name = "help";
+    this.name = "byebye";
     this.category = "Config";
     this.description =
       "Comando para configurar o sistema de mensagens de saída";
