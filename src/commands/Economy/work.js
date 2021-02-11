@@ -145,7 +145,7 @@ module.exports = class Work extends (
        ctx.textAlign = "center";
        ctx.font = '40px "Montserrat"';
        ctx.fillStyle = "#ffffff";
-       ctx.fillText(
+       await Utils.renderEmoji(ctx, 
          USER.username.length > 20
            ? USER.username.slice(0, 20) + "..."
            : USER.username,
@@ -162,7 +162,7 @@ module.exports = class Work extends (
        ctx.textAlign = "right";
        ctx.font = '25px "Segoe UI Black"';
        ctx.fillStyle = "#000000";
-       ctx.fillText(
+       await Utils.renderEmoji(ctx,
          user.work.name.length > 15
            ? user.work.name.slice(0, 15) + "..."
            : user.work.name,

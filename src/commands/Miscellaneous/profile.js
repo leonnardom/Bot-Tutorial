@@ -53,13 +53,12 @@ module.exports = class Profile extends (
       ctx.textAlign = "left";
       ctx.font = '50px "Segoe UI Black"';
       ctx.fillStyle = "rgb(253, 255, 252)";
-      ctx.fillText(
+      await Utils.renderEmoji(ctx, 
         USER.username.length > 20
           ? USER.username.slice(0, 20) + "..."
           : USER.username,
         180,
-        50
-      );
+        50)
 
       // Titles
 

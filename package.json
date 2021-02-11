@@ -16,6 +16,7 @@
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.11.8",
+    "node-canvas-with-twemoji-and-discord-emoji": "^1.1.8",
     "node-fetch": "^2.6.1",
     "parse-ms": "^2.1.0",
     "path": "^0.12.7"
