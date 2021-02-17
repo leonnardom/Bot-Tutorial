@@ -90,18 +90,18 @@ module.exports = class {
                         { _id: cmd.name },
                         async function (err, comando) {
                           if (comando) {
-                            //if (message.author.id !== process.env.OWNER_ID) {
-                            if (comando.manutenção)
-                              return message.quote(
-                                `${message.author}, o comando **\`${cmd.name}\`** está em manutenção no momento.\nMotivo: **${comando.reason}**`
-                              );
+                            if (message.author.id !== process.env.OWNER_ID) {
+                              if (comando.manutenção)
+                                return message.quote(
+                                  `${message.author}, o comando **\`${cmd.name}\`** está em manutenção no momento.\nMotivo: **${comando.reason}**`
+                                );
 
-                            if (cliente.manutenção) {
-                              return message.quote(
-                                `${message.author}, no momento eu me encontro em manutenção, tente novamente mais tarde.\nMotivo: **${cliente.reason}**`
-                              );
+                              if (cliente.manutenção) {
+                                return message.quote(
+                                  `${message.author}, no momento eu me encontro em manutenção, tente novamente mais tarde.\nMotivo: **${cliente.reason}**`
+                                );
+                              }
                             }
-                            // }
                             if (
                               cliente.blacklist.some(
                                 (x) => x == message.author.id
@@ -111,6 +111,27 @@ module.exports = class {
                                 `${message.author}, você não pode me usar no momento. **\`Lista Negra\`**.`
                               );
                             }
+
+                            const cb = server.cmdblock;
+
+                            if (cb.status) {
+                              if (!cb.cmds.some((x) => x === cmd.name)) {
+                                if (
+                                  !cb.channels.some(
+                                    (x) => x === message.channel.id
+                                  )
+                                ) {
+                                  if (
+                                    !message.member.hasPermission(
+                                      "MANAGE_MESSAGES"
+                                    )
+                                  ) {
+                                    return message.channel.send(cb.msg);
+                                  }
+                                }
+                              }
+                            }
+
                             cmd.run(message, args, prefix, author);
                             var num = comando.usages;
                             num = num + 1;

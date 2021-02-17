@@ -31,6 +31,12 @@ let guildSchema = new Schema({
     status: { type: Boolean, default: false },
     roles: { type: Array, default: [] },
   },
+  cmdblock: {
+    status: { type: Boolean, default: false },
+    channels: { type: Array, default: [] },
+    cmds: { type: Array, default: [] },
+    msg: { type: String, default: "Proibido usar comandos aqui!" },
+  },
 });
 
 let Guild = mongoose.model("Guilds", guildSchema);
