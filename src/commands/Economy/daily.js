@@ -1,10 +1,9 @@
 const User = require("../../database/Schemas/User");
-const ms = require("parse-ms");
 const Command = require("../../structures/Command");
-
-module.exports = class Daily extends (
-  Command
-) {
+const moment = require("moment");
+require("moment-duration-format");
+const Utils = require("../../utils/Util");
+module.exports = class Daily extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -19,36 +18,36 @@ module.exports = class Daily extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run(message) {
     User.findOne({ idU: message.author.id }, async (err, user) => {
+      //================= Imports =================//
       let cooldown = 8.64e7;
       let coins = Math.floor(Math.random() * 100);
       let daily = user.daily;
       let atual = user.coins;
+      let time = cooldown - (Date.now() - daily);
+
+      //================= Verifcação do Tempo =================//
 
       if (daily !== null && cooldown - (Date.now() - daily) > 0) {
-        let time = ms(cooldown - (Date.now() - daily) > 0);
-        let hours = time.hours;
-        let minutes = time.minutes;
-        let seconds = time.seconds;
         return message.channel.send(
-          `${message.author}, você deve esperar **${
-            hours <= 1 ? `1 hora` : `${hours} horas`
-          } ${
-            minutes <= 1 ? `1 minuto` : `${minutes} minutos`
-          } e ${seconds} segundos.**`
+          `${message.author}, aguarde **${moment
+            .duration(time)
+            .format(
+              "h [horas] m [minutos] e s [segundos]"
+            )}** até pegar o prêmio diário novamente`
         );
       } else {
         message.channel.send(
           `${
             message.author
-          }, você resgatou seu prêmio diário de hoje e conseguiu **${coins}** coins.\nAgora você possui **${Number(
+          }, você resgatou seu prêmio diário de hoje e conseguiu **${coins}** coins.\nAgora você possui **${Utils.toAbbrev(
             atual + coins
-          ).toLocaleString()}** coins.`
+          )}** coins.`
         );
         await User.findOneAndUpdate(
           { idU: message.author.id },
-          { $set: { coins: coins + atual, daily: cooldown + Date.now() } }
+          { $set: { coins: coins + atual, daily: Date.now() } }
         );
       }
     });

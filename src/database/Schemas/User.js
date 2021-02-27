@@ -6,7 +6,7 @@ let userSchema = new Schema({
   idS: { type: String },
   coins: { type: Number, default: 0 },
   daily: { type: Number, default: 0 },
-  bank: {type: Number, default: 0},
+  bank: { type: Number, default: 0 },
   Exp: {
     xp: { type: Number, default: 1 },
     level: { type: Number, default: 1 },
@@ -27,6 +27,10 @@ let userSchema = new Schema({
     cooldown: { type: Number, default: 0 },
     coins: { type: Number, default: 200 },
     name: { type: String, default: "null" },
+  },
+  vip: {
+    hasVip: { type: Boolean, default: false },
+    date: { type: Number, default: 0 },
   },
 });
 
