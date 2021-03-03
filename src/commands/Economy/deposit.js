@@ -2,9 +2,7 @@ const User = require("../../database/Schemas/User");
 const Command = require("../../structures/Command");
 const Utils = require("../../utils/Util");
 
-module.exports = class Deposit extends (
-  Command
-) {
+module.exports = class Deposit extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -46,7 +44,7 @@ module.exports = class Deposit extends (
         }
         return;
       }
-      if(coins < 0) {
+      if (coins < 0) {
         return message.quote(
           `${message.author}, não é possível depositar menos de 1 coins.`
         );
