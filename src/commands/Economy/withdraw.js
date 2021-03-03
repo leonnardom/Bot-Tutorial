@@ -2,9 +2,7 @@ const User = require("../../database/Schemas/User");
 const Command = require("../../structures/Command");
 const Utils = require("../../utils/Util");
 
-module.exports = class WithDraw extends (
-  Command
-) {
+module.exports = class WithDraw extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -48,7 +46,11 @@ module.exports = class WithDraw extends (
       }
 
       if (args[0]) {
-        if (isNaN(coins)) {
+        if (coins < 0) {
+          return message.quote(
+            `${message.author}, não é possível retirar menos de 1 coins`
+          );
+        } else if (isNaN(coins)) {
           return message.quote(
             `${message.author}, modo correto de utilizar o comando: **${prefix}sacar <quantia/all>**`
           );
