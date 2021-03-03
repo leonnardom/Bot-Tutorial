@@ -46,7 +46,11 @@ module.exports = class Deposit extends (
         }
         return;
       }
-      if (isNaN(coins)) {
+      if(coins < 0) {
+        return message.quote(
+          `${message.author}, não é possível depositar menos de 1 coins.`
+        );
+      } else if (isNaN(coins)) {
         return message.quote(
           `${message.author}, modo correto de utilizar o comando: **${prefix}depositar <quantia/all>**`
         );
