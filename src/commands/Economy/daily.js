@@ -45,6 +45,8 @@ module.exports = class Daily extends Command {
             atual + coins
           )}** coins.`
         );
+        
+
         await User.findOneAndUpdate(
           { idU: message.author.id },
           { $set: { coins: coins + atual, daily: Date.now() } }

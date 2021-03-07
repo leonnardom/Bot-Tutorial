@@ -44,6 +44,37 @@ module.exports = class {
           member.roles.add(server.autorole.roles, "Sistema de AutoRole");
         }
 
+        if (server.serverstats.status) {
+          const st = server.serverstats;
+          const ch = st.channels;
+
+          if (ch.total != "null") {
+            let channel = guild.channels.cache.get(ch.total);
+
+            channel.setName(`Total: ${guild.memberCount.toLocaleString()}`);
+          }
+
+          if (ch.bot != "null") {
+            let channel = guild.channels.cache.get(ch.bot);
+
+            channel.setName(
+              `Bots: ${guild.members.cache
+                .filter((x) => x.user.bot)
+                .size.toLocaleString()}`
+            );
+          }
+
+          if (ch.users != "null") {
+            let channel = guild.channels.cache.get(ch.users);
+
+            channel.setName(
+              `Usuários: ${guild.members.cache
+                .filter((x) => !x.user.bot)
+                .size.toLocaleString()}`
+            );
+          }
+        }
+
         if (server.contador.status) {
           this.client.channels.cache
             .get(server.contador.channel)
