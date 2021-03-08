@@ -3,9 +3,7 @@ const Guild = require("../../database/Schemas/Guild"),
 const Command = require("../../structures/Command");
 const ClientEmbed = require("../../structures/ClientEmbed");
 
-module.exports = class Help extends (
-  Command
-) {
+module.exports = class Help extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -28,6 +26,7 @@ module.exports = class Help extends (
       const Moderation = [];
       const Owner = [];
       const Miscellaneous = [];
+      const Minecraft = [];
 
       const { commands } = message.client;
 
@@ -47,9 +46,7 @@ module.exports = class Help extends (
           const name = args[0].toLowerCase();
           const comando =
             commands.get(name) ||
-            commands.find(
-              (cmd) => cmd.aliases && cmd.aliases.includes(name)
-            );
+            commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name));
 
           if (!comando) {
             return message.quote(
@@ -73,9 +70,15 @@ module.exports = class Help extends (
                 ? "Não tem Descrição"
                 : comando.description
             );
-          AJUDA.addField(`Usos`, !cmd ? "Comando não registrado" : cmd.usages == 0 ? "Nenhum Uso" : cmd.usages);
-          if (comando.usage)
-            AJUDA.addField(`Modo de Uso`, comando.usage);
+          AJUDA.addField(
+            `Usos`,
+            !cmd
+              ? "Comando não registrado"
+              : cmd.usages == 0
+              ? "Nenhum Uso"
+              : cmd.usages
+          );
+          if (comando.usage) AJUDA.addField(`Modo de Uso`, comando.usage);
 
           message.quote(AJUDA);
         });
@@ -97,39 +100,57 @@ module.exports = class Help extends (
         commands.map((cmd) => {
           if (cmd.category === "Config") Config.push(cmd.name);
           else if (cmd.category == "Economy") Economy.push(cmd.name);
-          else if (cmd.category == "Information")
-            Information.push(cmd.name);
-          else if (cmd.category == "Moderation")
-            Moderation.push(cmd.name);
+          else if (cmd.category == "Information") Information.push(cmd.name);
+          else if (cmd.category == "Moderation") Moderation.push(cmd.name);
           else if (cmd.category == "Owner") Owner.push(cmd.name);
-          else if (cmd.category == "Miscellaneous") Miscellaneous.push(cmd.name);
+          else if (cmd.category == "Miscellaneous")
+            Miscellaneous.push(cmd.name);
+          else if (cmd.category == "Minecraft") Minecraft.push(cmd.name);
           else Information.push(cmd.name);
         });
 
         HELP.addFields(
           {
             name: "Configuração",
-            value: Config.map((x) => `\`${x}\``).join(", "),
+            value: !Config.length
+              ? "Nenhum Comando"
+              : Config.map((x) => `\`${x}\``).join(", "),
           },
           {
             name: "Economy",
-            value: Economy.map((x) => `\`${x}\``).join(", "),
+            value: !Economy.length
+              ? "Nenhum Comando"
+              : Economy.map((x) => `\`${x}\``).join(", "),
           },
           {
             name: "Information",
-            value: Information.map((x) => `\`${x}\``).join(", "),
+            value: !Information.length
+              ? "Nenhum Comando"
+              : Information.map((x) => `\`${x}\``).join(", "),
           },
           {
             name: "Moderation",
-            value: Moderation.map((x) => `\`${x}\``).join(", "),
+            value: !Moderation.length
+              ? "Nenhum Comando"
+              : Moderation.map((x) => `\`${x}\``).join(", "),
           },
           {
             name: "Miscellaneous",
-            value: Miscellaneous.map((x) => `\`${x}\``).join(", "),
+            value: !Miscellaneous.length
+              ? "Nenhum Comando"
+              : Miscellaneous.map((x) => `\`${x}\``).join(", "),
+          },
+          {
+            name: "Minecraft",
+            value: !Minecraft.length
+              ? "Nenhum Comando"
+              : Minecraft.map((x) => `\`${x}\``).join(", "),
           },
           {
             name: "Owner",
-            value: Owner.map((x) => `\`${x}\``).join(", "),
+            value: !Owner.length
+              ? "Nenhum Comando"
+              : Owner.map((x) => `\`${x}\``).join(", "),
           }
         );
 

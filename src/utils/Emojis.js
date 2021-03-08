@@ -3,5 +3,6 @@ module.exports = {
   Certo: "✅",
   Bank: "🏦",
   Coins: "💵",
-  Economy: "💰"
+  Economy: "💰",
+  Minecraft: "<a:minecraft:818286052963385365>"
 };
