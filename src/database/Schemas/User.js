@@ -32,6 +32,15 @@ let userSchema = new Schema({
     hasVip: { type: Boolean, default: false },
     date: { type: Number, default: 0 },
   },
+  shop: {
+    itens: {
+      pickaxe: { type: Number, default: 0 },
+      axe: { type: Number, default: 0 },
+      hoe: { type: Number, default: 0 },
+      sword: { type: Number, default: 0 },
+      shovel: { type: Number, default: 0 },
+    },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);
