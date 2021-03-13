@@ -68,7 +68,7 @@ module.exports = class Shop extends Command {
         `${message.author}, você comprou com sucesso o seguinte item: **${
           list.name
         }** pelo preço **R$${Utils.toAbbrev(
-          list.price
+          list.price * size
         )}** ( Quantia: **${size}** ).`
       );
 
@@ -107,7 +107,7 @@ module.exports = class Shop extends Command {
 
       await User.findOneAndUpdate(
         { idU: message.author.id },
-        { $set: { bank: user.bank - list.price } }
+        { $set: { bank: user.bank - list.price * size } }
       );
     }
   }

@@ -41,6 +41,17 @@ let userSchema = new Schema({
       shovel: { type: Number, default: 0 },
     },
   },
+  factory: {
+    name: { type: String, default: "null" },
+    exp: { type: Number, default: 0 },
+    level: { type: Number, default: 1 },
+    nextLevel: { type: Number, default: 500 },
+    owner: { type: String, default: "null" },
+    employers: { type: Array, default: [] },
+    hasFactory: { type: Boolean, default: false },
+    createFactory: { type: Boolean, default: false },
+    lastWork: { type: Number, default: 0 },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);

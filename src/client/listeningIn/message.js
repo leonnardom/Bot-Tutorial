@@ -11,6 +11,7 @@ module.exports = class {
 
   async run(message) {
     try {
+      
       User.findOne(
         { idU: message.author.id, idS: message.guild.id },
         async (err, user) => {
