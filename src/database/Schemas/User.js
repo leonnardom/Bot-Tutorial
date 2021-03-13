@@ -34,11 +34,26 @@ let userSchema = new Schema({
   },
   shop: {
     itens: {
-      pickaxe: { type: Number, default: 0 },
-      axe: { type: Number, default: 0 },
-      hoe: { type: Number, default: 0 },
-      sword: { type: Number, default: 0 },
-      shovel: { type: Number, default: 0 },
+      pickaxe: {
+        type: Object,
+        default: { id: 1, size: 0, price: 3000, name: "Picareta", emoji: "❤️" },
+      },
+      axe: {
+        type: Object,
+        default: { id: 2, size: 0, price: 5000, name: "Machado", emoji: "❤️" },
+      },
+      hoe: {
+        type: Object,
+        default: { id: 3, size: 0, price: 6000, name: "Enxada", emoji: "❤️" },
+      },
+      sword: {
+        type: Object,
+        default: { id: 4, size: 0, price: 7000, name: "Espada", emoji: "❤️" },
+      },
+      shovel: {
+        type: Object,
+        default: { id: 5, size: 0, price: 8000, name: "Pá", emoji: "❤️" },
+      },
     },
   },
   factory: {
