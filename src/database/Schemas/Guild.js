@@ -46,6 +46,10 @@ let guildSchema = new Schema({
       category: { type: String, default: "null" },
     },
   },
+  notification: {
+    role: { type: String, default: "null" },
+    status: { type: Boolean, default: false },
+  },
 });
 
 let Guild = mongoose.model("Guilds", guildSchema);

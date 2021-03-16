@@ -33,7 +33,16 @@ module.exports = class Shop extends Command {
 
     if (!infoObject.length)
       return message.channel.send(
-        `${message.author}, o item de ID: **${args[0]}** não existe.`
+        `${message.author}, o item de ID: **${
+          args[0]
+        }** não existe. Lista dos itens que existem na minha Loja.\n\n${itens
+          .map(([, x]) => x)
+          .filter((x) => x != true)
+          .map(
+            (x) =>
+              ` > ID: **${x.id}** ( Nome: **${x.name}** )\n> Valor: **\`${x.price}\`**`
+          )
+          .join("\n\n")}`
       );
 
     const find = infoObject[0][1];
