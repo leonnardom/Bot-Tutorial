@@ -9,11 +9,9 @@ registerFont("src/assets/fonts/Segoe UI Black.ttf", {
 });
 const Utils = require("../../utils/Util");
 
-const { MessageAttachment } = require("discord.js");
+const { MessageAttachment, Util } = require("discord.js");
 
-module.exports = class Profile extends (
-  Command
-) {
+module.exports = class Profile extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -35,16 +33,29 @@ module.exports = class Profile extends (
       message.author;
 
     User.findOne({ idU: USER.id }, async (err, user) => {
-      const canvas = createCanvas(800, 600);
+      const canvas = createCanvas(1280, 720);
       const ctx = canvas.getContext("2d");
       let nextLevel = user.Exp.nextLevel * user.Exp.level;
 
       //========================// Import Background //========================//
 
       const background = await loadImage(
-        "./src/assets/img/png/Profile_Card.png"
+        "./src/assets/img/jpeg/background.jpg"
       );
-      ctx.drawImage(background, 0, 0, 800, 600);
+      ctx.drawImage(background, 0, 0, 1280, 720);
+
+      //========================// Import BreakLines //========================//
+
+      function addBreakLines(str, max) {
+        max = max + 1;
+        for (let i = 0; i < str.length / max; i++) {
+          str =
+            str.substring(0, max * i) +
+            `\n` +
+            str.substring(max * i, str.length);
+        }
+        return str;
+      }
 
       //========================// Texts //========================//
 
@@ -53,12 +64,14 @@ module.exports = class Profile extends (
       ctx.textAlign = "left";
       ctx.font = '50px "Segoe UI Black"';
       ctx.fillStyle = "rgb(253, 255, 252)";
-      await Utils.renderEmoji(ctx, 
+      await Utils.renderEmoji(
+        ctx,
         USER.username.length > 20
           ? USER.username.slice(0, 20) + "..."
           : USER.username,
         180,
-        50)
+        50
+      );
 
       // Titles
 
@@ -82,6 +95,22 @@ module.exports = class Profile extends (
         185
       );
 
+      // Sobre
+
+      ctx.font = '25px "Montserrat"';
+      ctx.fillText(
+        addBreakLines(
+          String(
+            user.about == "null"
+              ? `Use ${prefix}sobremim <msg> para alterar essa mensagem`
+              : user.about
+          ),
+          60
+        ),
+        20,
+        490
+      );
+
       //========================// Import Avatar //========================//
 
       ctx.arc(100, 95, 85, 0, Math.PI * 2, true);
@@ -92,7 +121,7 @@ module.exports = class Profile extends (
       ctx.clip();
 
       const avatar = await loadImage(USER.displayAvatarURL({ format: "jpeg" }));
-      ctx.drawImage(avatar, 15, 12, 170, 170);
+      ctx.drawImage(avatar, 15, 10, 175, 175);
 
       //========================// Create Image //========================//
 

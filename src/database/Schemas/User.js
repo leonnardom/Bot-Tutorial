@@ -67,6 +67,7 @@ let userSchema = new Schema({
     createFactory: { type: Boolean, default: false },
     lastWork: { type: Number, default: 0 },
   },
+  about: { type: String, default: "null" },
 });
 
 const User = mongoose.model("Users", userSchema);
