@@ -68,6 +68,12 @@ let userSchema = new Schema({
     lastWork: { type: Number, default: 0 },
   },
   about: { type: String, default: "null" },
+  reps: {
+    size: { type: Number, default: 0 },
+    lastRep: { type: String, default: "null" },
+    lastSend: { type: String, default: "null" },
+    time: { type: Number, default: 0 },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);
