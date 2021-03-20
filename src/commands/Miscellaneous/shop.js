@@ -18,14 +18,14 @@ module.exports = class Shop extends Command {
   }
 
   async run({ message, args, prefix, author }, t) {
-    const doc = await this.client.u_db.findOne({ idU: message.author.id });
+    const doc = await this.client.database.users.findOne({ idU: message.author.id });
 
     if (!args[0])
       return message.channel.send(
         `${message.author}, você deve inserir o ID do item que deseja comprar.`
       );
 
-    const itens = await this.client.u_db
+    const itens = await this.client.database.users
       .findOne({ idU: message.author.id })
       .then((x) => Object.entries(x.shop.itens));
 
@@ -65,11 +65,11 @@ module.exports = class Shop extends Command {
         {}
       );
 
-      await this.client.u_db.findOneAndUpdate(
+      await this.client.database.users.findOneAndUpdate(
         { idU: message.author.id },
         { $set: { bank: doc.bank - find.price * size } }
       );
-      await this.client.u_db.findOneAndUpdate(
+      await this.client.database.users.findOneAndUpdate(
         { idU: message.author.id },
         updateObject
       );

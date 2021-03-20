@@ -10,6 +10,7 @@ class Main extends Client {
     super(options);
     this.commands = new Collection();
     this.aliases = new Collection();
+    this.database = new Collection()
   }
 
   login(token) {

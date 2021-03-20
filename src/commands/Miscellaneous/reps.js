@@ -24,7 +24,7 @@ module.exports = class Reps extends Command {
       message.mentions.users.first() ||
       message.author;
 
-    const doc = await this.client.u_db.findOne({ idU: USER.id });
+    const doc = await this.client.database.users.findOne({ idU: USER.id });
     const rep = doc.reps;
     const cooldown = 7.2e6 - (Date.now() - rep.time);
 

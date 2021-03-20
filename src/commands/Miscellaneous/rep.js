@@ -21,8 +21,8 @@ module.exports = class Rep extends Command {
     const USER =
       this.client.users.cache.get(args[0]) || message.mentions.users.first();
 
-    const doc = await this.client.u_db.findOne({ idU: message.author.id });
-    const doc1 = await this.client.u_db.findOne({ idU: USER.id });
+    const doc = await this.client.database.users.findOne({ idU: message.author.id });
+    const doc1 = await this.client.database.users.findOne({ idU: USER.id });
 
     const rep = doc.reps;
     const cooldown = 7.2e6 - (Date.now() - rep.time);
@@ -56,11 +56,11 @@ module.exports = class Rep extends Command {
       `${message.author}, você enviou uma reputaçaõ para o usuário **${USER.tag}** com sucesso.`
     );
 
-    await this.client.u_db.findOneAndUpdate(
+    await this.client.database.users.findOneAndUpdate(
       { idU: message.author.id },
       { $set: { "reps.lastSend": USER.id, "reps.time": Date.now() } }
     );
-    await this.client.u_db.findOneAndUpdate(
+    await this.client.database.users.findOneAndUpdate(
       { idU: USER.id },
       {
         $set: {

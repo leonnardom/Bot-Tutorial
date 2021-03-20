@@ -17,7 +17,7 @@ module.exports = class About extends Command {
 
   async run({ message, args, prefix, author }, t) {
     const about = args.join(" ");
-    const doc = await this.client.u_db.findOne({ idU: message.author.id });
+    const doc = await this.client.database.users.findOne({ idU: message.author.id });
 
     if (!about)
       return message.channel.send(
@@ -35,7 +35,7 @@ module.exports = class About extends Command {
     message.channel.send(
       `${message.author}, seu sobre foi alterado com sucesso.`
     );
-    await this.client.u_db.findOneAndUpdate(
+    await this.client.database.users.findOneAndUpdate(
       { idU: message.author.id },
       { $set: { about: about } }
     );

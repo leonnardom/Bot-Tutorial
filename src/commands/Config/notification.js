@@ -17,7 +17,7 @@ module.exports = class Notification extends Command {
   }
 
   async run({ message, args, prefix, author }, t) {
-    const doc = await this.client.g_db.findOne({ idS: message.guild.id });
+    const doc = await this.client.database.guilds.findOne({ idS: message.guild.id });
 
     if (!args[0]) {
       if (!doc.notification.status) {
@@ -50,7 +50,7 @@ module.exports = class Notification extends Command {
         message.channel.send(
           `${message.author}, o cargo inserido é o mesmo setado atualmente, portanto eu removi ele.`
         );
-        return await this.client.g_db.findOneAndUpdate(
+        return await this.client.database.guilds.findOneAndUpdate(
           { idS: message.guild.id },
           {
             $set: { "notification.role": "null", "notification.status": false },
@@ -60,7 +60,7 @@ module.exports = class Notification extends Command {
         message.channel.send(
           `${message.author}, ok, cargo alterado com sucesso.`
         );
-        await this.client.g_db.findOneAndUpdate(
+        await this.client.database.guilds.findOneAndUpdate(
           { idS: message.guild.id },
           {
             $set: { "notification.role": role.id, "notification.status": true },
@@ -78,7 +78,7 @@ module.exports = class Notification extends Command {
         message.quote(
           `${message.author}, sistema de notificação ativado com sucesso.`
         );
-        await this.client.g_db.findOneAndUpdate(
+        await this.client.database.guilds.findOneAndUpdate(
           { idS: message.guild.id },
           { $set: { "notification.status": true } }
         );
@@ -95,7 +95,7 @@ module.exports = class Notification extends Command {
         message.quote(
           `${message.author}, sistema de notificação desativado com sucesso.`
         );
-        await this.client.g_db.findOneAndUpdate(
+        await this.client.database.guilds.findOneAndUpdate(
           { idS: message.guild.id },
           { $set: { "notification.status": false } }
         );

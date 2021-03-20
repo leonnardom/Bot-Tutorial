@@ -25,7 +25,7 @@ module.exports = class Factory extends Command {
       message.mentions.users.first() ||
       message.author;
 
-    const user = await this.client.u_db.findOne({ idU: USER.id });
+    const user = await this.client.database.users.findOne({ idU: USER.id });
     const fb = user?.factory;
 
     if (["info"].includes(args[0].toLowerCase())) {
@@ -38,7 +38,7 @@ module.exports = class Factory extends Command {
           }.`
         );
       const owner = await this.client.users.fetch(fb.owner);
-      const fd = await this.client.u_db
+      const fd = await this.client.database.users
         .findOne({ idU: owner.id })
         .then((x) => x.factory);
 
@@ -99,7 +99,7 @@ module.exports = class Factory extends Command {
     }
 
     if (["work", "trabalhar"].includes(args[0].toLowerCase())) {
-      const user = await this.client.u_db.findOne({ idU: message.author.id });
+      const user = await this.client.database.users.findOne({ idU: message.author.id });
       const fd = user?.factory;
 
       if (!fd.hasFactory)
@@ -129,15 +129,15 @@ module.exports = class Factory extends Command {
         );
 
         const owner = await this.client.users.fetch(fd.owner);
-        const fc = await this.client.u_db
+        const fc = await this.client.database.users
           .findOne({ idU: owner.id })
           .then((x) => x.factory);
 
-        await this.client.u_db.findOneAndUpdate(
+        await this.client.database.users.findOneAndUpdate(
           { idU: message.author.id },
           { $set: { bank: user.bank + COINS, "factory.lastWork": Date.now() } }
         );
-        await this.client.u_db.findOneAndUpdate(
+        await this.client.database.users.findOneAndUpdate(
           { idU: owner.id },
           { $set: { "factory.exp": fc.exp + XP } }
         );
@@ -159,7 +159,7 @@ module.exports = class Factory extends Command {
         );
 
       const owner = await this.client.users.fetch(fb.owner);
-      const fd = await this.client.u_db
+      const fd = await this.client.database.users
         .findOne({ idU: owner.id })
         .then((x) => x.factory);
 
@@ -172,12 +172,12 @@ module.exports = class Factory extends Command {
           `${message.author}, funcionário demitido com sucesso.`
         );
 
-        await this.client.u_db.findOneAndUpdate(
+        await this.client.database.users.findOneAndUpdate(
           { idU: message.author.id },
           { $pull: { "factory.employers": USER.id } }
         );
 
-        await this.client.u_db.findOneAndUpdate(
+        await this.client.database.users.findOneAndUpdate(
           { idU: USER.id },
           {
             $set: {
@@ -225,12 +225,12 @@ module.exports = class Factory extends Command {
                   `${message.author}, você contratou o(a) usuário(a) ${USER} com sucesso.`
                 );
 
-                await this.client.u_db.findOneAndUpdate(
+                await this.client.database.users.findOneAndUpdate(
                   { idU: message.author.id },
                   { $push: { "factory.employers": USER.id } }
                 );
 
-                await this.client.u_db.findOneAndUpdate(
+                await this.client.database.users.findOneAndUpdate(
                   { idU: USER.id },
                   {
                     $set: {
@@ -271,7 +271,7 @@ module.exports = class Factory extends Command {
         message.channel.send(
           `${message.author}, sua Fábrica foi criada com sucesso.`
         );
-        await this.client.u_db.findOneAndUpdate(
+        await this.client.database.users.findOneAndUpdate(
           { idU: message.author.id },
           {
             $set: {
@@ -292,7 +292,7 @@ module.exports = class Factory extends Command {
   }
   async PUSH(members, list) {
     for (const employer of list) {
-      const doc = await this.client.u_db
+      const doc = await this.client.database.users
         .findOne({ idU: employer })
         .then((x) => x.factory);
       members.push({

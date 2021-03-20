@@ -1,5 +1,6 @@
-const Guild = require("../../database/Schemas/Guild")
-const User = require("../../database/Schemas/User")
+const Guild = require("../../database/Schemas/Guild"),
+  User = require("../../database/Schemas/User"),
+  Commands = require("../../database/Schemas/Command");
 
 module.exports = class {
   constructor(client) {
@@ -7,9 +8,9 @@ module.exports = class {
   }
 
   async run() {
-
-    this.client.u_db = User;
-    this.client.g_db = Guild;
+    this.client.database.users = User;
+    this.client.database.guilds = Guild;
+    this.client.database.commands = Commands;
 
     const status = [
       {
