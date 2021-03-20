@@ -3,9 +3,7 @@ const CanvaCord = require("canvacord");
 const User = require("../../database/Schemas/User");
 const Command = require("../../structures/Command");
 
-module.exports = class XP extends (
-  Command
-) {
+module.exports = class XP extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -20,7 +18,7 @@ module.exports = class XP extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     let USER =
       message.mentions.users.first() ||
       this.client.users.cache.get(args[0]) ||

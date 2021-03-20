@@ -17,7 +17,7 @@ module.exports = class Rep extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     const USER =
       this.client.users.cache.get(args[0]) || message.mentions.users.first();
 

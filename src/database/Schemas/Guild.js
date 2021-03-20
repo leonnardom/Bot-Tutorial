@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 let guildSchema = new Schema({
-  idS: { type: String, required: true },
+  idS: { type: String },
   prefix: { type: String, default: "!" },
   welcome: {
     status: { type: Boolean, default: false },
@@ -50,6 +50,7 @@ let guildSchema = new Schema({
     role: { type: String, default: "null" },
     status: { type: Boolean, default: false },
   },
+  lang: { type: String, default: "pt-BR" },
 });
 
 let Guild = mongoose.model("Guilds", guildSchema);

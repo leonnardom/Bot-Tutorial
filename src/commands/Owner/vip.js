@@ -20,7 +20,7 @@ module.exports = class Vip extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     moment.locale("pt-BR");
 
     const USER =

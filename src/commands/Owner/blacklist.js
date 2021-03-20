@@ -2,9 +2,7 @@ const ClientS = require("../../database/Schemas/Client");
 const Command = require("../../structures/Command");
 const ClientEmbed = require("../../structures/ClientEmbed");
 
-module.exports = class BlackList extends (
-  Command
-) {
+module.exports = class BlackList extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -19,7 +17,7 @@ module.exports = class BlackList extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     if (message.author.id !== process.env.OWNER_ID) return;
 
     ClientS.findOne({ _id: this.client.user.id }, async (err, cliente) => {
@@ -39,12 +37,12 @@ module.exports = class BlackList extends (
               value: `${cliente.blacklist
                 .map(
                   (x) =>
-                    `User: **\`${this.client.users.cache.get(x).tag}\`**\nID: **\`${
-                      this.client.users.cache.get(x).id
-                    }\`**`
+                    `User: **\`${
+                      this.client.users.cache.get(x).tag
+                    }\`**\nID: **\`${this.client.users.cache.get(x).id}\`**`
                 )
                 .join("\n\n")}`,
-            })
+            });
 
           message.quote(LIST);
         }

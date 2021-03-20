@@ -18,7 +18,7 @@ module.exports = class ServerStats extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     Guild.findOne({ idS: message.guild.id }, async (err, server) => {
       if (!message.member.hasPermission("MANAGE_GUILD"))
         return message.quote(

@@ -18,7 +18,7 @@ module.exports = class Help extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({message, args, prefix, author}, t) {
     Guild.findOne({ idS: message.guild.id }, async (err, server) => {
       const Config = [];
       const Economy = [];
@@ -32,11 +32,11 @@ module.exports = class Help extends Command {
 
       const AJUDA = new ClientEmbed(author)
         .setAuthor(
-          `Central de Ajuda do Bot`,
+          `${t('commands:help.title')}`,
           this.client.user.displayAvatarURL({ size: 2048 })
         )
         .setFooter(
-          `Comando requisitado por ${message.author.username}`,
+          `Comando requisitado  por ${message.author.username}`,
           message.author.displayAvatarURL({ dynamic: true })
         )
         .setThumbnail(this.client.user.displayAvatarURL({ size: 2048 }));

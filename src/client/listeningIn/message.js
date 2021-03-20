@@ -3,7 +3,7 @@ const Guild = require("../../database/Schemas/Guild"),
   Command = require("../../database/Schemas/Command"),
   ClientS = require("../../database/Schemas/Client");
 const GetMention = (id) => new RegExp(`^<@!?${id}>( |)$`);
-
+let t;
 module.exports = class {
   constructor(client) {
     this.client = client;
@@ -21,6 +21,13 @@ module.exports = class {
               async (err, cliente) => {
                 if (message.author.bot == true) return;
 
+                const language = await this.client.getLanguage(message.guild.id);
+
+                try {
+                    t = await this.client.getTranslate(message.guild.id)
+                } catch (e) {
+                    console.log(e);
+                }
                 if (user) {
                   if (server) {
                     if (cliente) {
@@ -133,7 +140,8 @@ module.exports = class {
                               }
                             }
 
-                            cmd.run(message, args, prefix, author);
+
+                              cmd.run({message, args, prefix, author, language}, t);
                             var num = comando.usages;
                             num = num + 1;
 

@@ -17,13 +17,15 @@ module.exports = class Deposit extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     User.findOne({ idU: message.author.id }, async (err, user) => {
       let coins = parseInt(args[0]);
 
       if (!args[0])
         return message.quote(
-          `${message.author}, modo correto de utilizar o comando: **${prefix}depositar <quantia/all>**`
+          `${message.author}, ${t('commands:deposit.noArgs', {
+            prefix
+          } )}`
         );
 
       if (["all", "tudo"].includes(args[0].toLowerCase())) {
@@ -33,9 +35,9 @@ module.exports = class Deposit extends Command {
           );
         } else {
           message.channel.send(
-            `${message.author}, você depositou **${Utils.toAbbrev(
-              user.coins
-            )} coins** com sucesso.`
+            `${message.author}, ${t('commands:deposit.sucess', {
+              coins: `${Utils.toAbbrev(user.coins)}`
+            } )}`
           );
           await User.findOneAndUpdate(
             { idU: message.author.id },

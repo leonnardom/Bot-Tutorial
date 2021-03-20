@@ -15,7 +15,7 @@ module.exports = class About extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     const about = args.join(" ");
     const doc = await this.client.u_db.findOne({ idU: message.author.id });
 

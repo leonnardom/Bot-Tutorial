@@ -17,7 +17,7 @@ module.exports = class McBody extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     const nick = args[0];
 
     if (!nick)

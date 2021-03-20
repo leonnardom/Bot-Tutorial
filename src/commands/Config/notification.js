@@ -16,7 +16,7 @@ module.exports = class Notification extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     const doc = await this.client.g_db.findOne({ idS: message.guild.id });
 
     if (!args[0]) {

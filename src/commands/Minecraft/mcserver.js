@@ -20,7 +20,7 @@ module.exports = class McServer extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     const ip = args[0];
 
     if (!ip)

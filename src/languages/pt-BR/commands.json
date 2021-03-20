@@ -1,0 +1,14 @@
+{
+  "help": {
+    "title": "Central de Ajuda do Bot"
+  },
+  "welcome": {
+    "channel": {
+      "sucess": "o canal **<#{{canal}}>** foi setado como canal de welcome com sucesso."
+    }
+  },
+  "deposit": {
+    "noArgs": "modo correto de utilizar o comando: **{{prefix}}depositar <quantia/all>**",
+    "sucess": "você depositou **{{coins}} coins** com sucesso."
+  }
+}

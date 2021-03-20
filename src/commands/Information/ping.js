@@ -1,8 +1,6 @@
 const Command = require("../../structures/Command");
 
-module.exports = class Ping extends (
-  Command
-) {
+module.exports = class Ping extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -17,7 +15,7 @@ module.exports = class Ping extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     message.channel
       .send(`Ping do Bot: **${this.client.ws.ping}ms**`)
       .then((x) => x.delete({ timeout: 5000 }));

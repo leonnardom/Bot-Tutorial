@@ -3,9 +3,7 @@ const User = require("../../database/Schemas/User");
 const moment = require("moment");
 const Command = require("../../structures/Command");
 
-module.exports = class Registrar extends (
-  Command
-) {
+module.exports = class Registrar extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -20,7 +18,7 @@ module.exports = class Registrar extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     moment.locale("pt-BR");
 
     const USER =

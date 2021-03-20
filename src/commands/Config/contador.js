@@ -2,9 +2,7 @@ const Guild = require("../../database/Schemas/Guild");
 const Discord = require("discord.js");
 const Command = require("../../structures/Command");
 
-module.exports = class Contador extends (
-  Command
-) {
+module.exports = class Contador extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -18,7 +16,7 @@ module.exports = class Contador extends (
     this.enabled = true;
     this.guildOnly = true;
   }
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     Guild.findOne({ idS: message.guild.id }, async function (err, server) {
       if (!message.member.hasPermission("MANAGE_GUILD"))
         return message.quote(

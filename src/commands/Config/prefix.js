@@ -1,9 +1,7 @@
 const Guild = require("../../database/Schemas/Guild");
 const Command = require("../../structures/Command");
 
-module.exports = class Prefix extends (
-  Command
-) {
+module.exports = class Prefix extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -18,7 +16,7 @@ module.exports = class Prefix extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     Guild.findOne({ idS: message.guild.id }, async function (err, server) {
       let prefixos = args[0];
 

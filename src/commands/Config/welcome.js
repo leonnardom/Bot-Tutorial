@@ -20,7 +20,7 @@ module.exports = class Welcome extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({message, args, prefix, author}, t) {
     Guild.findOne({ idS: message.guild.id }, async function (err, server) {
       if (!message.member.hasPermission("MANAGE_GUILD"))
         return message.channel.send(
@@ -42,7 +42,9 @@ module.exports = class Welcome extends (
           );
         } else {
           message.quote(
-            `${message.author}, canal **<#${canal.id}>** setado como canal de **welcome** com sucesso.`
+            `${message.author}, ${t('commands:welcome:channel.sucess', {
+              canal: canal.id
+            })}`
           );
           await Guild.findOneAndUpdate(
             { idS: message.guild.id },

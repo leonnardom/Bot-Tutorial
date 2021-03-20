@@ -19,7 +19,7 @@ module.exports = class Avatar extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     const user =
       this.client.users.cache.get(args[0]) ||
       message.mentions.users.first() ||

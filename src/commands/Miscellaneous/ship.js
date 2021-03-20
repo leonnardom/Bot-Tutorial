@@ -19,8 +19,7 @@ module.exports = class Ship extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
-  
+  async run({message, args, prefix, author}, t) {  
 
     let user = message.mentions.users.first(2)[0] || this.client.users.cache.get(args[0])
     let target = message.mentions.users.first(2)[1] || this.client.users.cache.get(args[1])

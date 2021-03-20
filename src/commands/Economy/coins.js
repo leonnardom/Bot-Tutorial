@@ -4,9 +4,7 @@ const Utils = require("../../utils/Util");
 const Emojis = require("../../utils/Emojis");
 const ClientEmbed = require("../../structures/ClientEmbed");
 
-module.exports = class Coins extends (
-  Command
-) {
+module.exports = class Coins extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -21,7 +19,7 @@ module.exports = class Coins extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     const USER =
       this.client.users.cache.get(args[0]) ||
       message.mentions.users.first() ||

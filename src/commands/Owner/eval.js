@@ -1,8 +1,6 @@
 const Command = require("../../structures/Command");
 
-module.exports = class Eval extends (
-  Command
-) {
+module.exports = class Eval extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -17,7 +15,7 @@ module.exports = class Eval extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     if (message.author.id !== "600804786492932101") return;
     if (!args[0]) return;
 

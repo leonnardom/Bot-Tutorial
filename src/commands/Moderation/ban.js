@@ -3,9 +3,7 @@ const Guild = require("../../database/Schemas/Guild");
 const Command = require("../../structures/Command");
 const ClientEmbed = require("../../structures/ClientEmbed");
 
-module.exports = class Ban extends (
-  Command
-) {
+module.exports = class Ban extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -20,7 +18,7 @@ module.exports = class Ban extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     Guild.findOne({ _id: message.guild.id }, async (err, server) => {
       if (!message.member.hasPermission("BAN_MEMBERS"))
         return message.quote(

@@ -3,7 +3,8 @@ const klaw = require("klaw");
 const path = require("path");
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
-
+const Locale = require("../lib");
+const Guild = require("./database/Schemas/Guild");
 class Main extends Client {
   constructor(options) {
     super(options);
@@ -27,6 +28,51 @@ class Main extends Client {
       this.aliases.set(aliases, props.name);
     });
     return false;
+  }
+  async getLanguage(firstGuild) {
+    if (!firstGuild) return;
+    const guild = await Guild.findOne({
+      idS: !isNaN(firstGuild) ? firstGuild : firstGuild.id,
+    });
+
+    if (guild) {
+      let lang = guild.lang;
+
+      if (lang === undefined) {
+        guild.lang = "pt-BR";
+        guild.save();
+
+        return "pt-BR";
+      } else {
+        return lang;
+      }
+    } else {
+      await Guild.create({ idS: firstGuild.id });
+
+      return "pt-BR";
+    }
+  }
+
+  async getActualLocale() {
+    return this.t;
+  }
+
+  async setActualLocale(locale) {
+    this.t = locale;
+  }
+
+  async getTranslate(guild) {
+    const language = await this.getLanguage(guild);
+
+    const translate = new Locale("src/languages");
+
+    const t = await translate.init({
+      returnUndefined: false,
+    });
+
+    translate.setLang(language);
+
+    return t;
   }
 }
 

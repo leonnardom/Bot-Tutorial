@@ -17,7 +17,7 @@ module.exports = class WithDraw extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     User.findOne({ idU: message.author.id }, async (err, user) => {
       let coins = parseInt(args[0]);
 

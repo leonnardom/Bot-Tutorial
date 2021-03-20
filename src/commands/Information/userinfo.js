@@ -3,9 +3,7 @@ const moment = require("moment");
 const Command = require("../../structures/Command");
 const ClientEmbed = require("../../structures/ClientEmbed");
 
-module.exports = class UserInfo extends (
-  Command
-) {
+module.exports = class UserInfo extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -20,7 +18,7 @@ module.exports = class UserInfo extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     moment.locale("pt-BR");
 
     try {

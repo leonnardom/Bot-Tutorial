@@ -19,7 +19,7 @@ module.exports = class BotInfo extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     //===============> Imports <===============//
 
     const users = this.client.users.cache.size;

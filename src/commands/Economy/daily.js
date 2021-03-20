@@ -18,7 +18,7 @@ module.exports = class Daily extends Command {
     this.guildOnly = true;
   }
 
-  async run(message) {
+  async run({ message, args, prefix, author }, t) {
     User.findOne({ idU: message.author.id }, async (err, user) => {
       //================= Imports =================//
       let cooldown = 8.64e7;
@@ -45,7 +45,6 @@ module.exports = class Daily extends Command {
             atual + coins
           )}** coins.`
         );
-        
 
         await User.findOneAndUpdate(
           { idU: message.author.id },

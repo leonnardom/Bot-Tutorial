@@ -18,7 +18,7 @@ module.exports = class Inventory extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     const user = await User.findOne({ idU: message.author.id }).then((x) =>
       Object.entries(x.shop.itens)
     );

@@ -17,7 +17,7 @@ module.exports = class Shop extends Command {
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     const doc = await this.client.u_db.findOne({ idU: message.author.id });
 
     if (!args[0])

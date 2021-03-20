@@ -2,9 +2,7 @@ const User = require("../../database/Schemas/User");
 const Command = require("../../structures/Command");
 const ClientEmbed = require("../../structures/ClientEmbed");
 
-module.exports = class Rank extends (
-  Command
-) {
+module.exports = class Rank extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -19,7 +17,7 @@ module.exports = class Rank extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     User.findOne({ idU: message.author.id }, async (err, user) => {
       await require("mongoose")
         .connection.collection("users")

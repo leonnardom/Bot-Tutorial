@@ -10,11 +10,9 @@ registerFont("src/assets/fonts/Segoe UI.ttf", { family: "Segoe UI" });
 registerFont("src/assets/fonts/Segoe UI Black.ttf", {
   family: "Segoe UI Black",
 });
-const Utils = require('../../utils/Util')
+const Utils = require("../../utils/Util");
 
-module.exports = class Work extends (
-  Command
-) {
+module.exports = class Work extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -29,7 +27,7 @@ module.exports = class Work extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     if (!args[0]) {
       User.findOne({ idU: message.author.id }, async (err, user) => {
         let xp = Math.floor(Math.random() * 50) + 1;
@@ -65,7 +63,7 @@ module.exports = class Work extends (
                 },
               }
             );
-          } else {  
+          } else {
             message.quote(
               `${
                 message.author
@@ -78,7 +76,7 @@ module.exports = class Work extends (
                   "work.cooldown": Date.now(),
                   "work.exp":
                     user.work.exp + xp > nextlevel ? 0 : user.work.exp + xp,
-                    coins: user.coins + money,
+                  coins: user.coins + money,
                 },
               }
             );
@@ -118,21 +116,20 @@ module.exports = class Work extends (
     }
 
     if (["info", "informação"].includes(args[0].toLowerCase())) {
-
       const USER =
         this.client.users.cache.get(args[1]) ||
         message.mentions.users.first() ||
         message.author;
 
-
       User.findOne({ idU: USER.id }, async (err, user) => {
-
         const canvas = createCanvas(400, 600);
         const ctx = canvas.getContext("2d");
 
         let work = user.work.cooldown;
         let cooldown = 2.88e7;
-        let money = Utils.toAbbrev(Math.ceil(user.work.level * 2 * user.work.coins + 200));
+        let money = Utils.toAbbrev(
+          Math.ceil(user.work.level * 2 * user.work.coins + 200)
+        );
         let works = work - (Date.now() - cooldown);
 
         const background = await loadImage(
@@ -140,50 +137,52 @@ module.exports = class Work extends (
         );
         ctx.drawImage(background, 0, 0, 400, 600);
 
-       //========================// Import Texts //========================//
+        //========================// Import Texts //========================//
 
-       ctx.textAlign = "center";
-       ctx.font = '40px "Montserrat"';
-       ctx.fillStyle = "#ffffff";
-       await Utils.renderEmoji(ctx, 
-         USER.username.length > 20
-           ? USER.username.slice(0, 20) + "..."
-           : USER.username,
-         200,
-         210
-       );
+        ctx.textAlign = "center";
+        ctx.font = '40px "Montserrat"';
+        ctx.fillStyle = "#ffffff";
+        await Utils.renderEmoji(
+          ctx,
+          USER.username.length > 20
+            ? USER.username.slice(0, 20) + "..."
+            : USER.username,
+          200,
+          210
+        );
 
-       ctx.textAlign = "left";
-       ctx.font = '30px "Segoe UI Black"';
-       ctx.fillStyle = "#000000";
-       ctx.fillText("Nome\nStatus\nLevel", 5, 260);
-       ctx.fillText("Salário", 5, 500);
+        ctx.textAlign = "left";
+        ctx.font = '30px "Segoe UI Black"';
+        ctx.fillStyle = "#000000";
+        ctx.fillText("Nome\nStatus\nLevel", 5, 260);
+        ctx.fillText("Salário", 5, 500);
 
-       ctx.textAlign = "right";
-       ctx.font = '25px "Segoe UI Black"';
-       ctx.fillStyle = "#000000";
-       await Utils.renderEmoji(ctx,
-         user.work.name.length > 15
-           ? user.work.name.slice(0, 15) + "..."
-           : user.work.name,
-         390,
-         260
-       );
+        ctx.textAlign = "right";
+        ctx.font = '25px "Segoe UI Black"';
+        ctx.fillStyle = "#000000";
+        await Utils.renderEmoji(
+          ctx,
+          user.work.name.length > 15
+            ? user.work.name.slice(0, 15) + "..."
+            : user.work.name,
+          390,
+          260
+        );
 
-       ctx.fillText(
-        works < 0
-          ? "Pode Trabalhar"
-          : moment
-              .duration(cooldown - (Date.now() - work))
-              .format("h[h], m[m], s[s]"),
-        390,
-        300
-      );
+        ctx.fillText(
+          works < 0
+            ? "Pode Trabalhar"
+            : moment
+                .duration(cooldown - (Date.now() - work))
+                .format("h[h], m[m], s[s]"),
+          390,
+          300
+        );
 
-      ctx.fillText(user.work.level, 390, 340);
-      ctx.fillText(`${money.toLocaleString()} coins`, 390, 500);
+        ctx.fillText(user.work.level, 390, 340);
+        ctx.fillText(`${money.toLocaleString()} coins`, 390, 500);
 
-      //========================// Import ProgressBar //========================//
+        //========================// Import ProgressBar //========================//
 
         const need = user.work.level * 250;
 
@@ -192,18 +191,46 @@ module.exports = class Work extends (
 
         ctx.beginPath();
         ctx.fillStyle = "#404040";
-        ctx.arc(15 + 18.5, 340 + 18.5 + 36.25, 18.5, 1.5 * Math.PI, 0.5 * Math.PI, true);
+        ctx.arc(
+          15 + 18.5,
+          340 + 18.5 + 36.25,
+          18.5,
+          1.5 * Math.PI,
+          0.5 * Math.PI,
+          true
+        );
         ctx.fill();
         ctx.fillRect(15 + 18.5, 340 + 36.25, 350 - 18.5, 37.5);
-        ctx.arc(15 + 350, 340 + 18.5 + 36.25, 18.75, 1.5 * Math.PI, 0.5 * Math.PI,false);
+        ctx.arc(
+          15 + 350,
+          340 + 18.5 + 36.25,
+          18.75,
+          1.5 * Math.PI,
+          0.5 * Math.PI,
+          false
+        );
         ctx.fill();
 
         ctx.beginPath();
         ctx.fillStyle = "#ff4d4d";
-        ctx.arc(15 + 18.5, 340 + 18.5 + 36.25, 18.5, 1.5 * Math.PI,0.5 * Math.PI, true);
+        ctx.arc(
+          15 + 18.5,
+          340 + 18.5 + 36.25,
+          18.5,
+          1.5 * Math.PI,
+          0.5 * Math.PI,
+          true
+        );
         ctx.fill();
         ctx.fillRect(15 + 18.5, 340 + 36.25, widthXp, 37.5);
-        ctx.arc(15 + 18.5 + widthXp, 340 + 18.5 + 36.25, 18.75, 1.5 * Math.PI, 0.5 * Math.PI, false);
+        ctx.arc(
+          15 + 18.5 + widthXp,
+          340 + 18.5 + 36.25,
+          18.75,
+          1.5 * Math.PI,
+          0.5 * Math.PI,
+          false
+        );
         ctx.fill();
 
         ctx.textAlign = "center";
@@ -217,7 +244,7 @@ module.exports = class Work extends (
           405
         );
 
-      //========================// Import Avatar //========================//
+        //========================// Import Avatar //========================//
 
         ctx.beginPath();
         ctx.arc(200, 70, 65, 0, Math.PI * 2, true);
@@ -232,7 +259,7 @@ module.exports = class Work extends (
         );
         ctx.drawImage(avatar, 135, 5, 130, 130);
 
-      //===============================// //================================//
+        //===============================// //================================//
 
         const attach = new MessageAttachment(
           canvas.toBuffer(),
@@ -240,7 +267,7 @@ module.exports = class Work extends (
         );
 
         message.quote(attach);
-      })
+      });
     }
   }
 };

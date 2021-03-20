@@ -2,9 +2,7 @@ const CommandC = require("../../database/Schemas/Command"),
   ClientS = require("../../database/Schemas/Client");
 const Command = require("../../structures/Command");
 
-module.exports = class Manu extends (
-  Command
-) {
+module.exports = class Manu extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -19,7 +17,7 @@ module.exports = class Manu extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix) {
+  async run({ message, args, prefix, author }, t) {
     if (message.author.id !== process.env.OWNER_ID) return;
 
     let re = args.slice(2).join(" ");

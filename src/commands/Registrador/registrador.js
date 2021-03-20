@@ -4,9 +4,7 @@ const ClientEmbed = require("../../structures/ClientEmbed");
 const moment = require("moment");
 const Command = require("../../structures/Command");
 
-module.exports = class Registrador extends (
-  Command
-) {
+module.exports = class Registrador extends Command {
   constructor(client) {
     super(client);
     this.client = client;
@@ -21,7 +19,7 @@ module.exports = class Registrador extends (
     this.guildOnly = true;
   }
 
-  async run(message, args, prefix, author) {
+  async run({ message, args, prefix, author }, t) {
     moment.locale("pt-BR");
 
     const USER = message.guild.member(
@@ -88,8 +86,9 @@ module.exports = class Registrador extends (
                     ? "Não foi setado o cargo de registrador ainda"
                     : !message.guild.roles.cache
                         .find((x) => x.id == registrador.role)
-                        .members.map((f) => this.client.users.cache.get(f.id).tag)
-                        .length
+                        .members.map(
+                          (f) => this.client.users.cache.get(f.id).tag
+                        ).length
                     ? "Nenhum Membro"
                     : `${
                         message.guild.roles.cache
