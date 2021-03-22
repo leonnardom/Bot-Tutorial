@@ -74,6 +74,10 @@ let userSchema = new Schema({
     lastSend: { type: String, default: "null" },
     time: { type: Number, default: 0 },
   },
+  reminder: {
+    list: { type: Array, default: [] },
+    has: { type: Number, default: 0 },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);

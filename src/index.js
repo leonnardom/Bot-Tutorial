@@ -5,17 +5,19 @@ const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Locale = require("../lib");
 const Guild = require("./database/Schemas/Guild");
+const Files = require("./utils/Files");
+const c = require("colors");
 class Main extends Client {
   constructor(options) {
     super(options);
     this.commands = new Collection();
     this.aliases = new Collection();
-    this.database = new Collection()
+    this.database = new Collection();
   }
 
   login(token) {
     token = process.env.TOKEN;
-    return super.login(token);
+    return super.login(token).then(async () => [await this.initLoaders()]);
   }
 
   load(commandPath, commandName) {
@@ -30,6 +32,15 @@ class Main extends Client {
     });
     return false;
   }
+
+  async initLoaders() {
+    return Files.requireDirectory("./src/loaders", (Loader) => {
+      Loader.load(this).then(
+        console.log(c.red("[Loaders] - Pasta Loaders carregada com sucesso."))
+      );
+    });
+  }
+
   async getLanguage(firstGuild) {
     if (!firstGuild) return;
     const guild = await Guild.findOne({
@@ -78,6 +89,7 @@ class Main extends Client {
 }
 
 const dbIndex = require("./database/index.js");
+const { resolve } = require("path");
 dbIndex.start();
 
 const client = new Main();

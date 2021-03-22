@@ -1,19 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const c = require("colors");
 
 module.exports = {
-    start(){
-        try{
+  start() {
+    try {
+      mongoose.connect(process.env.DATABASE_CONNECT, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+      });
 
-            mongoose.connect(process.env.DATABASE_CONNECT, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useFindAndModify: false
-            })
-
-            console.log(`(DataBase) - Conectado ao Banco de Dados.`)
-
-        } catch (err) {
-            if(err) return console.log(`(DataBase) - ERROR:`, + err)
-        }
+      console.log(c.red(`[DataBase] - Conectado ao Banco de Dados.`));
+    } catch (err) {
+      if (err) return console.log(c.red(`[DataBase] - ERROR:`, +err));
     }
-}
+  },
+};
