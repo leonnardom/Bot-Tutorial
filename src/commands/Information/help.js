@@ -80,7 +80,7 @@ module.exports = class Help extends Command {
           this.client.user.displayAvatarURL({ size: 2048 })
         )
         .setDescription(
-          `**${message.author.username}**, lista de todos os meus comandos.\nCaso queira saber mais sobre algum use **${prefix}help <comando/aliases>**.`
+          `**${message.author.username}**, lista de todos os meus comandos.\nCaso queira saber mais sobre algum use **${prefix}help <comando/aliases>**.\nTotal de **${this.client.commands.size}** comandos.`
         )
         .setFooter(
           `Comando requisitado por ${message.author.username}`,
