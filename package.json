@@ -11,6 +11,7 @@
     "discord-tictactoe": "^2.0.7",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "erela.js": "^2.3.3",
     "fs": "0.0.1-security",
     "gamedig": "^2.0.24",
     "klaw": "^3.0.0",
