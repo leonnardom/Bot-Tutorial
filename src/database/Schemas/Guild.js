@@ -50,6 +50,7 @@ let guildSchema = new Schema({
     role: { type: String, default: "null" },
     status: { type: Boolean, default: false },
   },
+
   mutes: {
     list: { type: Array, default: [] },
     has: { type: Number, default: 0 },

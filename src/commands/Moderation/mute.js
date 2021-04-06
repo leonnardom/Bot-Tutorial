@@ -23,12 +23,10 @@ module.exports = class Mute extends Command {
       return message.channel.send(
         `${message.author}, você precisa da permissão **MUTE_MEMBERS* para executar este comando.`
       );
-
     if (!message.guild.me.hasPermission("MUTE_MEMBERS"))
       return message.channel.send(
         `${message.author}, preciso da permissão de **MUTE_MEMBERS** para executar este comando.`
       );
-
     const doc = await this.client.database.guilds.findOne({
       idS: message.guild.id,
     });
@@ -41,15 +39,18 @@ module.exports = class Mute extends Command {
       return message.channel.send(
         `${message.author}, você deve mencionar quem deseja mutar primeiro.`
       );
+
     if (!args[1])
       return message.channel.send(
         `${message.author}, você deve inserir quanto tempo deseja mutar o membro.`
       );
+
     let time = ms(args[1]); // Tempo do Mute
     let reason = !args[2] ? "Não Informado" : args.slice(2).join(" "); // Motivo do Mute
 
     if (!time)
       return message.channel.send(`${message.author}, tempo inválido.`);
+
     if (!USER.manageable)
       return message.channel.send(
         `${message.author}, não posso mutar o membro poís ele tem um cargo maior que o meu.`
