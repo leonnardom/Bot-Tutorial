@@ -4,5 +4,7 @@ module.exports = {
   Bank: "🏦",
   Coins: "💵",
   Economy: "💰",
-  Minecraft: "<a:minecraft:818286052963385365>"
+  Minecraft: "<a:minecraft:818286052963385365>",
+  Next: "➡️",
+  Back: "⬅️",
 };

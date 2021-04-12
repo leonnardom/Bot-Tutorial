@@ -2,6 +2,9 @@ const Command = require("../../structures/Command");
 const ms = require("ms");
 const moment = require("moment");
 require("moment-duration-format");
+const Collection = require("../../services/Collection");
+const ClientEmbed = require("../../structures/ClientEmbed");
+const Emojis = require("../../utils/Emojis");
 
 module.exports = class Mute extends Command {
   constructor(client) {
@@ -18,7 +21,7 @@ module.exports = class Mute extends Command {
     this.guildOnly = true;
   }
 
-  async run({ message, args }) {
+  async run({ message, args, author }) {
     if (!message.member.hasPermission("MUTE_MEMBERS"))
       return message.channel.send(
         `${message.author}, você precisa da permissão **MUTE_MEMBERS* para executar este comando.`
@@ -27,9 +30,109 @@ module.exports = class Mute extends Command {
       return message.channel.send(
         `${message.author}, preciso da permissão de **MUTE_MEMBERS** para executar este comando.`
       );
+
     const doc = await this.client.database.guilds.findOne({
       idS: message.guild.id,
     });
+
+    if (args[0] == "list") {
+      const EMBED = new ClientEmbed(author);
+
+      const LIST = new Collection();
+
+      let actualPage = 1;
+
+      let sort = doc.mutes.list.map((x) => x).sort((x, f) => x.time - f.time);
+
+      if (!sort.length)
+        return message.channel.send(
+          `${message.author}, não tem ninguém mutado neste servidor.`
+        );
+
+      sort.map((x) => {
+        LIST.push(
+          `Usuário: <@${x.user}> \`( ${x.user} )\`\nTempo: **${moment
+            .duration(x.time - Date.now())
+            .format("M[M] d[d] h[h] m[m] s[s]")}**\nMotivo: **${
+            x.reason.length > 20 ? x.reason.slice(0, 20) + "..." : x.reason
+          }**`
+        );
+      });
+
+      const pages = Math.ceil(LIST.length() / 10);
+
+      let paginated = LIST.paginate(actualPage, 10);
+
+      EMBED.setDescription(paginated.join("\n\n"));
+
+      message.channel.send(EMBED).then((msg) => {
+        if (pages <= 1) return;
+
+        msg.react(Emojis.Next);
+
+        const collector = msg.createReactionCollector(
+          (r, u) =>
+            [Emojis.Next, Emojis.Back].includes(r.emoji.name) &&
+            u.id === message.author.id
+        );
+
+        collector.on("collect", async (r, u) => {
+          switch (r.emoji.name) {
+            case Emojis.Next:
+              if (message.guild.me.permissions.has("MANAGE_MESSAGES"))
+                r.users.remove(message.author.id);
+
+              if (actualPage === pages) return;
+
+              actualPage++;
+              paginated = LIST.paginate(actualPage, 10);
+
+              EMBED.setDescription(paginated.join("\n\n"));
+
+              await msg.edit(EMBED);
+              await msg.react(Emojis.Back);
+              if (
+                actualPage === pages &&
+                message.guild.me.permissions.has("MANAGE_MESSAGES")
+              )
+                r.remove(Emojis.Next);
+              if (
+                actualPage === pages &&
+                !message.guild.me.permissions.has("MANAGE_MESSAGES")
+              )
+                r.users.remove(this.client.user.id);
+
+              break;
+
+            case Emojis.Back:
+              if (message.guild.me.permissions.has("MANAGE_MESSAGES"))
+                r.users.remove(message.author.id);
+
+              if (actualPage === 1) return;
+
+              actualPage--;
+
+              paginated = LIST.paginate(actualPage, 10);
+              EMBED.setDescription(paginated.join("\n\n"));
+              await msg.edit(EMBED);
+
+              if (
+                actualPage === 1 &&
+                message.guild.me.permissions.has("MANAGE_MESSAGES")
+              )
+                r.remove(Emojis.Next);
+              if (
+                actualPage === 1 &&
+                !message.guild.me.permissions.has("MANAGE_MESSAGES")
+              )
+                r.users.remove(this.client.user.id);
+              msg.react(Emojis.Next);
+          }
+        });
+      });
+
+      return;
+    }
 
     const USER = message.guild.member(
       this.client.users.cache.get(args[0]) || message.mentions.users.first()
