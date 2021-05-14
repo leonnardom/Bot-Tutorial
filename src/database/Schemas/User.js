@@ -78,6 +78,11 @@ let userSchema = new Schema({
     list: { type: Array, default: [] },
     has: { type: Number, default: 0 },
   },
+  ticket: {
+    have: { type: Boolean, default: false },
+    channel: { type: String, default: "null" },
+    created: { type: String, default: "null" },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);

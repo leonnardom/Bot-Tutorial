@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const Emojis = require("../../utils/Emojis");
 
 module.exports = class {
   constructor(client) {
@@ -129,6 +130,89 @@ module.exports = class {
           handleStarboard2();
         } else handleStarboard2();
       }
+    }
+
+    //=====---- Sistema de Ticket ----====//
+
+    try {
+      const guild = this.client.guilds.cache.get(raw.d.guild_id);
+      const member = this.client.users.cache.get(raw.d.user_id);
+
+      const doc = await this.client.database.guilds.findOne({ idS: guild.id });
+      const user = await this.client.database.users.findOne({ idU: member.id });
+
+      const ticket = doc.ticket;
+
+      const d = raw.d;
+      const t = raw.t;
+
+      const msg = guild.channels.cache.get(doc.ticket.channel);
+
+      if (d.message_id != ticket.msg) return;
+
+      if (t === "MESSAGE_REACTION_ADD") {
+        if (d.emoji.name === Emojis.Help) {
+          if (user.ticket.have)
+            return msg.send(
+              `${member}, você já possui um **TICKET** em aberto.`
+            );
+
+          msg
+            .send(`${member}, estou criando seu **TICKET**, um momento.`)
+            .then((x) => x.delete({ timeout: 3000 }));
+          setTimeout(async () => {
+            guild.channels
+              .create(`${doc.ticket.size + 1}-${member.tag}`, {
+                type: "text",
+                permissionsOverwrites: [
+                  {
+                    id: member.id,
+                    allow: [
+                      "VIEW_CHANNEL",
+                      "READ_MESSAGE_HISTORY",
+                      "USE_EXTERNAL_EMOJIS",
+                    ],
+                    deny: ["ADD_REACTIONS"],
+                  },
+                  {
+                    id: guild.id,
+                    deny: "VIEW_CHANNEL",
+                  },
+                  {
+                    id:
+                      doc.ticket.staff == "null"
+                        ? guild.member(member.id).roles.highest.id
+                        : doc.ticket.staff,
+                    allow: "VIEW_CHANNEL",
+                    deny: "ADD_REACTIONS",
+                  },
+                ],
+              })
+              .then(async (x) => {
+                x.send(
+                  `${member}, aqui está seu **TICKET**.\nQuando você quiser fechar ele, basta usar **${doc.prefix}ticket fechar**.`
+                );
+
+                await this.client.database.users.findOneAndUpdate(
+                  { idU: member.id },
+                  {
+                    $set: {
+                      "ticket.have": true,
+                      "ticket.channel": x.id,
+                      "ticket.created": Date.now(),
+                    },
+                  }
+                );
+                await this.client.database.guilds.findOneAndUpdate(
+                  { idS: guild.id },
+                  { $set: { "ticket.size": doc.ticket.size + 1 } }
+                );
+              });
+          }, 3000);
+        }
+      }
+    } catch (err) {
+      if (err) return console.log(err);
     }
   }
 };

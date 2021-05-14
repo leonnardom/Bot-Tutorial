@@ -56,6 +56,13 @@ let guildSchema = new Schema({
   },
 
   lang: { type: String, default: "pt-BR" },
+  ticket: {
+    guild: { type: String, default: "null" },
+    channel: { type: String, default: "null" },
+    msg: { type: String, default: "null" },
+    size: { type: Number, default: 0 },
+    staff: { type: String, default: "null" },
+  },
 });
 
 let Guild = mongoose.model("Guilds", guildSchema);
