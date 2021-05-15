@@ -164,7 +164,7 @@ module.exports = class {
             guild.channels
               .create(`${doc.ticket.size + 1}-${member.tag}`, {
                 type: "text",
-                permissionsOverwrites: [
+                permissionOverwrites: [ 
                   {
                     id: member.id,
                     allow: [
