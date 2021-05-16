@@ -83,6 +83,11 @@ let userSchema = new Schema({
     channel: { type: String, default: "null" },
     created: { type: String, default: "null" },
   },
+  marry: {
+    time: { type: Number, default: 0 },
+    user: { type: String, default: "null" },
+    has: { type: Boolean, default: false },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);

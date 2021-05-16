@@ -99,7 +99,9 @@ module.exports = class Factory extends Command {
     }
 
     if (["work", "trabalhar"].includes(args[0].toLowerCase())) {
-      const user = await this.client.database.users.findOne({ idU: message.author.id });
+      const user = await this.client.database.users.findOne({
+        idU: message.author.id,
+      });
       const fd = user?.factory;
 
       if (!fd.hasFactory)
@@ -256,6 +258,61 @@ module.exports = class Factory extends Command {
             });
           });
       }
+    }
+
+    if (["up", "upar", "subir"].includes(args[0].toLowerCase())) {
+      if (!fb.createFactory)
+        return message.channel.send(
+          `${message.author}, somente o Dono da fábrica pode alterar o nome dela.`
+        );
+
+      if (fb.nextLevel * fb.level > fb.exp)
+        return message.channel.send(
+          `${message.author}, a fábrica não tem xp o suficiente para upar de level.`
+        );
+
+      message.channel.send(`${message.author}, fábrica elevada com sucesso.`);
+
+      await this.client.database.users.findOneAndUpdate(
+        { idU: message.author.id },
+        {
+          $set: {
+            "factory.level": fb.level + 1,
+            "factory.exp": fb.exp - fb.nextLevel * fb.level,
+          },
+        }
+      );
+
+      return;
+    }
+
+    if (["name", "nome"].includes(args[0].toLowerCase())) {
+      if (!fb.createFactory)
+        return message.channel.send(
+          `${message.author}, somente o Dono da fábrica pode alterar o nome dela.`
+        );
+
+      const name = args.slice(1).join(" ");
+
+      if (name.length > 40)
+        return message.channel.send(
+          `${message.author}, o nome da fábrica deve conter 40 ou menos caracteres.`
+        );
+
+      if (fb.name === name)
+        return message.channel.send(
+          `${message.author}, o nome inserido é o mesmo setado atualmente.`
+        );
+
+      message.channel.send(
+        `${message.author}, o nome da sua fábrica foi alterada com sucesso.`
+      );
+      await this.client.database.users.findOneAndUpdate(
+        { idU: message.author.id },
+        { $set: { "factory.name": name } }
+      );
+
+      return;
     }
 
     if (["create", "criar"].includes(args[0].toLowerCase())) {
