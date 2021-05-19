@@ -88,6 +88,10 @@ let userSchema = new Schema({
     user: { type: String, default: "null" },
     has: { type: Boolean, default: false },
   },
+  steal: {
+    time: { type: Number, default: 0 },
+    protection: { type: Number, default: 0 },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);

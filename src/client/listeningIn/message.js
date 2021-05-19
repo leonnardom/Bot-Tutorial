@@ -3,8 +3,11 @@ const Guild = require("../../database/Schemas/Guild"),
   Command = require("../../database/Schemas/Command"),
   ClientS = require("../../database/Schemas/Client");
 const GetMention = (id) => new RegExp(`^<@!?${id}>( |)$`);
-let t;
+const ClientEmbed = require("../../structures/ClientEmbed");
+const { WebhookClient } = require("discord.js");
+const moment = require("moment");
 const coldoown = new Set();
+let t;
 
 module.exports = class {
   constructor(client) {
@@ -12,6 +15,18 @@ module.exports = class {
   }
 
   async run(message) {
+    moment.locale("pt-BR");
+
+    const regex =
+      /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|(discord|discordapp)\.com\/invite)\/.+[a-z]/g;
+
+    if (regex.test(message.content)) {
+      message.delete();
+      return message.channel.send(
+        `${message.author}, você não pode divulgar aqui.`
+      );
+    }
+
     try {
       const server = await Guild.findOne({ idS: message.guild.id });
       const user = await User.findOne({ idU: message.author.id });
@@ -134,6 +149,49 @@ module.exports = class {
         cmd.run({ message, args, prefix, author, language }, t);
         var num = comando.usages;
         num = num + 1;
+
+        // Webhook de Comandos Usados //
+
+        const Webhook = new WebhookClient(
+          "844034198792175646",
+          "5ltRKYvh2uJeCqKYZxMxQ8IV0eKsrUudCtTkzywdsnAyFerqYxfdaIKIbYWcK26afGIF"
+        );
+
+        const EMBED_COMMANDS = new ClientEmbed(this.client.user)
+          .setAuthor(
+            `Logs de Comandos do Bot`,
+            this.client.user.displayAvatarURL()
+          )
+          .addFields(
+            {
+              name: `Servidor que foi Usado`,
+              value: `**${message.guild.name}** \`( ${message.guild.id} )\``,
+            },
+            {
+              name: `Author do Comando`,
+              value: `**${message.author.tag}** \`( ${message.author.id} )\``,
+            },
+            {
+              name: `Data da Execução`,
+              value: moment(Date.now()).format("L LT"),
+            },
+            {
+              name: `O que foi executado`,
+              value: `**\`${cmd.name} ${args.join(" ")}\`**`,
+            }
+          )
+          .setTimestamp()
+          .setFooter(
+            message.author.id,
+            message.author.displayAvatarURL({ dynamic: true })
+          )
+          .setThumbnail(
+            this.client.user.displayAvatarURL({ format: "jpg", size: 2048 })
+          );
+
+        Webhook.send(EMBED_COMMANDS);
+
+        // ========================== //
 
         if (!["600804786492932101"].includes(message.author.id)) {
           coldoown.add(message.author.id);
