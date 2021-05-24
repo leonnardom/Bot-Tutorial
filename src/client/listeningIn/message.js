@@ -17,15 +17,7 @@ module.exports = class {
   async run(message) {
     moment.locale("pt-BR");
 
-    const regex =
-      /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|(discord|discordapp)\.com\/invite)\/.+[a-z]/g;
 
-    if (regex.test(message.content)) {
-      message.delete();
-      return message.channel.send(
-        `${message.author}, você não pode divulgar aqui.`
-      );
-    }
 
     try {
       const server = await Guild.findOne({ idS: message.guild.id });

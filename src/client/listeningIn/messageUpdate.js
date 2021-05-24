@@ -7,10 +7,14 @@ module.exports = class {
   }
 
   async run(oldMessage, newMessage) {
-    Guild.findOne({ idS: newMessage.guild.id }, async function (err, server) {
+    Guild.findOne({ idS: newMessage.guild.id }, async (err, server) => {
       try {
         if (newMessage.author.bot) return; // caso um bot tenha editado alguma mensagem ele não vai mandar no canal de LOGS.
         const guild = newMessage.guild;
+
+        if (oldMessage.content === newMessage.content) return;
+
+        this.client.emit("message", newMessage);
 
         const UPDATE = new MessageEmbed()
           .setAuthor(guild.name, guild.iconURL({ dynamic: true }))
