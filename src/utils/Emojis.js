@@ -8,4 +8,13 @@ module.exports = {
   Next: "➡️",
   Back: "⬅️",
   Help: "❔",
+  Early: "<:ES:848914312810463273>",
+  Bravery: "<:Bravery:848914312830910544>",
+  Balance: "<:Balance:848914312843231282>",
+  Brilliance: "<:Brilliance:848914312789622784>",
+  Verified_Developer: "<:EVBD:848914312876916776>",
+  Verified_Bot: "<:BV:848916250847084565>",
+  Computer: "💻",
+  Mobile: "📱",
+  Robot: "🤖",
 };
