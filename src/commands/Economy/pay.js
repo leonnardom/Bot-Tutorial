@@ -25,7 +25,7 @@ module.exports = class Pay extends Command {
       idU: message.author.id,
     });
 
-    const money = args[1];
+    const money = parseInt(args[1]);
 
     if (!user)
       return message.channel.send(
