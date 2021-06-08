@@ -25,6 +25,7 @@ module.exports = class RankCoins extends Command {
 
     const coins = Object.entries(COINS)
       .map(([, x]) => x.idU)
+      .sort((x, f) => x.bank - f.bank)
       .slice(0, 10);
 
     const members = [];
