@@ -5,6 +5,7 @@
   "main": "ClientSharding.js",
   "dependencies": {
     "@iamtraction/google-translate": "^1.1.2",
+    "aki-api": "^5.2.1",
     "ascii-table": "0.0.9",
     "axios": "^0.21.1",
     "canvacord": "^5.0.8",

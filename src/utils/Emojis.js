@@ -17,4 +17,7 @@ module.exports = {
   Computer: "💻",
   Mobile: "📱",
   Robot: "🤖",
+  Thinking: "🤔",
+  Angry: "😠",
+  Aki_Cancel: "🔹"
 };

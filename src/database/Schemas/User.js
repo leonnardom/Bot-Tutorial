@@ -92,6 +92,10 @@ let userSchema = new Schema({
     time: { type: Number, default: 0 },
     protection: { type: Number, default: 0 },
   },
+  upvote: {
+    count: { type: Number, default: 0 },
+    cooldown: { type: Number, default: 0 },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);
