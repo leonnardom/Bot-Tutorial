@@ -60,8 +60,6 @@ module.exports = class Registrador extends Command {
           const registrador = server.registrador;
           const registradorU = user.registrador;
 
-          console.log(registradorU);
-
           const HELP = new ClientEmbed(author)
             .setAuthor(
               `${message.guild.name} - Sistema de Registro`,
