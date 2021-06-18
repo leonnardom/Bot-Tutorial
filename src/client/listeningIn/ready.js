@@ -14,6 +14,7 @@ module.exports = class {
     this.client.database.clientUtils = Client;
     this.client.database.commands = Commands;
 
+
     const status = [
       {
         name: "Bot Tutorial",

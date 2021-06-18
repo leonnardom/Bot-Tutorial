@@ -25,25 +25,30 @@ module.exports = class Pay extends Command {
       idU: message.author.id,
     });
 
-    const money = parseInt(args[1]);
-
     if (!user)
       return message.channel.send(
         `${message.author}, você deve mencionar para quem deseja enviar dinheiro.`
       );
 
-    if (!money)
+    if (!args[1])
       return message.channel.send(
         `${message.author}, você deve inserir quanto deseja enviar.`
+      );
+
+    const money = await Util.notAbbrev(args[1]);
+
+    if (String(money) === "NaN")
+      return message.channel.send(`${message.author}, dinheiro inválido.`);
+
+    if (money <= 0)
+      return message.channel.send(
+        `${message.author}, dinheiro menor ou igual a 0`
       );
 
     if (user.id === message.author.id)
       return message.channel.send(
         `${message.author}, você não pode enviar dinheiro para si mesmo.`
       );
-
-    if (isNaN(money) || money <= 0)
-      return message.channel.send(`${message.author}, dinheiro inválido.`);
 
     if (money > doc.bank)
       return message.channel.send(
