@@ -17,11 +17,9 @@ module.exports = class {
   async run(message) {
     moment.locale("pt-BR");
 
-
-
     try {
       const server = await Guild.findOne({ idS: message.guild.id });
-      const user = await User.findOne({ idU: message.author.id });
+      let user = await User.findOne({ idU: message.author.id });
       const client = await ClientS.findOne({ _id: this.client.user.id });
 
       if (message.author.bot == true) return;
@@ -53,6 +51,8 @@ module.exports = class {
           `Olá ${message.author}, meu prefixo no servidor é **${prefix}**.`
         );
       }
+
+      user = await User.findOne({ idU: message.author.id });
 
       let xp = user.Exp.xp;
       let level = user.Exp.level;

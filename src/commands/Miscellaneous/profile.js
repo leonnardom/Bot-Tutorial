@@ -32,105 +32,108 @@ module.exports = class Profile extends Command {
       message.mentions.users.first() ||
       message.author;
 
-    User.findOne({ idU: USER.id }, async (err, user) => {
-      const canvas = createCanvas(1280, 720);
-      const ctx = canvas.getContext("2d");
-      let nextLevel = user.Exp.nextLevel * user.Exp.level;
+    const user = await this.client.database.users.findOne({ idU: USER.id });
+    const canvas = createCanvas(1280, 720);
+    const ctx = canvas.getContext("2d");
+    let nextLevel = user.Exp.nextLevel * user.Exp.level;
 
-      //========================// Import Background //========================//
+    //========================// Import Background //========================//
 
-      const background = await loadImage(
-        "./src/assets/img/jpeg/background.jpg"
-      );
-      ctx.drawImage(background, 0, 0, 1280, 720);
+    const background = await loadImage("./src/assets/img/jpeg/background.jpg");
+    ctx.drawImage(background, 0, 0, 1280, 720);
 
-      //========================// Import BreakLines //========================//
+    //========================// Import BreakLines //========================//
 
-      function addBreakLines(str, max) {
-        max = max + 1;
-        for (let i = 0; i < str.length / max; i++) {
-          str =
-            str.substring(0, max * i) +
-            `\n` +
-            str.substring(max * i, str.length);
-        }
-        return str;
+    function addBreakLines(str, max) {
+      max = max + 1;
+      for (let i = 0; i < str.length / max; i++) {
+        str =
+          str.substring(0, max * i) + `\n` + str.substring(max * i, str.length);
       }
+      return str;
+    }
 
-      //========================// Texts //========================//
+    //========================// Texts //========================//
 
-      // Username
+    // Username
 
-      ctx.textAlign = "left";
-      ctx.font = '50px "Segoe UI Black"';
-      ctx.fillStyle = "rgb(253, 255, 252)";
-      await Utils.renderEmoji(
-        ctx,
-        USER.username.length > 20
-          ? USER.username.slice(0, 20) + "..."
-          : USER.username,
-        180,
-        50
-      );
+    ctx.textAlign = "left";
+    ctx.font = '50px "Segoe UI Black"';
+    ctx.fillStyle = "rgb(253, 255, 252)";
+    await Utils.renderEmoji(
+      ctx,
+      USER.username.length > 20
+        ? USER.username.slice(0, 20) + "..."
+        : USER.username,
+      180,
+      50
+    );
 
-      // Titles
+    // Titles
 
-      ctx.textAlign = "left";
-      ctx.font = '30px "Segoe UI Black"';
-      ctx.fillStyle = "rgb(253, 255, 252)";
-      ctx.fillText("Coins", 190, 90);
-      ctx.fillText("XP", 190, 155);
+    ctx.textAlign = "left";
+    ctx.font = '30px "Segoe UI Black"';
+    ctx.fillStyle = "rgb(253, 255, 252)";
+    ctx.fillText("Coins", 190, 90);
+    ctx.fillText("XP", 190, 155);
 
-      // Coins/XP
-
-      ctx.textAlign = "left";
-      ctx.font = '30px "Segoe UI"';
-      ctx.fillStyle = "rgb(253, 255, 252)";
-      ctx.fillText(`${Utils.toAbbrev(user.coins)}`, 190, 120);
+    ctx.textAlign = "center";
+    ctx.font = '20px "Segoe UI Black"';
+    if (user.marry.has) {
+      ctx.fillText("Casado com o(a)", 600, 90);
       ctx.fillText(
-        `#${user.Exp.level} | ${Utils.toAbbrev(user.Exp.xp)}/${Utils.toAbbrev(
-          nextLevel
-        )}`,
-        190,
-        185
+        await this.client.users.fetch(user.marry.user).then((x) => x.tag),
+        600,
+        120
       );
+    }
+    // Coins/XP
 
-      // Sobre
+    ctx.textAlign = "left";
+    ctx.font = '30px "Segoe UI"';
+    ctx.fillStyle = "rgb(253, 255, 252)";
+    ctx.fillText(`${Utils.toAbbrev(user.coins)}`, 190, 120);
+    ctx.fillText(
+      `#${user.Exp.level} | ${Utils.toAbbrev(user.Exp.xp)}/${Utils.toAbbrev(
+        nextLevel
+      )}`,
+      190,
+      185
+    );
 
-      ctx.font = '25px "Montserrat"';
-      ctx.fillText(
-        addBreakLines(
-          String(
-            user.about == "null"
-              ? `Use ${prefix}sobremim <msg> para alterar essa mensagem`
-              : user.about
-          ),
-          60
-        ),
-        20,
-        490
-      );
+    // Sobre
 
-      //========================// Import Avatar //========================//
+    ctx.font = '25px "Montserrat"';
+    ctx.fillText(
+      addBreakLines(
+        user.about == "null"
+          ? `Use ${prefix}sobremim <msg> para alterar essa mensagem`
+          : user.about,
+        60
+      ),
+      20,
+      500
+    );
 
-      ctx.arc(100, 95, 85, 0, Math.PI * 2, true);
-      ctx.lineWidth = 6;
-      ctx.strokeStyle = "#faf5f5";
-      ctx.stroke();
-      ctx.closePath();
-      ctx.clip();
+    //========================// Import Avatar //========================//
 
-      const avatar = await loadImage(USER.displayAvatarURL({ format: "jpeg" }));
-      ctx.drawImage(avatar, 15, 10, 175, 175);
+    ctx.arc(100, 95, 85, 0, Math.PI * 2, true);
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = "#faf5f5";
+    ctx.stroke();
+    ctx.closePath();
+    ctx.clip();
 
-      //========================// Create Image //========================//
+    const avatar = await loadImage(USER.displayAvatarURL({ format: "jpeg" }));
+    ctx.drawImage(avatar, 15, 10, 175, 175);
 
-      const attach = new MessageAttachment(
-        canvas.toBuffer(),
-        `Profile_${USER.tag}_.png`
-      );
+    //========================// Create Image //========================//
 
-      message.quote(attach);
-    });
+    const attach = new MessageAttachment(
+      canvas.toBuffer(),
+      `Profile_${USER.tag}_.png`
+    );
+
+    message.quote(attach);
   }
 };
