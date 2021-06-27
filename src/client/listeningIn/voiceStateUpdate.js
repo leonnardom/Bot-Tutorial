@@ -9,26 +9,31 @@ module.exports = class voiceStateUpdate {
 
   async run(oldState, newState) {
     moment.locale("pt-BR");
-    let user = newState.member;
-    const guild = newState.guild;
 
-    user = user.user;
+    try {
+      let user = newState.member;
+      const guild = newState.guild;
 
-    /*const list = ["id 1", "id 2", "id 3"];
+      user = user.user;
+
+      /*const list = ["id 1", "id 2", "id 3"];
 
     Caso queira que funcione só para alguns usuários;
 
     if (!list.some((x) => x === user.id)) return;*/
 
-    const doc = await this.client.database.users.findOne({ idU: user.id });
-    const doc1 = await this.client.database.guilds.findOne({ idS: guild.id });
+      const doc = await this.client.database.users.findOne({ idU: user.id });
+      const call = doc.infoCall;
+      //const doc1 = await this.client.database.guilds.findOne({ idS: guild.id });
 
-    const channel = guild.channels.cache.get(doc1.logs.channel);
+      //const channel = guild.channels.cache.get(doc1.logs.channel);
 
-    if (oldState.channel && !newState.channel) {
-      // ===================> Quando O Membro Sai do Canal
+      if (!call.status) return;
 
-      const EMBED = new ClientEmbed(this.client.user)
+      if (oldState.channel && !newState.channel) {
+        // ===================> Quando O Membro Sai do Canal
+
+        /*const EMBED = new ClientEmbed(this.client.user)
         .setAuthor(
           `${user.tag} - Saída de Canal`,
           user.displayAvatarURL({ dynamic: true })
@@ -39,21 +44,34 @@ module.exports = class voiceStateUpdate {
         .addField(
           `Tempo que o Membro ficou em Call`,
           moment
-            .duration(Date.now() - doc.lastCall)
+            .duration(Date.now() - call.lastCall)
             .format("d [dias] h [horas] m [minutos] s [segundos]")
             .replace("minsutos", "minutos")
         )
         .setTimestamp()
         .setFooter(user.tag);
 
-      channel.send(EMBED).catch(() => {});
-    } else if (!oldState.channel && newState.channel) {
-      // ===================> Quando O Membro Entra no Canal
+      channel.send(EMBED).catch(() => {});*/
 
-      await this.client.database.users.findOneAndUpdate(
-        { idU: user.id },
-        { $set: { lastCall: Date.now() } }
-      );
+        await this.client.database.users.findOneAndUpdate(
+          { idU: user.id },
+          {
+            $set: {
+              "infoCall.totalCall": Date.now() - call.lastCall + call.totalCall,
+              "infoCall.lastRegister": Date.now() - call.lastCall,
+            },
+          }
+        );
+      } else if (!oldState.channel && newState.channel) {
+        // ===================> Quando O Membro Entra no Canal
+
+        await this.client.database.users.findOneAndUpdate(
+          { idU: user.id },
+          { $set: { "infoCall.lastCall": Date.now() } }
+        );
+      }
+    } catch (err) {
+      if (err) return console.log(`Primeira vez do membro em call.`);
     }
   }
 };
