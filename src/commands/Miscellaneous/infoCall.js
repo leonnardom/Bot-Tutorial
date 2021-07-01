@@ -55,6 +55,40 @@ module.exports = class infoCall extends Command {
       return;
     }
 
+    if (args[0] == "rank") {
+      const CALLS = await require("mongoose")
+        .connection.collection("users")
+        .find({ "infoCall.totalCall": { $gt: 2 } })
+        .toArray();
+
+      let call = Object.entries(CALLS).map(([, x]) => x.idU);
+
+      call = call.filter((x) => message.guild.members.cache.get(x)); // Parte para filtrar quem está no seu servidor para aparecer no Ranking.
+
+      let members = [];
+
+      await this.PUSH(call, members);
+
+      members = members.sort((x, f) => f.callTime - x.callTime).slice(0, 10);
+
+      const EMBED = new ClientEmbed(author).setDescription(
+        members
+          .map(
+            (x, f) =>
+              `> \`${f + 1}º\` **${x.user.tag}** ( ${
+                x.user.id
+              } )\n> Tempo em Call: **${moment
+                .duration(x.callTime)
+                .format("M[M] d[d] h[h] m[m] s[s]")}**`
+          )
+          .join("\n\n")
+      );
+
+      message.channel.send(EMBED);
+
+      return;
+    }
+
     if (doc.infoCall.lastRegister <= 0)
       return message.channel.send(
         `${message.author}, o membro nunca ficou em call.`
@@ -99,5 +133,17 @@ module.exports = class infoCall extends Command {
       );
 
     message.channel.send(message.author, EMBED);
+  }
+  async PUSH(call, members) {
+    for (const member of call) {
+      const doc = await this.client.database.users.findOne({ idU: member });
+
+      members.push({
+        user: await this.client.users.fetch(member).then((user) => {
+          return user;
+        }),
+        callTime: doc.infoCall.totalCall,
+      });
+    }
   }
 };

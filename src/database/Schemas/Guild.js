@@ -73,6 +73,10 @@ let guildSchema = new Schema({
     status: { type: Boolean, default: false },
     days: { type: Number, default: 0 },
   },
+  infoCall: {
+    channels: { type: Array, default: [] },
+    roles: { type: Array, default: [] },
+  },
 });
 
 let Guild = mongoose.model("Guilds", guildSchema);
