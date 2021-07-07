@@ -33,12 +33,22 @@ module.exports = class callConfig extends Command {
           name: `Canais Bloqueados`,
           value: !call.channels.length
             ? "Nenhum Canal Adicionado"
+            : call.channels.length > 10
+            ? `${call.channels
+                .map((x) => `<#${x}>`)
+                .slice(0, 10)
+                .join(" - ")} e mais ***${call.channels.length - 10} canais***`
             : call.channels.map((x) => `<#${x}>`).join(" - "),
         },
         {
           name: `Cargos Bloqueados`,
           value: !call.roles.length
             ? "Nenhum Cargo Adicionado"
+            : call.roles.length > 10
+            ? `${call.roles
+                .map((x) => `<@&${x}>`)
+                .slice(0, 10)
+                .join(" - ")} e mais ***${call.roles.length - 10} cargos***`
             : call.roles.map((x) => `<@&${x}>`).join(" - "),
         }
       );
@@ -51,6 +61,26 @@ module.exports = class callConfig extends Command {
       );
 
     if (["canal", "channel"].includes(args[0].toLowerCase())) {
+      if (args[1] === "addall") {
+        const channels = message.guild.channels.cache
+          .filter((x) => x.type === "voice")
+          .map((f) => f.id);
+        await this.client.database.guilds.findOneAndUpdate(
+          { idS: message.guild.id },
+          { $set: { "infoCall.channels": [] } }
+        );
+
+        await this.client.database.guilds.findOneAndUpdate(
+          { idS: message.guild.id },
+          { $push: { "infoCall.channels": channels } }
+        );
+
+        message.channel.send(
+          `${message.author}, todos os canais foram setados com sucesso.`
+        );
+
+        return;
+      }
       if (args[1] === "all" || args[1] === "tudo") {
         if (!call.channels.length)
           return message.channel.send(
@@ -100,6 +130,26 @@ module.exports = class callConfig extends Command {
       }
     }
     if (["cargo", "role"].includes(args[0].toLowerCase())) {
+      if (args[1] === "addall") {
+        const channels = message.guild.roles.cache.map((x) => x.id);
+
+        await this.client.database.guilds.findOneAndUpdate(
+          { idS: message.guild.id },
+          { $set: { "infoCall.roles": [] } }
+        );
+
+        await this.client.database.guilds.findOneAndUpdate(
+          { idS: message.guild.id },
+          { $push: { "infoCall.roles": channels } }
+        );
+
+        message.channel.send(
+          `${message.author}, todos os cargos foram setados com sucesso.`
+        );
+
+        return;
+      }
+
       if (args[1] === "all" || args[1] === "tudo") {
         if (!call.roles.length)
           return message.channel.send(

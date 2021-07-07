@@ -2,6 +2,8 @@ const Command = require("../../structures/Command");
 const ClientEmbed = require("../../structures/ClientEmbed");
 const moment = require("moment");
 require("moment-duration-format");
+const Collection = require("../../services/Collection");
+const Emojis = require("../../utils/Emojis");
 
 module.exports = class infoCall extends Command {
   constructor(client) {
@@ -55,6 +57,113 @@ module.exports = class infoCall extends Command {
       return;
     }
 
+    if (args[0] === "top") {
+      const CALLS = await require("mongoose")
+        .connection.collection("users")
+        .find({ "infoCall.totalCall": { $gt: 2 } })
+        .toArray();
+
+      let call = Object.entries(CALLS).map(([, x]) => x.idU);
+
+      if (args[1] === "local")
+      call = call.filter((x) => message.guild.members.cache.get(x));
+
+      let members = [];
+
+
+      await this.PUSH(call, members);
+
+      const EMBED = new ClientEmbed(author);
+
+      const LIST = new Collection();
+
+      let actualPage = 1;
+
+      let sort = members.sort((x, f) => f.callTime - x.callTime);
+
+      sort.map((x) => {
+        LIST.push(
+          `Usuário: **${x.user.tag}** \n> Tempo em Call: **${moment
+            .duration(x.callTime)
+            .format("M[M] d[d] h[h] m[m] s[s]")}**`
+        );
+      });
+
+      const pages = Math.ceil(LIST.length() / 10);
+
+      let paginated = LIST.paginate(actualPage, 10);
+
+      EMBED.setDescription(paginated.join("\n\n"));
+
+      message.channel.send(EMBED).then((msg) => {
+        if (pages <= 1) return;
+
+        msg.react(Emojis.Next);
+
+        const collector = msg.createReactionCollector(
+          (r, u) =>
+            [Emojis.Next, Emojis.Back].includes(r.emoji.name) &&
+            u.id === message.author.id
+        );
+
+        collector.on("collect", async (r, u) => {
+          switch (r.emoji.name) {
+            case Emojis.Next:
+              if (message.guild.me.permissions.has("MANAGE_MESSAGES"))
+                r.users.remove(message.author.id);
+
+              if (actualPage === pages) return;
+
+              actualPage++;
+              paginated = LIST.paginate(actualPage, 10);
+
+              EMBED.setDescription(paginated.join("\n\n"));
+
+              await msg.edit(EMBED);
+              await msg.react(Emojis.Back);
+              if (
+                actualPage === pages &&
+                message.guild.me.permissions.has("MANAGE_MESSAGES")
+              )
+                r.remove(Emojis.Next);
+              if (
+                actualPage === pages &&
+                !message.guild.me.permissions.has("MANAGE_MESSAGES")
+              )
+                r.users.remove(this.client.user.id);
+
+              break;
+
+            case Emojis.Back:
+              if (message.guild.me.permissions.has("MANAGE_MESSAGES"))
+                r.users.remove(message.author.id);
+
+              if (actualPage === 1) return;
+
+              actualPage--;
+
+              paginated = LIST.paginate(actualPage, 10);
+              EMBED.setDescription(paginated.join("\n\n"));
+              await msg.edit(EMBED);
+
+              if (
+                actualPage === 1 &&
+                message.guild.me.permissions.has("MANAGE_MESSAGES")
+              )
+                r.remove(Emojis.Next);
+              if (
+                actualPage === 1 &&
+                !message.guild.me.permissions.has("MANAGE_MESSAGES")
+              )
+                r.users.remove(this.client.user.id);
+              msg.react(Emojis.Next);
+          }
+        });
+      });
+
+      return;
+    }
+
     if (args[0] == "rank") {
       const CALLS = await require("mongoose")
         .connection.collection("users")
@@ -63,7 +172,8 @@ module.exports = class infoCall extends Command {
 
       let call = Object.entries(CALLS).map(([, x]) => x.idU);
 
-      call = call.filter((x) => message.guild.members.cache.get(x)); // Parte para filtrar quem está no seu servidor para aparecer no Ranking.
+      if (args[1] === "local")
+        call = call.filter((x) => message.guild.members.cache.get(x));
 
       let members = [];
 
