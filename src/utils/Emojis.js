@@ -19,5 +19,8 @@ module.exports = {
   Robot: "🤖",
   Thinking: "🤔",
   Angry: "😠",
-  Aki_Cancel: "🔹"
+  Aki_Cancel: "🔹",
+  Alianca: "<:aliancas:864915668948221962>",
+  Owner: "<:crown:864916805176918036>",
+  Vip: "<:vipcard:864917341091135548>",
 };

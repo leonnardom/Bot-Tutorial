@@ -8,6 +8,7 @@ registerFont("src/assets/fonts/Segoe UI Black.ttf", {
   family: "Segoe UI Black",
 });
 const Utils = require("../../utils/Util");
+const Emojis = require("../../utils/Emojis");
 
 const { MessageAttachment, Util } = require("discord.js");
 
@@ -33,25 +34,21 @@ module.exports = class Profile extends Command {
       message.author;
 
     const user = await this.client.database.users.findOne({ idU: USER.id });
-    const canvas = createCanvas(1280, 720);
+    const canvas = createCanvas(900, 600);
     const ctx = canvas.getContext("2d");
     let nextLevel = user.Exp.nextLevel * user.Exp.level;
 
+    //========================// Import Avatar //========================//
+
+    const avatar = await loadImage(
+      USER.displayAvatarURL({ format: "jpeg", size: 2048 })
+    );
+    ctx.drawImage(avatar, 20, 90, 195, 180);
+
     //========================// Import Background //========================//
 
-    const background = await loadImage("./src/assets/img/jpeg/background.jpg");
-    ctx.drawImage(background, 0, 0, 1280, 720);
-
-    //========================// Import BreakLines //========================//
-
-    function addBreakLines(str, max) {
-      max = max + 1;
-      for (let i = 0; i < str.length / max; i++) {
-        str =
-          str.substring(0, max * i) + `\n` + str.substring(max * i, str.length);
-      }
-      return str;
-    }
+    const background = await loadImage("./src/assets/img/png/Profile_Card.png");
+    ctx.drawImage(background, 0, 0, 900, 600);
 
     //========================// Texts //========================//
 
@@ -60,17 +57,41 @@ module.exports = class Profile extends Command {
     ctx.textAlign = "left";
     ctx.font = '50px "Segoe UI Black"';
     ctx.fillStyle = "rgb(253, 255, 252)";
-    await Utils.renderEmoji(
-      ctx,
-      USER.username.length > 20
-        ? USER.username.slice(0, 20) + "..."
-        : USER.username,
-      180,
-      50
-    );
+    await Utils.renderEmoji(ctx, this.shorten(USER.username, 20), 230, 190);
+
+    // Badges
+
+    let list = [];
+
+    /*
+    const flags = USER.flags === null ? "" : USER.flags.toArray()
+    list.push(flags)*/
+
+    if (user.marry.has) list.push("CASADO");
+    if (USER.id === process.env.OWNER_ID) list.push("DONO");
+    if (message.guild.owner.id === USER.id) list.push("SERVER_OWNER");
+    if (user.vip.hasVip) list.push("VIP");
+
+    list = list
+      .join(",")
+      /*.replace("EARLY_VERIFIED_DEVELOPER", Emojis.Verified_Developer)
+    .replace("HOUSE_BRAVERY", Emojis.Bravery)
+    .replace("HOUSE_BRILLIANCE", Emojis.Brilliance)
+    .replace("HOUSE_BALANCE", Emojis.Balance)
+    .replace("VERIFIED_BOT", Emojis.Verified_Bot)
+    .replace("VERIFIED_DEVELOPER", "")*/
+      .replace("CASADO", Emojis.Alianca)
+      .replace("DONO", Emojis.Owner)
+      .replace("SERVER_OWNER", "👑")
+      .replace("VIP", Emojis.Vip);
+
+    ctx.font = `30px "Segoe Print"`;
+
+    await Utils.renderEmoji(ctx, list.split(",").join(" "), 230, 240);
 
     // Titles
 
+    /*
     ctx.textAlign = "left";
     ctx.font = '30px "Segoe UI Black"';
     ctx.fillStyle = "rgb(253, 255, 252)";
@@ -100,32 +121,17 @@ module.exports = class Profile extends Command {
       190,
       185
     );
-
+*/
     // Sobre
 
-    ctx.font = '25px "Montserrat"';
+    ctx.font = '20px "Montserrat"';
     ctx.fillText(
-      addBreakLines(
-        user.about == "null"
-          ? `Use ${prefix}sobremim <msg> para alterar essa mensagem`
-          : user.about,
-        60
-      ),
-      20,
-      500
+      user.about == "null"
+        ? `Use ${prefix}sobremim <msg> para alterar essa mensagem`
+        : user.about.match(/.{1,60}/g).join("\n"),
+      65,
+      333
     );
-
-    //========================// Import Avatar //========================//
-
-    ctx.arc(100, 95, 85, 0, Math.PI * 2, true);
-    ctx.lineWidth = 6;
-    ctx.strokeStyle = "#faf5f5";
-    ctx.stroke();
-    ctx.closePath();
-    ctx.clip();
-
-    const avatar = await loadImage(USER.displayAvatarURL({ format: "jpeg" }));
-    ctx.drawImage(avatar, 15, 10, 175, 175);
 
     //========================// Create Image //========================//
 
@@ -135,5 +141,10 @@ module.exports = class Profile extends Command {
     );
 
     message.quote(attach);
+  }
+  shorten(text, len) {
+    if (typeof text !== "string") return "";
+    if (text.length <= len) return text;
+    return text.substr(0, len).trim() + "...";
   }
 };
