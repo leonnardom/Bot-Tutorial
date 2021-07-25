@@ -36,7 +36,6 @@ module.exports = class Profile extends Command {
     const user = await this.client.database.users.findOne({ idU: USER.id });
     const canvas = createCanvas(900, 600);
     const ctx = canvas.getContext("2d");
-    let nextLevel = user.Exp.nextLevel * user.Exp.level;
 
     //========================// Import Avatar //========================//
 
@@ -47,8 +46,32 @@ module.exports = class Profile extends Command {
 
     //========================// Import Background //========================//
 
-    const background = await loadImage("./src/assets/img/png/Profile_Card.png");
-    ctx.drawImage(background, 0, 0, 900, 600);
+    const bg = user.backgrounds.active;
+
+    const backgrounds = {
+      one: {
+        id: 1,
+        background: "./src/assets/img/png/Profile_Card_Green.png",
+      },
+      two: {
+        id: 2,
+        background: "./src/assets/img/png/Profile_Card_Purple.png",
+      },
+      three: {
+        id: 3,
+        background: "./src/assets/img/png/Profile_Card_Different.png",
+      },
+    };
+
+    let back_img = "";
+    if (bg === 0) back_img = "./src/assets/img/png/Profile_Card.png";
+    else {
+      back_img = Object.entries(backgrounds).find(([, x]) => x.id === bg)[1]
+        .background;
+    }
+
+    const back = await loadImage(back_img);
+    ctx.drawImage(back, 0, 0, 900, 600);
 
     //========================// Texts //========================//
 
