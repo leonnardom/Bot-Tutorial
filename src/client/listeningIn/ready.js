@@ -29,5 +29,6 @@ module.exports = class {
     }, 10 * 1000);
 
     this.client.user.setStatus("dnd");
+    this.client.music.init(this.client.user.id)
   }
 };

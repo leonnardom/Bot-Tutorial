@@ -29,7 +29,7 @@ module.exports = class voiceStateUpdate {
 
     const channel = guild.channels.cache.get(doc1.logs.channel);
 
-    if (!call.status) return;
+    if (!call?.status) return;
 
     if (oldState.channel && !newState.channel) {
       // ===================> Quando O Membro Sai do Canal
@@ -40,25 +40,27 @@ module.exports = class voiceStateUpdate {
       )
         return;
 
-      const EMBED = new ClientEmbed(this.client.user)
-        .setAuthor(
-          `${user.tag} - Saída de Canal`,
-          user.displayAvatarURL({ dynamic: true })
-        )
-        .setThumbnail(
-          user.displayAvatarURL({ dynamic: true, format: "jpg", size: 2048 })
-        )
-        .addField(
-          `Tempo que o Membro ficou em Call`,
-          moment
-            .duration(Date.now() - call.lastCall)
-            .format("d [dias] h [horas] m [minutos] s [segundos]")
-            .replace("minsutos", "minutos")
-        )
-        .setTimestamp()
-        .setFooter(user.tag);
+      if (doc1.logs.status) {
+        const EMBED = new ClientEmbed(this.client.user)
+          .setAuthor(
+            `${user.tag} - Saída de Canal`,
+            user.displayAvatarURL({ dynamic: true })
+          )
+          .setThumbnail(
+            user.displayAvatarURL({ dynamic: true, format: "jpg", size: 2048 })
+          )
+          .addField(
+            `Tempo que o Membro ficou em Call`,
+            moment
+              .duration(Date.now() - call.lastCall)
+              .format("d [dias] h [horas] m [minutos] s [segundos]")
+              .replace("minsutos", "minutos")
+          )
+          .setTimestamp()
+          .setFooter(user.tag);
 
-      channel.send(EMBED).catch(() => {});
+        channel.send(EMBED).catch(() => {});
+      }
 
       await this.client.database.users.findOneAndUpdate(
         { idU: user.id },
