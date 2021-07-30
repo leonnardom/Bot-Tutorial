@@ -16,12 +16,6 @@ module.exports = class voiceStateUpdate {
 
     user = user.user;
 
-    /*const list = ["id 1", "id 2", "id 3"];
-
-    Caso queira que funcione só para alguns usuários;
-
-    if (!list.some((x) => x === user.id)) return;*/
-
     const doc = await this.client.database.users.findOne({ idU: user.id });
     const doc1 = await this.client.database.guilds.findOne({ idS: guild.id });
     const call = doc?.infoCall;

@@ -8,6 +8,9 @@ const Guild = require("./database/Schemas/Guild");
 const Files = require("./utils/Files");
 const c = require("colors");
 const { Manager } = require("erela.js");
+const clientID = '52db336abc244440848dd62f21fe76ed'
+const clientSecret = 'bab043f39baf46c9998346873cc252d4'
+const Spotify = require('erela.js-spotify')
 
 class BotTutorial extends Client {
   constructor(options) {
@@ -117,6 +120,12 @@ client.music = new Manager({
     const guild = client.guilds.cache.get(id);
     if (guild) guild.shard.send(payload);
   },
+  plugins: [
+    new Spotify({
+      clientID,
+      clientSecret
+    })
+  ]
 })
 
   .on("nodeConnect", (node) => {
