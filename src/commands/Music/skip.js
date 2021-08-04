@@ -1,6 +1,7 @@
 const Command = require("../../structures/Command");
 let array = [];
 
+
 module.exports = class Skip extends Command {
   constructor(client) {
     super(client);
