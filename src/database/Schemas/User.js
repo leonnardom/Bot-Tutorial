@@ -92,6 +92,20 @@ let userSchema = new Schema({
     time: { type: Number, default: 0 },
     protection: { type: Number, default: 0 },
   },
+  upvote: {
+    count: { type: Number, default: 0 },
+    cooldown: { type: Number, default: 0 },
+  },
+  infoCall: {
+    lastCall: { type: Number, default: 0 },
+    totalCall: { type: Number, default: 0 },
+    lastRegister: { type: Number, default: 0 },
+    status: { type: Boolean, default: true },
+  },
+  backgrounds: {
+    has: { type: Array, default: [] },
+    active: { type: Number, default: 0 },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);

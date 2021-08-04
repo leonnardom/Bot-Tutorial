@@ -63,6 +63,20 @@ let guildSchema = new Schema({
     size: { type: Number, default: 0 },
     staff: { type: String, default: "null" },
   },
+  antinvite: {
+    msg: { type: String, default: "null" },
+    status: { type: Boolean, default: false },
+    channels: { type: Array, default: [] },
+    roles: { type: Array, default: [] },
+  },
+  antifake: {
+    status: { type: Boolean, default: false },
+    days: { type: Number, default: 0 },
+  },
+  infoCall: {
+    channels: { type: Array, default: [] },
+    roles: { type: Array, default: [] },
+  },
 });
 
 let Guild = mongoose.model("Guilds", guildSchema);

@@ -45,7 +45,7 @@ module.exports = class Registrar extends Command {
                 return message.quote(
                   `${message.author}, o membro **\`${USER.tag}\`** não está registrado em meu **Banco de Dados** no momento.`
                 );
-              } else if (user.registred) {
+              } else if (user.registrador.registred) {
                 return message.quote(
                   `${message.author}, este membro já se encontra registrado.`
                 );
