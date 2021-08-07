@@ -9,7 +9,6 @@ const Files = require("./utils/Files");
 const c = require("colors");
 const { Manager } = require("erela.js");
 
-
 class BotTutorial extends Client {
   constructor(options) {
     super(options);
@@ -102,9 +101,9 @@ const nodes = [
   {
     identifier: "Node 1",
 
-    host: 'tutorial-lava-link.herokuapp.com',
+    host: "tutorial-lava-link.herokuapp.com",
     port: 80,
-    password: 'testando',
+    password: "testando",
     retryAmount: 30,
     retryDelay: 3000,
     secure: false,

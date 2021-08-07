@@ -54,7 +54,7 @@ module.exports = class Queue extends Command {
           this.convertMilliseconds(player.queue.duration),
           `hh:mm:ss`
         )}**`
-      );
+      )
 
     message.channel.send(QUEUE);
   }
