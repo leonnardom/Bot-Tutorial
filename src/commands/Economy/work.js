@@ -37,7 +37,7 @@ module.exports = class Work extends Command {
         let nextlevel = user.work.nextLevel * user.work.level;
 
         if (work !== null && cooldown - (Date.now() - work) > 0) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você deve esperar **${moment
               .duration(cooldown - (Date.now() - work))
               .format("h [horas], m [minutos] e s [segundos]")
@@ -45,7 +45,7 @@ module.exports = class Work extends Command {
           );
         } else {
           if (user.work.exp + xp > nextlevel) {
-            message.quote(
+            message.reply(
               `${
                 message.author
               }, e parabéns sua empresa acaba de subir para o level **${
@@ -64,7 +64,7 @@ module.exports = class Work extends Command {
               }
             );
           } else {
-            message.quote(
+            message.reply(
               `${
                 message.author
               }, você trabalhou com sucesso e obteve **${money.toLocaleString()} coins** e **${xp} de XP**.`
@@ -91,19 +91,19 @@ module.exports = class Work extends Command {
         const work = user.work;
         let name = args.slice(1).join(" ");
         if (!name) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você deve escrever um nome para setar na sua empresa.`
           );
         } else if (name == work.name) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o nome inserido é o mesmo setado atualmente, tenta novamente.`
           );
         } else if (name.length > 25) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o nome inserido é muito grande, por favor diminua o tamanho e tente novamente.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, o nome da sua empresa foi alterado com sucesso!`
           );
           await User.findOneAndUpdate(
@@ -266,7 +266,7 @@ module.exports = class Work extends Command {
           `Work_${USER.tag}_.png`
         );
 
-        message.quote(attach);
+        message.reply({ files: [attach] });
       });
     }
   }

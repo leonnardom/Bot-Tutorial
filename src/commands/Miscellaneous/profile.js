@@ -163,7 +163,7 @@ module.exports = class Profile extends Command {
       `Profile_${USER.tag}_.png`
     );
 
-    message.quote(attach);
+    message.reply(attach);
   }
   shorten(text, len) {
     if (typeof text !== "string") return "";

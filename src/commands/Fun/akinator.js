@@ -30,7 +30,7 @@ module.exports = class Akinator extends Command {
     ];
 
     if (akinator.has(message.author.id))
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você já tem uma partida em andamento.`
       );
 
@@ -53,7 +53,7 @@ module.exports = class Akinator extends Command {
             aki.answers.map((x, f) => `${emojis[f]} | ${x}`).join("\n")
           );
 
-        message.channel.send(EMBED).then(async (msg) => {
+        message.reply({embeds: [EMBED]}).then(async (msg) => {
           x.delete();
           for (const emoji of emojis) await msg.react(emoji);
 
@@ -80,7 +80,7 @@ module.exports = class Akinator extends Command {
 
                 collector.stop();
 
-                message.channel.send(
+                message.reply(
                   new ClientEmbed(author)
                     .setTitle(`Este é seu Personagem?`)
                     .setDescription(
@@ -105,7 +105,7 @@ module.exports = class Akinator extends Command {
                       collected.first().content
                     );
 
-                    message.channel.send(
+                    message.reply(
                       isWinner
                         ? `Como esperado de mim, acertei mais uma vez`
                         : `Você ganhou esta partida`

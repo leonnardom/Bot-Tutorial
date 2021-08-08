@@ -33,11 +33,11 @@ module.exports = class Manu extends Command {
             { _id: this.client.user.id },
             { $set: { manutenção: false, reason: "" } }
           );
-          return message.quote(
+          return message.reply(
             `${message.author}, fui retirado da manutenção com sucesso.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, fui colocado em manutenção com sucesso.\nMotivo: **${reason}**`
           );
           await ClientS.findOneAndUpdate(
@@ -51,7 +51,7 @@ module.exports = class Manu extends Command {
     }
     if (args[0] == "set") {
       if (!args[1]) {
-        return message.quote(
+        return message.reply(
           `${message.author}, insira o nome do comando para prosseguir.`
         );
       }
@@ -70,7 +70,7 @@ module.exports = class Manu extends Command {
               { _id: name },
               { $set: { manutenção: false, reason: "" } }
             );
-            return message.quote(
+            return message.reply(
               `${message.author}, retirei o comando **\`${name}\`** da manutenção com sucesso.`
             );
           } else {
@@ -78,12 +78,12 @@ module.exports = class Manu extends Command {
               { _id: name },
               { $set: { manutenção: true, reason: reason } }
             );
-            return message.quote(
+            return message.reply(
               `${message.author}, coloquei o comando **\`${name}\`** em manutenção com sucesso.\nMotivo: **${reason}**`
             );
           }
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, não encontrei nenhum comando com o nome **\`${name}\`**.`
           );
         }

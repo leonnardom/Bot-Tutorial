@@ -21,9 +21,9 @@ module.exports = class Say extends Command {
     const msg = args.join(" ");
 
     if (!msg)
-      return message.channel.send(`${message.author}, escreva algo primeiro.`);
+      return message.reply(`${message.author}, escreva algo primeiro.`);
 
     message.delete();
-    message.channel.send(msg);
+    message.reply(msg);
   }
 };

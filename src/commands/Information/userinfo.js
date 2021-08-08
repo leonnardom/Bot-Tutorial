@@ -85,7 +85,7 @@ module.exports = class UserInfo extends Command {
           message.author.displayAvatarURL({ dynamic: true })
         );
 
-      message.quote(USERINFO);
+      message.reply({ embeds: [USERINFO] });
     } catch (err) {
       console.log(`ERRO NO COMANDO USERINFO\nERROR: ${err}`);
     }

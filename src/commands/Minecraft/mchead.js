@@ -21,7 +21,7 @@ module.exports = class McHead extends Command {
     const nick = args[0];
 
     if (!nick)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve inserir um nick de uma skin de minecraft.`
       );
 
@@ -30,6 +30,6 @@ module.exports = class McHead extends Command {
       .setTitle(`${Emojis.Minecraft} - Nick: ${nick}`)
       .setImage(`https://mc-heads.net/head/${nick}/200`);
 
-    message.channel.send(EMBED);
+    message.reply({embeds: [EMBED]});
   }
 };

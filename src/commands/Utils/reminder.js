@@ -28,11 +28,11 @@ module.exports = class Reminder extends Command {
     if (["add"].includes(args[0].toLowerCase())) {
       let reminder = args.slice(1).join(" ");
       if (!reminder)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve inserir qual lembrete deseja criar.`
         );
 
-      const sendMessage = await message.channel.send(
+      const sendMessage = await message.reply(
         `${message.author}, agora digite o tempo que deseja que eu te lembre do lembrete.`
       );
 
@@ -45,7 +45,7 @@ module.exports = class Reminder extends Command {
           if (["cancelar", "cancel"].includes(content.toLowerCase())) {
             collector.stop();
 
-            return message.channel.send(
+            return message.reply(
               `${message.author}, lembrete cancelado com sucesso.`
             );
           }
@@ -71,13 +71,13 @@ module.exports = class Reminder extends Command {
           parse["s"] = parse["seconds"];
 
           if (!parse(time))
-            return message.channel.send(
+            return message.reply(
               `${message.author}, o tempo inserido é inválido.`
             );
 
           let tempo = parse(time) + Date.now();
 
-          message.channel.send(
+          message.reply(
             `${
               message.author
             }, lembrete adicionado com sucesso, informações:\n\nLembrete: **${reminder}**\nTempo: **${moment(
@@ -113,20 +113,20 @@ module.exports = class Reminder extends Command {
       const list = doc.reminder.list;
 
       if (!list.length)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não tem nenhum lembrete.`
         );
 
       const map = list.sort((x, f) => x.time - f.time).map((x, f) => f + 1);
 
       if (!map.find((x) => x === parseInt(args[1])))
-        return message.channel.send(
+        return message.reply(
           `${message.author}, não tem nenhum lembrete com este ID.`
         );
 
       const get_lembrete = parseInt(args[1] - 1);
 
-      message.channel.send(
+      message.reply(
         `${message.author}, lembrete removido com sucesso.\nID: **${args[1]}** ( \`${list[get_lembrete].lembrete}\` )`
       );
 
@@ -147,7 +147,7 @@ module.exports = class Reminder extends Command {
     if (["list", "lista"].includes(args[0].toLowerCase())) {
       const list = doc.reminder.list;
       if (!list.length)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não tem nenhum lembrete.`
         );
 
@@ -167,7 +167,7 @@ module.exports = class Reminder extends Command {
         .setTitle(`Seus Lembretes`)
         .setDescription(sort);
 
-      message.channel.send(EMBED);
+      message.reply({embeds: [EMBED]});
 
       return;
     }

@@ -28,15 +28,15 @@ module.exports = class Logs extends Command {
 
     if (args[0] == "set") {
       if (!channel) {
-        return message.quote(
+        return message.reply(
           `${Emojis.Errado} - ${message.author}, você não inseriu um ID/mencionou um canal para eu setar como canal de logs.`
         );
       } else if (channel.id == server.logs.channel) {
-        return message.quote(
+        return message.reply(
           `${Emojis.Errado} - ${message.author}, o canal inserido é o mesmo setado atualmente, tente novamente.`
         );
       } else {
-        message.quote(
+        message.reply(
           `${Emojis.Certo} - ${message.author}, o canal de logs foi alterado para **<#${channel.id}>** com sucesso.`
         );
         await Guild.findOneAndUpdate(
@@ -49,15 +49,15 @@ module.exports = class Logs extends Command {
 
     if (args[0] == "on") {
       if (server.logs.channel == "null") {
-        return message.quote(
+        return message.reply(
           `${Emojis.Errado} - ${message.author}, para ativar seu sitema de logs, sete um canal primeiro.`
         );
       } else if (server.logs.status) {
-        return message.quote(
+        return message.reply(
           `${Emojis.Errado} - ${message.author}, o sistema já se encontra ativado.`
         );
       } else {
-        message.quote(
+        message.reply(
           `${Emojis.Certo} - ${message.author}, sistema ativado com sucesso.`
         );
         await Guild.findOneAndUpdate(
@@ -70,11 +70,11 @@ module.exports = class Logs extends Command {
 
     if (args[0] == "off") {
       if (!server.logs.status) {
-        return message.quote(
+        return message.reply(
           `${Emojis.Errado} - ${message.author}, o sistema já se encontra desativado.`
         );
       } else {
-        message.quote(
+        message.reply(
           `${Emojis.Certo} - ${message.author}, sistema desativado com sucesso.`
         );
         await Guild.findOneAndUpdate(
@@ -113,6 +113,6 @@ module.exports = class Logs extends Command {
         }
       );
 
-    message.quote(message.author, HELP);
+    message.reply({embeds: [HELP]})
   }
 };

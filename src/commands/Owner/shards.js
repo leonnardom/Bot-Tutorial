@@ -65,7 +65,7 @@ module.exports = class Shards extends Command {
       botUsers.toLocaleString("pt-BR")
     );
 
-    message.channel.send(`\`\`\`prolog\n${table.toString()}\`\`\``);
+    message.reply(`\`\`\`prolog\n${table.toString()}\`\`\``);
 
     table.clearRows();
   }

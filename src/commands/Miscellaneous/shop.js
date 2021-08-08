@@ -21,7 +21,7 @@ module.exports = class Shop extends Command {
     const doc = await this.client.database.users.findOne({ idU: message.author.id });
 
     if (!args[0])
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve inserir o ID do item que deseja comprar.`
       );
 
@@ -32,7 +32,7 @@ module.exports = class Shop extends Command {
     const infoObject = itens.filter(([, x]) => x.id === parseInt(args[0]));
 
     if (!infoObject.length)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, o item de ID: **${
           args[0]
         }** não existe. Lista dos itens que existem na minha Loja.\n\n${itens
@@ -49,7 +49,7 @@ module.exports = class Shop extends Command {
     let size = !args[1] ? 1 : parseInt(args[1]);
 
     if (find.price > doc.bank) {
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não tem dinheiro o suficiente para comprar este item.`
       );
     } else {
@@ -73,7 +73,7 @@ module.exports = class Shop extends Command {
         { idU: message.author.id },
         updateObject
       );
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você comprou **${size}x** itens do ID: **${args[0]}** com sucesso.`
       );
     }

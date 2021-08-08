@@ -30,7 +30,7 @@ module.exports = class Factory extends Command {
 
     if (["info"].includes(args[0].toLowerCase())) {
       if (!fb.hasFactory)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, ${
             USER.id == message.author
               ? "você não faz parte de nenhuma Fábrica"
@@ -95,7 +95,7 @@ module.exports = class Factory extends Command {
           }
         );
 
-      return message.channel.send(EMBED);
+      return message.reply({embeds: [EMBED]})
     }
 
     if (["work", "trabalhar"].includes(args[0].toLowerCase())) {
@@ -105,7 +105,7 @@ module.exports = class Factory extends Command {
       const fd = user?.factory;
 
       if (!fd.hasFactory)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, ${
             USER.id == message.author
               ? "você não faz parte de nenhuma Fábrica"
@@ -119,14 +119,14 @@ module.exports = class Factory extends Command {
       let cooldown = 2.88e7 - (Date.now() - fd.lastWork);
 
       if (cooldown > 0) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve aguardar **${moment
             .duration(cooldown)
             .format("h [horas] m [minutos] e s [segundos]")
             .replace("minsutos", "minutos")}** para poder trabalhar novamente.`
         );
       } else {
-        message.channel.send(
+        message.reply(
           `${message.author}, você trabalhou com sucesso e conseguiu **${XP} XP** para sua Fábrica e **R$${COINS}** que já foram depositados em seu banco.`
         );
 
@@ -148,7 +148,7 @@ module.exports = class Factory extends Command {
 
     if (["kick", "demitir", "kickar"].includes(args[0].toLowerCase())) {
       if (!fb.hasFactory)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, ${
             USER.id == message.author
               ? "você não faz parte de nenhuma Fábrica"
@@ -156,7 +156,7 @@ module.exports = class Factory extends Command {
           }.`
         );
       if (USER.id === message.author.id)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não pode se kickar da Fábrica.`
         );
 
@@ -166,11 +166,11 @@ module.exports = class Factory extends Command {
         .then((x) => x.factory);
 
       if (!fd.employers.some((x) => x === USER.id)) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, este usuário não está contratado em sua Fábrica.`
         );
       } else {
-        message.channel.send(
+        message.reply(
           `${message.author}, funcionário demitido com sucesso.`
         );
 
@@ -193,16 +193,16 @@ module.exports = class Factory extends Command {
 
     if (["invite", "convidar", "contratar"].includes(args[0].toLowerCase())) {
       if (USER.bot)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, não é possível contratar bots.`
         );
 
       if (!USER && USER.id == message.author.id) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve mencionar quem deseja contratar primeiro.`
         );
       } else if (user.factory.hasFactory) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, este membro já possui uma Fábrica.`
         );
       } else {
@@ -223,7 +223,7 @@ module.exports = class Factory extends Command {
               if (
                 ["sim", "y", "yes"].includes(collected.content.toLowerCase())
               ) {
-                message.channel.send(
+                message.reply(
                   `${message.author}, você contratou o(a) usuário(a) ${USER} com sucesso.`
                 );
 
@@ -249,7 +249,7 @@ module.exports = class Factory extends Command {
               if (
                 ["não", "nao", "no"].includes(collected.content.toLowerCase())
               ) {
-                message.channel.send(
+                message.reply(
                   `${message.author}, o(a) ${USER} recusou o pedido.`
                 );
                 msg.delete();
@@ -262,16 +262,16 @@ module.exports = class Factory extends Command {
 
     if (["up", "upar", "subir"].includes(args[0].toLowerCase())) {
       if (!fb.createFactory)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, somente o Dono da fábrica pode alterar o nome dela.`
         );
 
       if (fb.nextLevel * fb.level > fb.exp)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, a fábrica não tem xp o suficiente para upar de level.`
         );
 
-      message.channel.send(`${message.author}, fábrica elevada com sucesso.`);
+      message.reply(`${message.author}, fábrica elevada com sucesso.`);
 
       await this.client.database.users.findOneAndUpdate(
         { idU: message.author.id },
@@ -288,23 +288,23 @@ module.exports = class Factory extends Command {
 
     if (["name", "nome"].includes(args[0].toLowerCase())) {
       if (!fb.createFactory)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, somente o Dono da fábrica pode alterar o nome dela.`
         );
 
       const name = args.slice(1).join(" ");
 
       if (name.length > 40)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o nome da fábrica deve conter 40 ou menos caracteres.`
         );
 
       if (fb.name === name)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o nome inserido é o mesmo setado atualmente.`
         );
 
-      message.channel.send(
+      message.reply(
         `${message.author}, o nome da sua fábrica foi alterada com sucesso.`
       );
       await this.client.database.users.findOneAndUpdate(
@@ -317,15 +317,15 @@ module.exports = class Factory extends Command {
 
     if (["create", "criar"].includes(args[0].toLowerCase())) {
       if (fb.hasFactory) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você já faz parte de uma Fábrica, portanto não é possível criar uma.`
         );
       } else if (user.bank < 5000) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você precisa de **R$5.000,00** para criar uma Fábrica.`
         );
       } else {
-        message.channel.send(
+        message.reply(
           `${message.author}, sua Fábrica foi criada com sucesso.`
         );
         await this.client.database.users.findOneAndUpdate(

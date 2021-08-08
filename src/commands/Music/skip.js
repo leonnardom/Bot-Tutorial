@@ -21,7 +21,7 @@ module.exports = class Skip extends Command {
     const player = this.client.music.players.get(message.guild.id);
 
     if (!player)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, não estou tocando música neste servidor.`
       );
 
@@ -29,12 +29,12 @@ module.exports = class Skip extends Command {
       !message.member.voice.channel ||
       message.member.voice.channel.id != message.guild.me.voice.channel.id
     )
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não está em um canal de voz/no mesmo canal que eu.`
       );
 
     if (message.member.voice.selfDeaf)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você está com seu fone desativado portanto não é possível votar para pular a música.`
       );
 
@@ -49,11 +49,11 @@ module.exports = class Skip extends Command {
     if (array.length >= requiredVotes) {
       player.stop();
 
-      message.channel.send(`Música pulada com sucesso.`);
+      message.reply(`Música pulada com sucesso.`);
       return (array = []);
     }
 
-    message.channel.send(
+    message.reply(
       `Skipar a Música? **( ${array.length}/${requiredVotes} )**.`
     );
   }

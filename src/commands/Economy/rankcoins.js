@@ -25,14 +25,16 @@ module.exports = class RankCoins extends Command {
 
     const coins = Object.entries(COINS)
       .map(([, x]) => x.idU)
-      .sort((x, f) => x.bank - f.bank)
-      .slice(0, 10);
+      .sort((x, f) => x.bank - f.bank);
 
     const members = [];
 
     await this.PUSH(coins, members);
 
-    const coinsMap = members.map((x) => x).sort((x, f) => f.coins - x.coins);
+    const coinsMap = members
+      .map((x) => x)
+      .sort((x, f) => f.coins - x.coins)
+      .slice(0, 10);
 
     const TOP = new ClientEmbed(this.client.user)
       .setAuthor(`Ranking Monetário`)
@@ -46,7 +48,7 @@ module.exports = class RankCoins extends Command {
           )
           .join("\n\n")
       );
-    message.channel.send(TOP);
+    message.reply({ embeds: [TOP] });
   }
 
   async PUSH(coins, members) {

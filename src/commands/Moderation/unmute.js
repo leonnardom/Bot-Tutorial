@@ -25,18 +25,18 @@ module.exports = class UnMute extends Command {
     );
 
     if (!USER)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve mencionar quem deseja desmutar.`
       );
 
     let role = message.guild.roles.cache.find((x) => x.name === "Mutado");
 
     if (!doc.mutes.list.find((x) => x.user === USER.id))
-      return message.channel.send(
+      return message.reply(
         `${message.author}, este membro não está mutado.`
       );
 
-    message.channel.send(`${message.author}, membro desmutado com sucesso.`);
+    message.reply(`${message.author}, membro desmutado com sucesso.`);
 
     await this.client.database.guilds.findOneAndUpdate(
       { idS: message.guild.id },
@@ -47,7 +47,7 @@ module.exports = class UnMute extends Command {
     USER.roles
       .remove(role.id, `Membro desmutado por: ${message.author.tag}`)
       .catch((err) => {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, este membro não tinha o cargo de mute.`
         );
       });

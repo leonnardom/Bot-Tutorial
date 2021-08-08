@@ -51,30 +51,30 @@ module.exports = class AutoRole extends Command {
             }
           );
 
-        message.quote(HELP);
+        message.reply({embeds: [HELP]})
         return;
       }
 
       if (!message.member.hasPermission("MANAGE_GUILD"))
-        return message.quote(
+        return message.reply(
           `${message.author}, você precisa da permissão **MANAGE_GUILD** para executar este comando.`
         );
 
       if (["add", "adicionar"].includes(args[0].toLowerCase())) {
         if (!role) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você não mencionou/inseriu o ID do cargo que deseja setar no AutoRole.`
           );
         } else if (autorole.roles.length > 5) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o limite de cargos no AutoRole é **5** e você já alcançou ele, portanto não é possível adicionar mais cargos.`
           );
         } else if (autorole.roles.find((x) => x === role.id)) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o cargo inserido já está adicionado no sistema.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, o cargo foi adicionado no sistema de AutoRole com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -88,11 +88,11 @@ module.exports = class AutoRole extends Command {
       if (["remove", "remover"].includes(args[0].toLowerCase())) {
         if (args[1] == "all") {
           if (!autorole.roles.length) {
-            return message.quote(
+            return message.reply(
               `${message.author}, não há nenhum cargo adicionado no sistema.`
             );
           } else {
-            message.quote(
+            message.reply(
               `${message.author}, todos os cargos foram removidos com sucesso.`
             );
             await Guild.findOneAndUpdate(
@@ -103,19 +103,19 @@ module.exports = class AutoRole extends Command {
           return;
         }
         if (!role) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você não mencionou/inseriu o ID do cargo que deseja setar no AutoRole.`
           );
         } else if (!autorole.roles.length) {
-          return message.quote(
+          return message.reply(
             `${message.author}, não há nenhum cargo adicionado no sistema.`
           );
         } else if (!autorole.roles.find((x) => x === role.id)) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o cargo inserido não está adicionado no sistema.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, o cargo foi removido do sistema de AutoRole com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -129,7 +129,7 @@ module.exports = class AutoRole extends Command {
 
       if (["list", "lista"].includes(args[0].toLowerCase())) {
         if (!autorole.roles.length) {
-          return message.quote(
+          return message.reply(
             `${message.author}, não há nenhum cargo adicionado no sistema.`
           );
         } else {
@@ -140,21 +140,21 @@ module.exports = class AutoRole extends Command {
             )
             .setDescription(autorole.roles.map((x) => `<@&${x}>`).join(", "));
 
-          message.channel.send(LIST);
+          message.reply(LIST);
         }
       }
 
       if (["on", "ligar"].includes(args[0].toLowerCase())) {
         if (autorole.status) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o sistema já se encontra ligado.`
           );
         } else if (!autorole.roles.length) {
-          return message.quote(
+          return message.reply(
             `${message.author}, não há nenhum cargo adicionado no sistema, portanto não é possível ligar ele.`
           );
         } else {
-          message.quote(`${message.author}, sistema ligado com sucesso.`);
+          message.reply(`${message.author}, sistema ligado com sucesso.`);
           await Guild.findOneAndUpdate(
             { idS: message.guild.id },
             { $set: { "autorole.status": true } }
@@ -163,11 +163,11 @@ module.exports = class AutoRole extends Command {
       }
       if (["off", "desligar"].includes(args[0].toLowerCase())) {
         if (!autorole.status) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o sistema já se encontra desligado.`
           );
         } else {
-          message.quote(`${message.author}, sistema desligado com sucesso.`);
+          message.reply(`${message.author}, sistema desligado com sucesso.`);
           await Guild.findOneAndUpdate(
             { idS: message.guild.id },
             { $set: { "autorole.status": false } }

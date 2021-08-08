@@ -33,16 +33,16 @@ module.exports = class Vip extends Command {
 
     if (!args[0]) {
       if (!vip.hasVip) {
-        return message.channel.send(
+        return message.reply(
           `${Emojis.Errado} - ${message.author}, você não possui VIP.`
         );
       } else {
         if (vip.date <= Date.now())
-          return message.channel.send(
+          return message.reply(
             `${message.author}, seu VIP expirou e será removido em instantes.`
           );
 
-        message.channel.send(
+        message.reply(
           `${Emojis.Certo} - ${
             message.author
           }, você possui VIP pelo tempo dê:\n\n> **${moment
@@ -62,11 +62,11 @@ module.exports = class Vip extends Command {
 
     if (["add", "adicionar", "setar"].includes(args[0].toLowerCase())) {
       if (!USER) {
-        return message.channel.send(
+        return message.reply(
           `${Emojis.Errado} - ${message.author}, você deve mencionar/inserir o ID de quem deseja setar VIP.`
         );
       } else if (!args[1]) {
-        return message.channel.send(
+        return message.reply(
           `${Emojis.Errado} - ${message.author}, você deve inserir quando tempo deseja setar de VIP no usuário.`
         );
       }
@@ -74,12 +74,12 @@ module.exports = class Vip extends Command {
       let time = ms(args[2]);
 
       if (String(time) == "undefined") {
-        return message.channel.send(
+        return message.reply(
           `${Emojis.Errado} - ${message.author}, a data inserida é inválida.`
         );
       } else {
         if (vip.hasVip) {
-          message.channel.send(
+          message.reply(
             `${Emojis.Certo} - ${message.author}, o membro já possuia VIP, portanto adicionei mais tempo ao VIP dele.`
           );
           return await this.client.database.users.findOneAndUpdate(
@@ -87,7 +87,7 @@ module.exports = class Vip extends Command {
             { $set: { "vip.date": vip.date + time } }
           );
         } else {
-          message.channel.send(
+          message.reply(
             `${Emojis.Certo} - ${message.author}, agora o membro possui VIP.`
           );
           await this.client.database.users.findOneAndUpdate(

@@ -29,12 +29,12 @@ module.exports = class Registrar extends Command {
         { idU: message.author.id, idS: message.guild.id },
         async (err, author) => {
           if (!message.member.roles.cache.has(server.registrador.role))
-            return message.quote(
+            return message.reply(
               `${message.author}, você não é um registrador no momento.`
             );
 
           if (!USER)
-            return message.quote(
+            return message.reply(
               `${message.author}, insira o ID/mencione o membro que deseja registrar.`
             );
 
@@ -42,15 +42,15 @@ module.exports = class Registrar extends Command {
             { idU: USER.id, idS: message.guild.id },
             async (err, user) => {
               if (!user) {
-                return message.quote(
+                return message.reply(
                   `${message.author}, o membro **\`${USER.tag}\`** não está registrado em meu **Banco de Dados** no momento.`
                 );
               } else if (user.registrador.registred) {
-                return message.quote(
+                return message.reply(
                   `${message.author}, este membro já se encontra registrado.`
                 );
               } else {
-                message.quote(
+                message.reply(
                   `${message.author}, você verificou o usuário **\`${
                     USER.tag
                   }\`** com sucesso. ( **${

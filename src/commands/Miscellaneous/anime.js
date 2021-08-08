@@ -23,7 +23,7 @@ module.exports = class Anime extends Command {
     const search = args.join(" ");
 
     if (!search)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, insira o nome do anime que deseja pesquisar.`
       );
 
@@ -109,9 +109,9 @@ module.exports = class Anime extends Command {
         true
       );
 
-    message.channel.send(message.author, ANIME).catch((err) => {
+    message.reply({embeds: [ANIME]}).catch((err) => {
       console.log(err);
-      return message.channel.send(`${message.author}, anime não encontrado.`);
+      return message.reply(`${message.author}, anime não encontrado.`);
     });
   }
 };

@@ -17,19 +17,19 @@ module.exports = class Clear extends Command {
 
   async run({ message, args, prefix, author }, t) {
     if (!message.member.hasPermission("MANAGE_MESSAGES"))
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você precisa da permissão **MANAGE_MESSAGES* para executar este comando.`
       );
 
     if (!args[0])
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve inserir quantas mensagens deseja apagar no chat.`
       );
 
     const amount = parseInt(args[0]);
 
     if (amount > 1000 || amount < 2)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve inserir um número de **2** à **1000** para eu limpar em mensagens.`
       );
 
@@ -40,7 +40,7 @@ module.exports = class Clear extends Command {
 
       const deleted = await message.channel.bulkDelete(messages, true);
 
-      message.channel.send(
+      message.reply(
         `${message.author}, ${
           deleted.size < messages.length
             ? `limpou o chat. Mas **${
@@ -66,7 +66,7 @@ module.exports = class Clear extends Command {
         if (deleted.size < messages.length) continue;
       }
 
-      await message.channel.send(
+      await message.reply(
         `${message.author}, ${
           length < amount
             ? `limpou o chat. Mas **${

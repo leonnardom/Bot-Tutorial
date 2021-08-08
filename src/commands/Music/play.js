@@ -24,34 +24,34 @@ module.exports = class Play extends Command {
         if (
           message.member.voice.channel.id != message.guild.me.voice.channel.id
         )
-          return message.channel.send(
+          return message.reply(
             `${message.author}, você deve estar no mesmo canal de voz que eu.`
           );
       }
 
       if (!message.member.voice.channel)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não está em nenhum canal de voz.`
         );
       const music = args.join(" ");
 
       if (!music)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve inserir o nome da música/url.`
         );
 
       const result = await this.client.music.search(music, message.author);
 
       if (result.loadType === "LOAD_FAILED")
-        return message.channel.send(
+        return message.reply(
           `${message.author}, não consegui tocar essa música.`
         );
       if (result.loadType === "NO_MATCHES")
-        return message.channel.send(
+        return message.reply(
           `${message.author}, não encontrei nenhum resultado para essa pesquisa.`
         );
 
-      message.channel.send(`${message.author}, pesquisando **\`${music}\`**.`);
+      message.reply(`${message.author}, pesquisando **\`${music}\`**.`);
 
       const player = this.client.music.create({
         guild: message.guild.id,
@@ -91,14 +91,14 @@ module.exports = class Play extends Command {
             }
           );
 
-        message.channel.send(EMBED);
+        message.reply({embeds: [EMBED]});
       } else {
         const tracks = result.tracks;
 
         player.queue.add(tracks[0]);
 
         if (player2) {
-          message.channel.send(
+          message.reply(
             `${message.author}, música **${tracks[0].title}** adicionada a PlayList.`
           );
         }
@@ -107,7 +107,7 @@ module.exports = class Play extends Command {
       }
     } catch (err) {
       if (err) console.log(err);
-      return message.channel.send(`${message.author}, erro ao usar o comando.`);
+      return message.reply(`${message.author}, erro ao usar o comando.`);
     }
   }
   convertMilliseconds(ms) {

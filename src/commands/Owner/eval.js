@@ -23,7 +23,7 @@ module.exports = class Eval extends Command {
     let litchtotoso = eval(litchdelicia);
     if (typeof litchtotoso !== "string")
       litchtotoso = require("util").inspect(litchtotoso, { depth: 0 });
-    message.channel.send(
+    message.reply(
       `Entrada: \`\`\`js\n${litchdelicia}\`\`\`\n Saída: \`\`\`js\n${litchtotoso}\`\`\``
     );
   }

@@ -19,7 +19,7 @@ module.exports = class Stop extends Command {
     const player = this.client.music.players.get(message.guild.id);
 
     if (!player)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, não estou tocando música neste servidor.`
       );
 
@@ -27,12 +27,12 @@ module.exports = class Stop extends Command {
       !message.member.voice.channel ||
       message.member.voice.channel.id != message.guild.me.voice.channel.id
     )
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não está em um canal de voz ou não está no mesmo canal que eu.`
       );
 
     if (message.member.voice.selfDeaf)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não pode parar a música estando com o aúdio desativado.`
       );
 

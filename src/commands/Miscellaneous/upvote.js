@@ -30,14 +30,14 @@ module.exports = class upVote extends Command {
       let atual = user.coins;
 
       if (daily !== null && cooldown - (Date.now() - daily) > 0) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, aguarde **${moment
             .duration(time)
             .format("h [horas] m [minutos] e s [segundos]")
             .replace("minsutos", "minutos")}** até poder votar novamente.`
         );
       } else {
-        message.channel.send(
+        message.reply(
           `${
             message.author
           } você votou no Bot com sucesso. Informações abaixo:\n\n> Quantidade de Votos que você tem no Total agora: **${
@@ -87,7 +87,7 @@ module.exports = class upVote extends Command {
             .join("\n\n")
         );
 
-      return message.channel.send(EMBED);
+      return message.reply({embeds: [EMBED]});
     }
   }
 

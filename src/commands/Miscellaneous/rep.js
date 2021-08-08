@@ -28,7 +28,7 @@ module.exports = class Rep extends Command {
     const cooldown = 7.2e6 - (Date.now() - rep.time);
 
     if (cooldown > 0)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve aguardar **${moment
           .duration(cooldown)
           .format("h [horas] m [minutos] e s [segundos]")
@@ -38,21 +38,21 @@ module.exports = class Rep extends Command {
           )}** até poder mandar reputação de novo.`
       );
     if (!USER)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve mencionar para quem deseja enviar uma reputação.`
       );
 
     if (USER.bot)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não pode enviar reputação para bots.`
       );
 
     if (!doc1)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, este usuário não está registrado em minha database.`
       );
 
-    message.channel.send(
+    message.reply(
       `${message.author}, você enviou uma reputaçaõ para o usuário **${USER.tag}** com sucesso.`
     );
 

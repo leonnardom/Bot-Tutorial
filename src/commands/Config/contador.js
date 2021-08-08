@@ -19,7 +19,7 @@ module.exports = class Contador extends Command {
   async run({ message, args, prefix, author }, t) {
     Guild.findOne({ idS: message.guild.id }, async function (err, server) {
       if (!message.member.hasPermission("MANAGE_GUILD"))
-        return message.quote(
+        return message.reply(
           `${message.author} você não tem permissão de executar este comando.`
         );
 
@@ -29,15 +29,15 @@ module.exports = class Contador extends Command {
           message.mentions.channels.first();
 
         if (!channel) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você deve mencionar o canal/inserir o ID que deseja setar o contador de membros.`
           );
         } else if (channel.id == server.contador.channel) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o canal inserido já é o mesmo setado atualmente, escolha outro e tente novamente.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, o canal de contador foi setado no canal de ID: **${channel.id} ( <#${channel.id}> ) ** com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -52,17 +52,17 @@ module.exports = class Contador extends Command {
         let msg = args.slice(1).join(" ");
 
         if (!msg) {
-          return message.quote(`${message.author}, você não escreveu nada.`);
+          return message.reply(`${message.author}, você não escreveu nada.`);
         } else if (msg == server.contador.msg) {
-          return message.quote(
+          return message.reply(
             `${message.author}, a mensagem inserida é a mesma setada atualmente, tente novamente.`
           );
         } else if (msg.length > 50) {
-          return message.quote(
+          return message.reply(
             `${message.author}, a mensagem inserida tem mais de **50 caracteres**, tente novamente.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, a mensagem foi alterada com sucesso!`
           );
           await Guild.findOneAndUpdate(
@@ -114,7 +114,7 @@ module.exports = class Contador extends Command {
             }
           );
 
-        message.quote(HELP);
+        message.reply({embeds: [HELP]})
 
         return;
       }

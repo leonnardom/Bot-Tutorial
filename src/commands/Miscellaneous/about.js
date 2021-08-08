@@ -20,19 +20,19 @@ module.exports = class About extends Command {
     const doc = await this.client.database.users.findOne({ idU: message.author.id });
 
     if (!about)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não inseriu o que deseja colocar no seu sobre.`
       );
     if (about.length > 300)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, o seu sobre deve ter menos de 300 caracteres.`
       );
     if (doc.about == about)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, o sobre que você inseriu é o mesmo setado atualmente.`
       );
 
-    message.channel.send(
+    message.reply(
       `${message.author}, seu sobre foi alterado com sucesso.`
     );
     await this.client.database.users.findOneAndUpdate(

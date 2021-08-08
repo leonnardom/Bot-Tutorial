@@ -22,10 +22,10 @@ module.exports = class Sugestion extends Command {
     const sug = args.join(" ");
 
     if (!sug)
-      return message.channel.send(`${message.author}, insira a sugestão.`);
+      return message.reply(`${message.author}, insira a sugestão.`);
 
     if (sug.length < 20)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, insira uma sugestão mais completa.`
       );
 
@@ -43,7 +43,7 @@ module.exports = class Sugestion extends Command {
           )
           .then(async (collected) => {
             if (collected.first().emoji.name === Emojis.Certo) {
-              message.channel.send(
+              message.reply(
                 `${message.author}, sugestão enviada com sucesso.`
               );
 
@@ -75,7 +75,7 @@ module.exports = class Sugestion extends Command {
                   })
                 );
 
-              channel.send(SUGESTION).then((x) => {
+              channel.send({embeds: [SUGESTION]}).then((x) => {
                 x.react(Emojis.Certo);
                 x.react(Emojis.Errado);
               });
@@ -86,7 +86,7 @@ module.exports = class Sugestion extends Command {
             if (collected.first().emoji.name === Emojis.Errado) {
               msg.delete();
 
-              return message.channel.send(
+              return message.reply(
                 `${message.author}, envio da sugestão cancelada..`
               );
             }

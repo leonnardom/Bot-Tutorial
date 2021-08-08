@@ -22,7 +22,7 @@ module.exports = class AntInvite extends Command {
     });
 
     if (!message.member.hasPermission("MANAGE_GUILD"))
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não tem permissão de executar este comando.`
       );
 
@@ -76,27 +76,27 @@ module.exports = class AntInvite extends Command {
         }
       );
 
-    if (!args[0]) return message.channel.send(EMBED);
+    if (!args[0]) return message.reply({embeds: [EMBED]})
 
     if (["msg", "message", "mensagem"].includes(args[0].toLowerCase())) {
       const msg = args.slice(1).join(" ");
 
       if (!msg)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não inseriu a mensagem que deseja setar no sistema.`
         );
 
       if (msg.length > 100)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve inserir uma mensagem de até **100 caracteres**.`
         );
 
       if (msg === anti.msg)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, a mensagem inserida é a mesma setada atualmente.`
         );
 
-      message.channel.send(`${message.author}, mensagem alterada com sucesso.`);
+      message.reply(`${message.author}, mensagem alterada com sucesso.`);
 
       return await this.client.database.guilds.findOneAndUpdate(
         { idS: message.guild.id },
@@ -106,11 +106,11 @@ module.exports = class AntInvite extends Command {
 
     if (["on", "ligar", "ativar"].includes(args[0].toLowerCase())) {
       if (anti.status)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o sistema já se encontra ligado.`
         );
 
-      message.channel.send(`${message.author}, sistema ativado com sucesso.`);
+      message.reply(`${message.author}, sistema ativado com sucesso.`);
 
       return await this.client.database.guilds.findOneAndUpdate(
         { idS: message.guild.id },
@@ -120,11 +120,11 @@ module.exports = class AntInvite extends Command {
 
     if (["off", "desligar", "desativar"].includes(args[0].toLowerCase())) {
       if (!anti.status)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o sistema já se encontra desativado.`
         );
 
-      message.channel.send(
+      message.reply(
         `${message.author}, sistema desativado com sucesso.`
       );
 
@@ -140,7 +140,7 @@ module.exports = class AntInvite extends Command {
         message.guild.roles.cache.get(args[1]);
 
       if (!role)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve inserir o ID/Mencionar do cargo que deseja adicionar no sistema de Ant-Invite.`
         );
 
@@ -157,11 +157,11 @@ module.exports = class AntInvite extends Command {
           });
 
       if (anti.roles.length >= 15)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você chegou no máximo de 15 cargos no sistema de Ant-Invite.`
         );
 
-      message.channel.send(`${message.author}, cargo inserido com sucesso.`);
+      message.reply(`${message.author}, cargo inserido com sucesso.`);
 
       return await this.client.database.guilds.findOneAndUpdate(
         { idS: message.guild.id },
@@ -177,7 +177,7 @@ module.exports = class AntInvite extends Command {
         message.guild.channels.cache.get(args[1]);
 
       if (!channel)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve inserir o ID/Mencionar do canal que deseja adicionar no sistema de Ant-Invite.`
         );
 
@@ -194,11 +194,11 @@ module.exports = class AntInvite extends Command {
           });
 
       if (anti.channels.length >= 15)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você chegou no máximo de 10 canais no sistema de Ant-Invite.`
         );
 
-      message.channel.send(`${message.author}, canal inserido com sucesso.`);
+      message.reply(`${message.author}, canal inserido com sucesso.`);
 
       return await this.client.database.guilds.findOneAndUpdate(
         { idS: message.guild.id },

@@ -37,7 +37,7 @@ module.exports = class infoCall extends Command {
       });
 
       if (doc1.infoCall.status) {
-        message.channel.send(
+        message.reply(
           `${message.author}, o sistema estava ligado na sua conta portanto eu desativei.`
         );
         await this.client.database.users.findOneAndUpdate(
@@ -45,7 +45,7 @@ module.exports = class infoCall extends Command {
           { $set: { "infoCall.status": false } }
         );
       } else {
-        message.channel.send(
+        message.reply(
           `${message.author}, o sistema estava desligado na sua conta portanto eu ativei.`
         );
         await this.client.database.users.findOneAndUpdate(
@@ -59,7 +59,7 @@ module.exports = class infoCall extends Command {
 
 
     if (doc.infoCall.lastRegister <= 0)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, o membro nunca ficou em call.`
       );
 
@@ -101,7 +101,7 @@ module.exports = class infoCall extends Command {
         }
       );
 
-    message.channel.send(message.author, EMBED);
+    message.reply({embeds: [EMBED]})
   }
   async PUSH(call, members) {
     for (const member of call) {

@@ -73,6 +73,6 @@ module.exports = class BotInfo extends Command {
         this.client.user.displayAvatarURL({ format: "jpg", size: 2048 })
       );
 
-    message.channel.send(EMBED);
+    message.reply({embeds: [EMBED]})
   }
 };

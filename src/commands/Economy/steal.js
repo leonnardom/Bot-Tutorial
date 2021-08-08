@@ -23,12 +23,12 @@ module.exports = class Steal extends Command {
       this.client.users.cache.get(args[0]) || message.mentions.users.first();
 
     if (!USER)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve mencionar quem deseja roubar primeiro.`
       );
 
     if (USER.id === message.author.id)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não pode roubar a si mesmo.`
       );
 
@@ -41,7 +41,7 @@ module.exports = class Steal extends Command {
     });
 
     if (cooldown - (Date.now() - doc.steal.time) > 0)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve aguardar **${moment
           .duration(cooldown - (Date.now() - doc.steal.time))
           .format("h [horas] m [minutos] e s [segundos]")
@@ -49,7 +49,7 @@ module.exports = class Steal extends Command {
       );
 
     if (user_cd - (Date.now() - target.steal.protection) > 0)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, o membro está em proteção por **${moment
           .duration(user_cd - (Date.now() - target.steal.protection))
           .format("d [dias] h [horas] m [minutos] e s [segundos]")
@@ -57,13 +57,13 @@ module.exports = class Steal extends Command {
       );
 
     if (target.coins <= 2000)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não pode roubar alguém que tenha **R$2,000** ou menos na carteira.`
       );
 
     const money = Math.ceil((5 / 100) * target.coins);
 
-    message.channel.send(
+    message.reply(
       `${message.author}, você roubou com sucesso **R$${money}** do membro.`
     );
 

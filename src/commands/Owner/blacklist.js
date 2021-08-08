@@ -23,7 +23,7 @@ module.exports = class BlackList extends Command {
     ClientS.findOne({ _id: this.client.user.id }, async (err, cliente) => {
       if (args[0] == "list") {
         if (!cliente.blacklist.length) {
-          return message.quote(
+          return message.reply(
             `${message.author}, não há nenhum membro em minha **\`Lista Negra\`**.`
           );
         } else {
@@ -44,7 +44,7 @@ module.exports = class BlackList extends Command {
                 .join("\n\n")}`,
             });
 
-          message.quote(LIST);
+          message.reply(LIST);
         }
 
         return;
@@ -53,7 +53,7 @@ module.exports = class BlackList extends Command {
       let member =
         this.client.users.cache.get(args[0]) || message.mentions.users.first();
       if (!member) {
-        return message.quote(
+        return message.reply(
           `${message.author}, você deve inserir o ID/mencionar o membro que deseja inserir em minha **\`Lista Negra\`**.`
         );
       } else if (cliente.blacklist.find((x) => x == member.id)) {
@@ -61,7 +61,7 @@ module.exports = class BlackList extends Command {
           { _id: this.client.user.id },
           { $pull: { blacklist: member.id } }
         );
-        return message.quote(
+        return message.reply(
           `${message.author}, o membro **\`${member.tag}\`** já estava em minha **\`Lista Negra\`** portanto eu removi ele.`
         );
       } else {
@@ -69,7 +69,7 @@ module.exports = class BlackList extends Command {
           { _id: this.client.user.id },
           { $push: { blacklist: member.id } }
         );
-        message.quote(
+        message.reply(
           `${message.author}, o membro **\`${member.tag}\`** foi adicionado em minha **\`Lista Negra\`** com sucesso..`
         );
       }

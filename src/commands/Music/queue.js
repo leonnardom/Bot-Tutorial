@@ -20,7 +20,7 @@ module.exports = class Queue extends Command {
     const player = this.client.music.players.get(message.guild.id);
 
     if (!player)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, não estou tocando música neste servidor.`
       );
 
@@ -56,7 +56,7 @@ module.exports = class Queue extends Command {
         )}**`
       )
 
-    message.channel.send(QUEUE);
+    message.reply({embeds: [QUEUE]});
   }
 
   shorten(text, size) {

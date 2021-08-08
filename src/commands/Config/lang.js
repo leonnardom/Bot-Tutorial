@@ -43,7 +43,7 @@ module.exports = class Lnaguage extends Command {
             .join("\n")}\n\nLinguagem setada atualmente: **${language}**`
         );
 
-      return message.channel.send(EMBED);
+      return message.reply({embeds: [EMBED]})
     }
 
     if (["set", "setar", "trocar"].includes(args[0].toLowerCase())) {
@@ -52,15 +52,15 @@ module.exports = class Lnaguage extends Command {
       const find = filter[0][1];
 
       if (!filter.length)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, não tenho esta linguagem disponível ainda.`
         );
       if (find.db === doc.lang)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, esta linguagem já está setada no momento.`
         );
 
-      message.channel.send(
+      message.reply(
         `${message.author}, linguagem alterada com sucesso.`
       );
 

@@ -21,12 +21,12 @@ module.exports = class ServerStats extends Command {
   async run({ message, args, prefix, author }, t) {
     Guild.findOne({ idS: message.guild.id }, async (err, server) => {
       if (!message.member.hasPermission("MANAGE_GUILD"))
-        return message.quote(
+        return message.reply(
           `${message.author}, você precisa da permissão **MANAGE_GUILD** para executar este comando.`
         );
 
       if (!args[0]) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, este é meu sistema de ServerStats em Canais de Voz, como funciona? O Bot irá deixar os status em Canais, a quantiade de usuários, bots e o total.\n\n> Como usar o comando?\n> **${prefix}serverstats on** - Cria os canais\n> **${prefix}serverstats remove** - Deleta os canais\n\n> OBS: Se você deletar um canal o Bot atualiza na DataBase caso o canal seja do sistema, portanto não é possível bugar ele.`
         );
       }
@@ -36,7 +36,7 @@ module.exports = class ServerStats extends Command {
 
       if (["remove", "desativar", "desligar"].includes(args[0].toLowerCase())) {
         if (!st.status) {
-          return message.channel.send(
+          return message.reply(
             `${message.author}, o sistema já se encontra desativado.`
           );
         }
@@ -46,7 +46,7 @@ module.exports = class ServerStats extends Command {
           { $set: { "serverstats.status": false } }
         );
 
-        message.channel.send(
+        message.reply(
           `${message.author}, o sistema foi desativado com sucesso e os canais foram deletados.`
         );
 
@@ -89,12 +89,12 @@ module.exports = class ServerStats extends Command {
 
       if (["on", "ligar", "ativar"].includes(args[0].toLowerCase())) {
         if (st.status) {
-          return message.channel.send(
+          return message.reply(
             `${message.author}, o sistema já se encontra ativado.`
           );
         }
 
-        message.channel.send(
+        message.reply(
           `${message.author}, o sistema foi ativado com sucesso e os canais foram criados.`
         );
 

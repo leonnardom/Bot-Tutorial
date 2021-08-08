@@ -35,7 +35,7 @@ module.exports = class Daily extends Command {
     //================= Verifcação do Tempo =================//
 
     if (daily !== null && cooldown - (Date.now() - daily) > 0) {
-      return message.channel.send(
+      return message.reply(
         `${message.author}, aguarde **${moment
           .duration(time)
           .format(
@@ -43,7 +43,7 @@ module.exports = class Daily extends Command {
           )}** até pegar o prêmio diário novamente`
       );
     } else {
-      message.channel.send(
+      message.reply(
         `${
           message.author
         }, você resgatou seu prêmio diário de hoje e conseguiu **${coins}** coins.\nAgora você possui **${Utils.toAbbrev(

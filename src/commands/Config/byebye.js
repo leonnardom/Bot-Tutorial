@@ -21,7 +21,7 @@ module.exports = class ByeBye extends Command {
   async run({ message, args, prefix, author }, t) {
     Guild.findOne({ idS: message.guild.id }, async (err, server) => {
       if (!message.member.hasPermission("MANAGE_GUILD"))
-        return message.quote(
+        return message.reply(
           `${message.author}, você precisa da permissão **MANAGE_GUILD** para executar este comando.`
         );
 
@@ -31,15 +31,15 @@ module.exports = class ByeBye extends Command {
           message.guild.channels.cache.find((x) => x.id == args[1]);
 
         if (!canal) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você não inseriu o ID/não mencionou nenhum canal para eu setar como canal de **byebye**.`
           );
         } else if (canal.id === server.byebye.channel) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o canal inserido é o mesmo setado atualmente.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, canal **<#${canal.id}>** setado como canal de **byebye** com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -54,19 +54,19 @@ module.exports = class ByeBye extends Command {
         let msg = args.slice(1).join(" ");
 
         if (!msg) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você não inseriu nenhuma mensagem.`
           );
         } else if (msg.length > 100) {
-          return message.quote(
+          return message.reply(
             `${message.author}, a mensagem inserida é muito grande, o limite de caracteres é de **100**.`
           );
         } else if (msg == server.byebye.msg) {
-          return message.quote(
+          return message.reply(
             `${message.author}, a mensagem inserida é a mesma setada atualmente.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, a mensagem de byebye do servidor foi alterada para\n\`\`\`diff\n- ${msg}\`\`\``
           );
           await Guild.findOneAndUpdate(
@@ -80,11 +80,11 @@ module.exports = class ByeBye extends Command {
 
       if (args[0] == "on") {
         if (server.byebye.status) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o sistema já se encontra ativado.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, sistema de byebye ativado com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -97,11 +97,11 @@ module.exports = class ByeBye extends Command {
 
       if (args[0] == "off") {
         if (!server.byebye.status) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o sistema já se encontra desativado.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, sistema de byebye desativado com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -150,7 +150,7 @@ module.exports = class ByeBye extends Command {
         .setThumbnail(message.guild.iconURL({ dynamic: true }))
         .setTimestamp();
 
-      message.quote(INFO);
+      message.reply({embeds: [EMBED]})
     });
   }
 };

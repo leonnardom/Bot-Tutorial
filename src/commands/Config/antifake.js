@@ -22,7 +22,7 @@ module.exports = class AntiFake extends Command {
     });
 
     if (!message.member.hasPermission("MANAGE_GUILD"))
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não tem permissão de executar este comando.`
       );
 
@@ -46,27 +46,27 @@ module.exports = class AntiFake extends Command {
         }
       );
 
-    if (!args[0]) return message.channel.send(EMBED);
+    if (!args[0]) return message.reply({embeds: [EMBED]})  // message.reply({embeds: [EMBED]});
 
     if (["dias", "days", "setar"].includes(args[0].toLowerCase())) {
       const days = parseInt(args[1]);
 
       if (!args[1] || isNaN(args[1]))
-        return message.channel.send(
+        return message.reply(
           `${message.author}, insira quantos dias deseja para eu kickar contas com o tempo de criação menor que o mesmo inserido.`
         );
 
       if (days < 1 || days > 30)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não pode inserir dias menos que 1 e maiores que 30!`
         );
 
       if (anti.days === days)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, a quantidade de dias inserido é o mesmo setado atualmente.`
         );
 
-      message.channel.send(
+      message.reply(
         `${message.author}, quantidade de dias alterado com sucesso.`
       );
 
@@ -80,16 +80,16 @@ module.exports = class AntiFake extends Command {
 
     if (["on", "ligar", "ativar"].includes(args[0].toLowerCase())) {
       if (anti.days <= 1)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, não é possível ativar o sistema sem a quantidade de dias estar setado.`
         );
 
       if (anti.status)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o sistema já se encontrado ativado.`
         );
 
-      message.channel.send(
+      message.reply(
         `${message.author}, o sistema foi ativado com sucesso.`
       );
       await this.client.database.guilds.findOneAndUpdate(
@@ -102,11 +102,11 @@ module.exports = class AntiFake extends Command {
 
     if (["off", "desligar", "desativar"].includes(args[0].toLowerCase())) {
       if (!anti.status)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o sistema já se encontrado desativado.`
         );
 
-      message.channel.send(
+      message.reply(
         `${message.author}, o sistema foi desativado com sucesso.`
       );
       await this.client.database.guilds.findOneAndUpdate(

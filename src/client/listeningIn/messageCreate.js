@@ -6,7 +6,7 @@ const coldoown = new Set();
 const c = require("colors");
 let t;
 
-module.exports = class {
+module.exports = class messageCreate {
   constructor(client) {
     this.client = client;
   }
@@ -54,7 +54,7 @@ module.exports = class {
       prefix = server.prefix;
 
       if (message.content.match(GetMention(this.client.user.id))) {
-        message.channel.send(
+        message.reply(
           `Olá ${message.author}, meu prefixo no servidor é **${prefix}**.`
         );
       }
@@ -92,7 +92,7 @@ module.exports = class {
           { $set: { "Exp.xp": 0, "Exp.level": level + 1 } }
         );
 
-        message.quote(
+        message.reply(
           `${message.author}, você acaba de subir para o level **${
             level + 1
           }**.`
@@ -110,7 +110,7 @@ module.exports = class {
 
       if (!cmd) return;
       if (coldoown.has(message.author.id))
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve aguardar **5 segundos** para usar outro comando.`
         );
 
@@ -121,18 +121,18 @@ module.exports = class {
       if (comando) {
         if (message.author.id !== process.env.OWNER_ID) {
           if (comando.manutenção)
-            return message.quote(
+            return message.reply(
               `${message.author}, o comando **\`${cmd.name}\`** está em manutenção no momento.\nMotivo: **${comando.reason}**`
             );
 
           if (client.manutenção) {
-            return message.quote(
+            return message.reply(
               `${message.author}, no momento eu me encontro em manutenção, tente novamente mais tarde.\nMotivo: **${client.reason}**`
             );
           }
         }
         if (client.blacklist.some((x) => x == message.author.id)) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você não pode me usar no momento. **\`Lista Negra\`**.`
           );
         }
@@ -143,7 +143,7 @@ module.exports = class {
           if (!cb.cmds.some((x) => x === cmd.name)) {
             if (!cb.channels.some((x) => x === message.channel.id)) {
               if (!message.member.hasPermission("MANAGE_MESSAGES")) {
-                return message.channel.send(cb.msg);
+                return message.reply(cb.msg);
               }
             }
           }
@@ -155,7 +155,7 @@ module.exports = class {
 
         // Webhook de Comandos Usados //
 
-        const Webhook = new WebhookClient(
+       /* const Webhook = new WebhookClient(
           "844034198792175646",
           "5ltRKYvh2uJeCqKYZxMxQ8IV0eKsrUudCtTkzywdsnAyFerqYxfdaIKIbYWcK26afGIF"
         );
@@ -192,7 +192,7 @@ module.exports = class {
             this.client.user.displayAvatarURL({ format: "jpg", size: 2048 })
           );
 
-        Webhook.send(EMBED_COMMANDS);
+        Webhook.send(EMBED_COMMANDS); */
 
         // ========================== //
 

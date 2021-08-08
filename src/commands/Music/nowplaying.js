@@ -20,7 +20,7 @@ module.exports = class NowPlaying extends Command {
     const player = this.client.music.players.get(message.guild.id);
 
     if (!player)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, não estou tocando música neste servidor.`
       );
 
@@ -54,7 +54,7 @@ module.exports = class NowPlaying extends Command {
       );
     //.setThumbnail(track.displayThumbnail("maxresdefault"))
 
-    message.channel.send(EMBED);
+    message.reply({embeds: [EMBED]});
   }
   msToHour(time) {
     time = Math.round(time / 1000);

@@ -22,7 +22,7 @@ module.exports = class Background extends Command {
     });
 
     if (!args[0])
-      return message.channel.send(
+      return message.reply(
         `${message.author}, sub-comandos do comando de background: **set, buy, list**.`
       );
 
@@ -50,7 +50,7 @@ module.exports = class Background extends Command {
 
     if (args[0] === "set") {
       if (!args[1])
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não inseriu o ID do background.`
         );
 
@@ -58,7 +58,7 @@ module.exports = class Background extends Command {
       const list = doc.backgrounds.has;
 
       if (id === 0) {
-        message.channel.send(`${message.author}, background padrão ativado.`);
+        message.reply(`${message.author}, background padrão ativado.`);
 
         await this.client.database.users.findOneAndUpdate(
           { idU: message.author.id },
@@ -66,7 +66,7 @@ module.exports = class Background extends Command {
         );
       } else {
         if (!list.find((x) => x === id))
-          return message.channel.send(
+          return message.reply(
             `${message.author}, você não tem este background.`
           );
 
@@ -75,7 +75,7 @@ module.exports = class Background extends Command {
           { $set: { "backgrounds.active": id } }
         );
 
-        message.channel.send(
+        message.reply(
           `${message.author}, background alterado com sucesso.`
         );
       }
@@ -84,32 +84,32 @@ module.exports = class Background extends Command {
 
     if (args[0] === "buy") {
       if (!args[1])
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não inseriu o ID do background.`
         );
       const id = parseInt(args[1]);
       const list = doc.backgrounds.has;
 
       if (list.find((x) => x === id))
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você já tem este background.`
         );
 
       let find = Object.entries(backgrounds).filter(([, x]) => x.id === id)[0];
 
       if (!find.length || id === 0)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, não temos background com este ID.`
         );
 
       find = find[1];
 
       if (find.price > doc.bank)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não tem dinheiro o suficiente para comprar este background. Preço: **${find.price}**.`
         );
 
-      message.channel.send(
+      message.reply(
         `${message.author}, background comprado e ativado com sucesso. Preço que você pagou: **${find.price}**.`
       );
 
@@ -148,7 +148,7 @@ module.exports = class Background extends Command {
               .join("\n\n")
         );
 
-      message.channel.send(EMBED);
+      message.reply({embeds: [EMBED]});
       return;
     }
   }

@@ -55,7 +55,7 @@ module.exports = class XP extends Command {
               data,
               `${USER.tag}--XP.png`
             );
-            message.channel.send(attachment);
+            message.reply({ files: [attachment] });
           });
         });
     });

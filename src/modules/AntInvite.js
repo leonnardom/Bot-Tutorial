@@ -4,7 +4,7 @@ module.exports = class AntInvite {
     }
   
     async run() {
-      this.client.on("message", async (message) => {
+      this.client.on("messageCreate", async (message) => {
         const doc = await this.client.database.guilds.findOne({
           idS: message.guild.id,
         });

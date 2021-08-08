@@ -23,11 +23,11 @@ module.exports = class Mute extends Command {
 
   async run({ message, args, author }) {
     if (!message.member.hasPermission("MUTE_MEMBERS"))
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você precisa da permissão **MUTE_MEMBERS* para executar este comando.`
       );
     if (!message.guild.me.hasPermission("MUTE_MEMBERS"))
-      return message.channel.send(
+      return message.reply(
         `${message.author}, preciso da permissão de **MUTE_MEMBERS** para executar este comando.`
       );
 
@@ -45,7 +45,7 @@ module.exports = class Mute extends Command {
       let sort = doc.mutes.list.map((x) => x).sort((x, f) => x.time - f.time);
 
       if (!sort.length)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, não tem ninguém mutado neste servidor.`
         );
 
@@ -65,7 +65,7 @@ module.exports = class Mute extends Command {
 
       EMBED.setDescription(paginated.join("\n\n"));
 
-      message.channel.send(EMBED).then((msg) => {
+      message.reply({embeds: [EMBED]}).then((msg) => {
         if (pages <= 1) return;
 
         msg.react(Emojis.Next);
@@ -89,7 +89,7 @@ module.exports = class Mute extends Command {
 
               EMBED.setDescription(paginated.join("\n\n"));
 
-              await msg.edit(EMBED);
+              await msg.edit({embeds: [EMBED]});
               await msg.react(Emojis.Back);
               if (
                 actualPage === pages &&
@@ -114,7 +114,7 @@ module.exports = class Mute extends Command {
 
               paginated = LIST.paginate(actualPage, 10);
               EMBED.setDescription(paginated.join("\n\n"));
-              await msg.edit(EMBED);
+              await msg.edit({embeds: [EMBED]});
 
               if (
                 actualPage === 1 &&
@@ -139,12 +139,12 @@ module.exports = class Mute extends Command {
     );
 
     if (!USER)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve mencionar quem deseja mutar primeiro.`
       );
 
     if (!args[1])
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve inserir quanto tempo deseja mutar o membro.`
       );
 
@@ -152,15 +152,15 @@ module.exports = class Mute extends Command {
     let reason = !args[2] ? "Não Informado" : args.slice(2).join(" "); // Motivo do Mute
 
     if (!time)
-      return message.channel.send(`${message.author}, tempo inválido.`);
+      return message.reply(`${message.author}, tempo inválido.`);
 
     if (!USER.manageable)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, não posso mutar o membro poís ele tem um cargo maior que o meu.`
       );
 
     if (doc.mutes.list.find((x) => x.user === USER.user.id))
-      return message.channel.send(
+      return message.reply(
         `${message.author}, o membro já se encontra mutado em minha DataBase.`
       );
 
@@ -180,7 +180,7 @@ module.exports = class Mute extends Command {
           });
         });
 
-    message.channel.send(
+    message.reply(
       `${
         message.author
       }, o(a) ${USER} foi mutado pelo tempo de **${moment

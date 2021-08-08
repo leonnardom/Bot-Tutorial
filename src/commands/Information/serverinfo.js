@@ -87,7 +87,7 @@ module.exports = class ServerInfo extends Command {
         )
         .setThumbnail(message.guild.iconURL({ dynamic: true }));
 
-      message.quote(SERVERINFO);
+      message.reply({embeds: [SERVERINFO]})
     } catch (err) {
       console.log(`ERRO NO COMANDO SERVERINFO\nERRO: ${err}`);
     }

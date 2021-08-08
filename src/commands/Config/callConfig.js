@@ -53,10 +53,10 @@ module.exports = class callConfig extends Command {
         }
       );
 
-    if (!args[0]) return message.channel.send(EMBED);
+    if (!args[0]) return message.reply({embeds: [EMBED]})
 
     if (!message.member.hasPermission("MANAGE_GUILD"))
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você não tem permissão de executar este comando.`
       );
 
@@ -75,7 +75,7 @@ module.exports = class callConfig extends Command {
           { $push: { "infoCall.channels": channels } }
         );
 
-        message.channel.send(
+        message.reply(
           `${message.author}, todos os canais foram setados com sucesso.`
         );
 
@@ -83,11 +83,11 @@ module.exports = class callConfig extends Command {
       }
       if (args[1] === "all" || args[1] === "tudo") {
         if (!call.channels.length)
-          return message.channel.send(
+          return message.reply(
             `${message.author}, não há nenhum canal na lista.`
           );
 
-        message.channel.send(
+        message.reply(
           `${message.author}, removi todos os canais com sucesso.`
         );
         await this.client.database.guilds.findOneAndUpdate(
@@ -102,12 +102,12 @@ module.exports = class callConfig extends Command {
         message.mentions.channels.first();
 
       if (!CHANNEL)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, mencione/insira o ID do canal desejado.`
         );
 
       if (CHANNEL.type != "voice")
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o canal inserido não é um canal de voz.`
         );
 
@@ -116,7 +116,7 @@ module.exports = class callConfig extends Command {
           { idS: message.guild.id },
           { $pull: { "infoCall.channels": CHANNEL.id } }
         );
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o canal inserido já estava na lista portanto eu removi ele.`
         );
       } else {
@@ -124,7 +124,7 @@ module.exports = class callConfig extends Command {
           { idS: message.guild.id },
           { $push: { "infoCall.channels": CHANNEL.id } }
         );
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o canal inserido foi adicionado na lista com sucesso.`
         );
       }
@@ -143,7 +143,7 @@ module.exports = class callConfig extends Command {
           { $push: { "infoCall.roles": channels } }
         );
 
-        message.channel.send(
+        message.reply(
           `${message.author}, todos os cargos foram setados com sucesso.`
         );
 
@@ -152,11 +152,11 @@ module.exports = class callConfig extends Command {
 
       if (args[1] === "all" || args[1] === "tudo") {
         if (!call.roles.length)
-          return message.channel.send(
+          return message.reply(
             `${message.author}, não há nenhum cargo na lista.`
           );
 
-        message.channel.send(
+        message.reply(
           `${message.author}, removi todos os cargos com sucesso.`
         );
         await this.client.database.guilds.findOneAndUpdate(
@@ -171,7 +171,7 @@ module.exports = class callConfig extends Command {
         message.mentions.roles.first();
 
       if (!ROLE)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, mencione/insira o ID do cargo desejado.`
         );
 
@@ -180,7 +180,7 @@ module.exports = class callConfig extends Command {
           { idS: message.guild.id },
           { $pull: { "infoCall.roles": ROLE.id } }
         );
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o cargo inserido já estava na lista portanto eu removi ele.`
         );
       } else {
@@ -188,7 +188,7 @@ module.exports = class callConfig extends Command {
           { idS: message.guild.id },
           { $push: { "infoCall.roles": ROLE.id } }
         );
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o cargo inserido foi adicionado na lista com sucesso.`
         );
       }

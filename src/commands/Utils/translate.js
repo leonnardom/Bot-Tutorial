@@ -20,7 +20,7 @@ module.exports = class Translate extends Command {
     const text = args.slice(1).join(" ");
 
     if (!text)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, insira o que você deseja traduzir primeiro.`
       );
 
@@ -29,7 +29,7 @@ module.exports = class Translate extends Command {
         to: args[0],
       });
 
-      message.channel.send(
+      message.reply(
         `${message.author}\n\n${trad.text ? trad.text : ""}`
       );
     } catch (err) {
@@ -39,7 +39,7 @@ module.exports = class Translate extends Command {
           err.message.startsWith("The language") &&
           err.message.endsWith("is not supported.")
         )
-          return message.channel.send(
+          return message.reply(
             `${message.author}, linguagem não suportada.`
           );
     }
