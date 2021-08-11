@@ -21,9 +21,7 @@ module.exports = class Play extends Command {
 
     try {
       if (player2) {
-        if (
-          message.member.voice.channel.id != message.guild.me.voice.channel.id
-        )
+        if (message.member.voice.channelId != message.guild.me.voice.channelid)
           return message.reply(
             `${message.author}, você deve estar no mesmo canal de voz que eu.`
           );
@@ -91,7 +89,7 @@ module.exports = class Play extends Command {
             }
           );
 
-        message.reply({embeds: [EMBED]});
+        message.reply({ embeds: [EMBED] });
       } else {
         const tracks = result.tracks;
 

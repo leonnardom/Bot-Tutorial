@@ -34,7 +34,7 @@ module.exports = class messageCreate {
       } catch (e) {
         console.log(e);
       }
-
+      
       if (!user)
         await this.client.database.users.create({
           idU: message.author.id,
