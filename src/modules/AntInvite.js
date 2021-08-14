@@ -23,7 +23,7 @@ module.exports = class AntInvite {
           message.member.roles.cache.has(x)
         );
   
-        if (!message.member.hasPermission("ADMINISTRATOR") && !channels && !roles)
+        if (!message.member.permissions.has("ADMINISTRATOR") && !channels && !roles)
           return message.channel
             .send(
               doc.antinvite.msg === "null"

@@ -21,7 +21,7 @@ module.exports = class CmdBlock extends Command {
   }
 
   async run({ message, args, prefix, author }, t) {
-    if (!message.member.hasPermission("MANAGE_CHANNELS"))
+    if (!message.member.permissions.has("MANAGE_CHANNELS"))
       return message.reply(
         `${Emojis.Errado} - ${message.author}, você não tem permissão para executar este comando.`
       );

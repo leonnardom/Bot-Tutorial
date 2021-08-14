@@ -20,7 +20,7 @@ module.exports = class Ban extends Command {
 
   async run({ message, args, prefix, author }, t) {
     Guild.findOne({ _id: message.guild.id }, async (err, server) => {
-      if (!message.member.hasPermission("BAN_MEMBERS"))
+      if (!message.member.permissions.has("BAN_MEMBERS"))
         return message.reply(
           `${message.author}, você não tem permissão para banir membros.`
         );

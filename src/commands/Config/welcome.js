@@ -22,7 +22,7 @@ module.exports = class Welcome extends (
 
   async run({message, args, prefix, author}, t) {
     Guild.findOne({ idS: message.guild.id }, async function (err, server) {
-      if (!message.member.hasPermission("MANAGE_GUILD"))
+      if (!message.member.permissions.has("MANAGE_GUILD"))
         return message.reply(
           `${message.author} você não tem permissão de executar este comando.`
         );

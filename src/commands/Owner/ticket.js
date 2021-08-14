@@ -71,7 +71,7 @@ module.exports = class Ticket extends Command {
     }
 
     if (["staff"].includes(args[0].toLowerCase())) {
-      if (!message.member.hasPermission("MANAGE_MESSAGES"))
+      if (!message.member.permissions.has("MANAGE_MESSAGES"))
         return message.reply(
           `${message.author}, você não tem permissão para usar este comando.`
         );
@@ -121,7 +121,7 @@ module.exports = class Ticket extends Command {
 
     if (["forceclose", "force-close", "fc"].includes(args[0].toLowerCase())) {
       try {
-        if (!message.member.hasPermission("MANAGE_MESSAGES"))
+        if (!message.member.permissions.has("MANAGE_MESSAGES"))
           return message.reply(
             `${message.author}, você não tem permissão para usar este comando.`
           );

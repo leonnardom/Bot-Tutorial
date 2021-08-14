@@ -55,7 +55,7 @@ module.exports = class AutoRole extends Command {
         return;
       }
 
-      if (!message.member.hasPermission("MANAGE_GUILD"))
+      if (!message.member.permissions.has("MANAGE_GUILD"))
         return message.reply(
           `${message.author}, você precisa da permissão **MANAGE_GUILD** para executar este comando.`
         );

@@ -20,7 +20,7 @@ module.exports = class ServerStats extends Command {
 
   async run({ message, args, prefix, author }, t) {
     Guild.findOne({ idS: message.guild.id }, async (err, server) => {
-      if (!message.member.hasPermission("MANAGE_GUILD"))
+      if (!message.member.permissions.has("MANAGE_GUILD"))
         return message.reply(
           `${message.author}, você precisa da permissão **MANAGE_GUILD** para executar este comando.`
         );

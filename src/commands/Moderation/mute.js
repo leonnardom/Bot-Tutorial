@@ -22,11 +22,11 @@ module.exports = class Mute extends Command {
   }
 
   async run({ message, args, author }) {
-    if (!message.member.hasPermission("MUTE_MEMBERS"))
+    if (!message.member.permissions.has("MUTE_MEMBERS"))
       return message.reply(
         `${message.author}, você precisa da permissão **MUTE_MEMBERS* para executar este comando.`
       );
-    if (!message.guild.me.hasPermission("MUTE_MEMBERS"))
+    if (!message.guild.me.permissions.has("MUTE_MEMBERS"))
       return message.reply(
         `${message.author}, preciso da permissão de **MUTE_MEMBERS** para executar este comando.`
       );
@@ -134,9 +134,8 @@ module.exports = class Mute extends Command {
       return;
     }
 
-    const USER = message.guild.member(
-      this.client.users.cache.get(args[0]) || message.mentions.users.first()
-    );
+    let USER = this.client.users.cache.get(args[0]) || message.mentions.users.first()
+     USER = message.guild.members.cache.get(USER.id);
 
     if (!USER)
       return message.reply(
@@ -171,7 +170,7 @@ module.exports = class Mute extends Command {
         .create({ data: { name: "Mutado", color: "GRAY" } })
         .then((x) => {
           message.guild.channels.cache.forEach((f) => {
-            f.createOverwrite(x.id, {
+            f.permissionOverwrites.create(x.id, {
               SEND_MESSAGES: false,
               ADD_REACTIONS: false,
               SPEAK: false,

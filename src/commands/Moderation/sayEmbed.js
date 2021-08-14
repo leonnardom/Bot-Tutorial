@@ -17,7 +17,7 @@ module.exports = class SayEmbed extends Command {
   }
 
   async run({ message, args, prefix, author }, t) {
-    if (!message.member.hasPermission("MANAGE_MESSAGES"))
+    if (!message.member.permissions.has("MANAGE_MESSAGES"))
       return message.reply(
         `${message.author}, você precisa da permissão de gerenciar mensagens para executar este comando.`
       );

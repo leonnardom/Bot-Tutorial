@@ -142,7 +142,7 @@ module.exports = class messageCreate {
         if (cb.status) {
           if (!cb.cmds.some((x) => x === cmd.name)) {
             if (!cb.channels.some((x) => x === message.channel.id)) {
-              if (!message.member.hasPermission("MANAGE_MESSAGES")) {
+              if (!message.member.permissions.has("MANAGE_MESSAGES")) {
                 return message.reply(cb.msg);
               }
             }

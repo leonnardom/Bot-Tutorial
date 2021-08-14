@@ -101,7 +101,7 @@ const nodes = [
   {
     identifier: "Node 1",
 
-    host: "tutorial-lava-link.herokuapp.com",
+    host: "tutollink.herokuapp.com",
     port: 80,
     password: "testando",
     retryAmount: 30,

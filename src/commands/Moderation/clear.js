@@ -16,7 +16,7 @@ module.exports = class Clear extends Command {
   }
 
   async run({ message, args, prefix, author }, t) {
-    if (!message.member.hasPermission("MANAGE_MESSAGES"))
+    if (!message.member.permissions.has("MANAGE_MESSAGES"))
       return message.reply(
         `${message.author}, você precisa da permissão **MANAGE_MESSAGES* para executar este comando.`
       );

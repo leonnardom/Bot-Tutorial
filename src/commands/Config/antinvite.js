@@ -21,7 +21,7 @@ module.exports = class AntInvite extends Command {
       idS: message.guild.id,
     });
 
-    if (!message.member.hasPermission("MANAGE_GUILD"))
+    if (!message.member.permissions.has("MANAGE_GUILD"))
       return message.reply(
         `${message.author}, você não tem permissão de executar este comando.`
       );
