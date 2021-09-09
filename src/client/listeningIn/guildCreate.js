@@ -37,12 +37,12 @@ module.exports = class {
             inline: true,
           },
           {
-            name: `Propietário`,
+            name: `Proprietário`,
             value: `${owner}`,
             inline: true,
           },
           {
-            name: `ID Do Propietário`,
+            name: `ID Do Proprietário`,
             value: `${owner.id}`,
             inline: true,
           },
