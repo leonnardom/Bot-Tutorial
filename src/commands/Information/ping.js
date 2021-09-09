@@ -18,6 +18,6 @@ module.exports = class Ping extends Command {
   async run({ message, args, prefix, author }, t) {
     message.channel
       .send(`Ping do Bot: **${this.client.ws.ping}ms**`)
-      .then((x) => x.delete({ timeout: 5000 }));
+      .then((m) => setTimeout(() => m.delete(), 10000));
   }
 };

@@ -10,8 +10,8 @@ module.exports = class Ticket extends Command {
     this.client = client;
 
     this.name = "ticket";
-    this.category = "Owner";
-    this.description = "Comando para criar a mensagem de ticket do servidor";
+    this.category = "Config";
+    this.description = "Comando para configurar o sistema de Ticket no Servidor";
     this.usage = "ticket";
     this.aliases = [];
 

@@ -34,7 +34,7 @@ module.exports = class Divorce extends Command {
       .reply(
         `${
           message.author
-        }, você deve divorciar do(a) **\`${await this.client.users
+        }, você quer se divorciar do(a) **\`${await this.client.users
           .fetch(doc.marry.user)
           .then((x) => x.tag)}\`**?`
       )
@@ -76,7 +76,7 @@ module.exports = class Divorce extends Command {
             if (collected.first().emoji.name === Emojis.Errado) {
               msg.delete();
 
-              return message.reply(`${message.author}, divorcio cancelado.`);
+              return message.reply(`${message.author}, divórcio cancelado.`);
             }
           });
       });

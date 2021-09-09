@@ -37,16 +37,16 @@ module.exports = class Coins extends Command {
         .addFields(
           {
             name: `${Emojis.Bank} Coins fora do Banco`,
-            value: Utils.toAbbrev(coins),
+            value: `${Utils.toAbbrev(coins)}`,
           },
 
           {
             name: `${Emojis.Coins} Coins no Banco`,
-            value: Utils.toAbbrev(bank),
+            value: `${Utils.toAbbrev(bank)}`,
           },
           {
             name: `${Emojis.Economy} Total`,
-            value: Utils.toAbbrev(coins + bank),
+            value: `${Utils.toAbbrev(coins + bank)}`,
           }
         )
         .setThumbnail(

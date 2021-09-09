@@ -133,7 +133,7 @@ module.exports = class Work extends Command {
         let works = work - (Date.now() - cooldown);
 
         const background = await loadImage(
-          "./src/assets/img/jpeg/Work_Template.png"
+          "./src/assets/img/png/Work_Template.png"
         );
         ctx.drawImage(background, 0, 0, 400, 600);
 

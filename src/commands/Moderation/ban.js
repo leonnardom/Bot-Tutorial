@@ -42,7 +42,7 @@ module.exports = class Ban extends Command {
           `${message.author}, eu não consegui banir o membro, provalvemente ele tem permissões mais altas que a minha.`
         );
       } else if (member.id == message.author.id) {
-        return message.reply(`${message.author}, você não pode si banir.`);
+        return message.reply(`${message.author}, você não pode se banir.`);
       } else {
         const BAN = new ClientEmbed(author)
           .setAuthor(

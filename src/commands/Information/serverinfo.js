@@ -44,7 +44,7 @@ module.exports = class ServerInfo extends Command {
         .addFields(
           { name: "ID do Servidor:", value: message.guild.id, inline: true },
           {
-            name: "Propietário:",
+            name: "Proprietário:",
             value: message.guild.owner.user.tag,
             inline: true,
           },
@@ -87,7 +87,7 @@ module.exports = class ServerInfo extends Command {
         )
         .setThumbnail(message.guild.iconURL({ dynamic: true }));
 
-      message.reply({embeds: [SERVERINFO]})
+      message.reply({ embeds: [SERVERINFO] });
     } catch (err) {
       console.log(`ERRO NO COMANDO SERVERINFO\nERRO: ${err}`);
     }

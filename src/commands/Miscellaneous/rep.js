@@ -21,7 +21,9 @@ module.exports = class Rep extends Command {
     const USER =
       this.client.users.cache.get(args[0]) || message.mentions.users.first();
 
-    const doc = await this.client.database.users.findOne({ idU: message.author.id });
+    const doc = await this.client.database.users.findOne({
+      idU: message.author.id,
+    });
     const doc1 = await this.client.database.users.findOne({ idU: USER.id });
 
     const rep = doc.reps;
@@ -53,7 +55,7 @@ module.exports = class Rep extends Command {
       );
 
     message.reply(
-      `${message.author}, você enviou uma reputaçaõ para o usuário **${USER.tag}** com sucesso.`
+      `${message.author}, você enviou uma reputação para o usuário **${USER.tag}** com sucesso.`
     );
 
     await this.client.database.users.findOneAndUpdate(

@@ -115,7 +115,7 @@ module.exports = class Registrador extends Command {
               }
             );
 
-          message.reply(HELP);
+          message.reply({ embeds: [HELP] });
         }
       );
     });

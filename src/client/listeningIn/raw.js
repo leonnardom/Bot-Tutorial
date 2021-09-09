@@ -159,7 +159,7 @@ module.exports = class {
 
           msg
             .send(`${member}, estou criando seu **TICKET**, um momento.`)
-            .then((x) => x.delete({ timeout: 3000 }));
+            .then((x) => setTimeout(() => x.delete(), 10000));
           setTimeout(async () => {
             guild.channels
               .create(`${doc.ticket.size + 1}-${member.tag}`, {

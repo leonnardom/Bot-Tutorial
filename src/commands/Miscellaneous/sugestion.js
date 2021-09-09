@@ -21,8 +21,7 @@ module.exports = class Sugestion extends Command {
   async run({ message, args, prefix, author }, t) {
     const sug = args.join(" ");
 
-    if (!sug)
-      return message.reply(`${message.author}, insira a sugestão.`);
+    if (!sug) return message.reply(`${message.author}, insira a sugestão.`);
 
     if (sug.length < 20)
       return message.reply(
@@ -30,7 +29,9 @@ module.exports = class Sugestion extends Command {
       );
 
     message.channel
-      .send(`${message.author}, você deseja a sugestão para meu desenvolvedor?`)
+      .send(
+        `${message.author}, você deseja enviar a sugestão para meu desenvolvedor?`
+      )
       .then(async (msg) => {
         for (let emoji of [Emojis.Certo, Emojis.Errado]) await msg.react(emoji);
 
@@ -43,9 +44,7 @@ module.exports = class Sugestion extends Command {
           )
           .then(async (collected) => {
             if (collected.first().emoji.name === Emojis.Certo) {
-              message.reply(
-                `${message.author}, sugestão enviada com sucesso.`
-              );
+              message.reply(`${message.author}, sugestão enviada com sucesso.`);
 
               const channel = await this.client.channels.fetch(
                 "791605747980828672"
@@ -75,7 +74,7 @@ module.exports = class Sugestion extends Command {
                   })
                 );
 
-              channel.send({embeds: [SUGESTION]}).then((x) => {
+              channel.send({ embeds: [SUGESTION] }).then((x) => {
                 x.react(Emojis.Certo);
                 x.react(Emojis.Errado);
               });

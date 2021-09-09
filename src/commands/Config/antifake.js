@@ -86,7 +86,7 @@ module.exports = class AntiFake extends Command {
 
       if (anti.status)
         return message.reply(
-          `${message.author}, o sistema já se encontrado ativado.`
+          `${message.author}, o sistema já se encontra ativado.`
         );
 
       message.reply(
@@ -103,7 +103,7 @@ module.exports = class AntiFake extends Command {
     if (["off", "desligar", "desativar"].includes(args[0].toLowerCase())) {
       if (!anti.status)
         return message.reply(
-          `${message.author}, o sistema já se encontrado desativado.`
+          `${message.author}, o sistema já se encontra desativado.`
         );
 
       message.reply(
