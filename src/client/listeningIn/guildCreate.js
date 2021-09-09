@@ -58,6 +58,7 @@ module.exports = class {
           }
         )
 
+      
       this.client.channels.cache.get(process.env.CHANNEL_LOGS).send({ embeds: [JOIN] })
     } catch (err) {
       console.log(`EVENTO: GuildCreate ${err}`);
