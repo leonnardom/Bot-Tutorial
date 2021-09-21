@@ -77,6 +77,7 @@ let guildSchema = new Schema({
     channels: { type: Array, default: [] },
     roles: { type: Array, default: [] },
   },
+  youtube: { type: Array, default: [] },
 });
 
 let Guild = mongoose.model("Guilds", guildSchema);

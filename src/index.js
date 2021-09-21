@@ -15,6 +15,8 @@ class BotTutorial extends Client {
     this.commands = new Collection();
     this.aliases = new Collection();
     this.database = new Collection();
+
+    this.youtubeChannels = new Array();
   }
 
   login(token) {
@@ -96,6 +98,8 @@ dbIndex.start();
 const client = new BotTutorial({
   intents: 32767,
 });
+
+/*
 
 const nodes = [
   {
@@ -187,6 +191,7 @@ client.music = new Manager({
   });
 
 client.on("raw", (x) => client.music.updateVoiceState(x));
+*/
 
 const onLoad = async () => {
   klaw("src/commands").on("data", (item) => {
