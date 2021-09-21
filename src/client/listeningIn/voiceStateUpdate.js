@@ -53,7 +53,7 @@ module.exports = class voiceStateUpdate {
           .setTimestamp()
           .setFooter(user.tag);
 
-        channel.send(EMBED).catch(() => {});
+          channel.send({ embeds: [EMBED] }).catch(() => {});
       }
 
       await this.client.database.users.findOneAndUpdate(

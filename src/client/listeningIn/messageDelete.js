@@ -18,15 +18,15 @@ module.exports = class {
           .addFields(
             {
               name: `Author`,
-              value: message.author, // pega o author da mensagem
+              value: `${message.author}`, // pega o author da mensagem
             },
             {
               name: `Contéudo da Mensagem`,
-              value: message.content, // pega o contéudo da mensagem
+              value: `${message.content}`, // pega o contéudo da mensagem
             },
             {
               name: `Canal`,
-              value: message.channel, // pega o canal que a mensagem foi deletada
+              value: `${message.channel}`, // pega o canal que a mensagem foi deletada
             }
           )
           .setThumbnail(
@@ -41,7 +41,7 @@ module.exports = class {
 
         if (server.logs.status) {
           const channel = guild.channels.cache.get(server.logs.channel);
-          channel.send(UPDATE);
+          channel.send({ embeds: [UPDATE] });
         }
       } catch (err) {
         console.log(`EVENTO: MessageDelete`);
