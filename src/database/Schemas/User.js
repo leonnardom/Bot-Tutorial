@@ -106,6 +106,16 @@ let userSchema = new Schema({
     has: { type: Array, default: [] },
     active: { type: Number, default: 0 },
   },
+  crates: {
+    normal: {
+      size: { type: Number, default: 0 },
+      id: { type: Number, default: 1 },
+    },
+    legendary: {
+      size: { type: Number, default: 0 },
+      id: { type: Number, default: 2 },
+    },
+  },
 });
 
 const User = mongoose.model("Users", userSchema);
