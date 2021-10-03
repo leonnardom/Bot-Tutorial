@@ -1,5 +1,3 @@
-const CommandC = require("../../database/Schemas/Command"),
-  ClientS = require("../../database/Schemas/Client");
 const Command = require("../../structures/Command");
 
 module.exports = class Say extends Command {
@@ -20,10 +18,10 @@ module.exports = class Say extends Command {
   async run({ message, args, prefix, author }, t) {
     const msg = args.join(" ");
 
-    if (!msg)
-      return message.reply(`${message.author}, escreva algo primeiro.`);
+    if (!msg) return message.reply(`${message.author}, escreva algo primeiro.`);
 
+    message.channel.send(msg);
+    
     message.delete();
-    message.reply(msg);
   }
 };

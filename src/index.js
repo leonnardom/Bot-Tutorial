@@ -15,17 +15,26 @@ class BotTutorial extends Client {
     this.commands = new Collection();
     this.aliases = new Collection();
     this.database = new Collection();
+    this.subcommands = new Collection();
 
     this.youtubeChannels = new Array();
   }
 
-  login(token) {
+  async login(token) {
     token = process.env.TOKEN;
-    return super.login(token).then(async () => [await this.initLoaders()]);
+    await super.login(token);
+    return [await this.initLoaders()];
   }
 
   load(commandPath, commandName) {
     const props = new (require(`${commandPath}/${commandName}`))(this);
+    if (props.isSub) {
+      if (!this.subcommands.get(props.reference)) {
+        this.subcommands.set(props.reference, new Collection());
+      }
+      this.subcommands.get(props.reference).set(props.name, props);
+    }
+    if (props.isSub) return;
     props.location = commandPath;
     if (props.init) {
       props.init(this);
