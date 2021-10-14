@@ -21,19 +21,19 @@ module.exports = class Prefix extends Command {
       let prefixos = args[0];
 
       if (!prefixos) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não inseriu nenhum prefixo para eu alterar.`
         );
       } else if (prefixos.length > 5) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve inserir um prefixo com no máximo 5 caracteres.`
         );
       } else if (prefixos == server.prefix) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, não foi possível alterar o prefixo, poís o prefixo inserido é o mesmo setado atualmente, tente novamente.`
         );
       } else {
-        message.channel.send(
+        message.reply(
           `${message.author}, meu prefixo em seu servidor foi alterado para **\`${prefixos}\`** com sucesso.`
         );
 

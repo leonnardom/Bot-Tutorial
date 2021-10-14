@@ -20,8 +20,8 @@ module.exports = class Kick extends Command {
 
   async run({ message, args, prefix, author }, t) {
     Guild.findOne({ _id: message.guild.id }, async (err, server) => {
-      if (!message.member.hasPermission("KICK_MEMBERS"))
-        return message.quote(
+      if (!message.member.permissions.has("KICK_MEMBERS"))
+        return message.reply(
           `${message.author}, você não tem permissão para kickar membros.`
         );
       let member = message.guild.member(
@@ -34,15 +34,15 @@ module.exports = class Kick extends Command {
       else reason = args.slice(1).join(" ");
 
       if (!member) {
-        return message.quote(
+        return message.reply(
           `${message.author}, você precisa mencionar/inserir o ID do membro que deseja kickar.`
         );
       } else if (!member.bannable) {
-        return message.quote(
+        return message.reply(
           `${message.author}, eu não consegui kickar o membro, provalvemente ele tem permissões mais altas que a minha.`
         );
       } else if (member.id == message.author.id) {
-        return message.quote(`${message.author}, você não pode si kickar.`);
+        return message.reply(`${message.author}, você não pode si kickar.`);
       } else {
         const KICK = new ClientEmbed(author)
           .setAuthor(
@@ -80,10 +80,10 @@ module.exports = class Kick extends Command {
           );
 
         if (!server.logs.status) {
-          message.quote(BAN);
+          message.reply({ embeds: [BAN] });
         } else {
           let channel = message.guild.channels.cache.get(server.logs.channel);
-          channel.send(BAN);
+          channel.send({ embeds: [BAN] });
         }
         member.kick({ days: 7, reason: reason });
       }

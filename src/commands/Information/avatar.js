@@ -37,6 +37,6 @@ module.exports = class Avatar extends Command {
       .setDescription(`Clique **[aqui](${avatar})** para baixar o avatar.`)
       .setImage(avatar);
 
-    message.channel.send(EMBED);
+    message.reply({embeds: [EMBED]})
   }
 };

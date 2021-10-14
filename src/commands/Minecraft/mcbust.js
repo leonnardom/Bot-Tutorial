@@ -21,7 +21,7 @@ module.exports = class McBust extends Command {
     const nick = args[0];
 
     if (!nick)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve inserir um nick de uma skin de minecraft.`
       );
 
@@ -30,6 +30,6 @@ module.exports = class McBust extends Command {
       .setTitle(`${Emojis.Minecraft} - Nick: ${nick}`)
       .setImage(`https://minotar.net/bust/${nick}/200.png`);
 
-    message.channel.send(EMBED);
+    message.reply({embeds: [EMBED]});
   }
 };

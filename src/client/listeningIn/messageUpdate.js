@@ -7,10 +7,14 @@ module.exports = class {
   }
 
   async run(oldMessage, newMessage) {
-    Guild.findOne({ idS: newMessage.guild.id }, async function (err, server) {
+    Guild.findOne({ idS: newMessage.guild.id }, async (err, server) => {
       try {
         if (newMessage.author.bot) return; // caso um bot tenha editado alguma mensagem ele não vai mandar no canal de LOGS.
         const guild = newMessage.guild;
+
+        if (oldMessage.content === newMessage.content) return;
+
+        this.client.emit("messageCreate", newMessage);
 
         const UPDATE = new MessageEmbed()
           .setAuthor(guild.name, guild.iconURL({ dynamic: true }))
@@ -18,19 +22,19 @@ module.exports = class {
           .addFields(
             {
               name: `Author`,
-              value: newMessage.author, // pega o author da mensagem
+              value: `${newMessage.author}`, // pega o author da mensagem
             },
             {
               name: `Mensagem Anterior`,
-              value: oldMessage.content,
+              value: `${oldMessage.content}`,
             },
             {
               name: `Mensagem Posterior`,
-              value: newMessage.content,
+              value: `${newMessage.content}`,
             },
             {
               name: `Canal`,
-              value: newMessage.channel,
+              value: `${newMessage.channel}`,
             }
           )
           .setThumbnail(
@@ -45,7 +49,7 @@ module.exports = class {
 
         if (server.logs.status) {
           const channel = guild.channels.cache.get(server.logs.channel);
-          channel.send(UPDATE);
+          channel.send({ embeds: [UPDATE] });
         }
       } catch (err) {
         console.log(`EVENTO: MessageUpdate ${err}`);

@@ -6,6 +6,9 @@ let clientSchema = new Schema({
   manutenção: { type: Boolean, default: false },
   reason: { type: String },
   blacklist: { type: Array, default: [] },
+  ranks: {
+    coins: { type: Array, default: [] },
+  },
 });
 
 let Client = mongoose.model("Client", clientSchema);

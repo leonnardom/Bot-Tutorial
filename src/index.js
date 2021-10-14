@@ -7,21 +7,34 @@ const Locale = require("../lib");
 const Guild = require("./database/Schemas/Guild");
 const Files = require("./utils/Files");
 const c = require("colors");
-class Main extends Client {
+const { Manager } = require("erela.js");
+
+class BotTutorial extends Client {
   constructor(options) {
     super(options);
     this.commands = new Collection();
     this.aliases = new Collection();
     this.database = new Collection();
+    this.subcommands = new Collection();
+
+    this.youtubeChannels = new Array();
   }
 
-  login(token) {
+  async login(token) {
     token = process.env.TOKEN;
-    return super.login(token).then(async () => [await this.initLoaders()]);
+    await super.login(token);
+    return [await this.initLoaders()];
   }
 
   load(commandPath, commandName) {
     const props = new (require(`${commandPath}/${commandName}`))(this);
+    if (props.isSub) {
+      if (!this.subcommands.get(props.reference)) {
+        this.subcommands.set(props.reference, new Collection());
+      }
+      this.subcommands.get(props.reference).set(props.name, props);
+    }
+    if (props.isSub) return;
     props.location = commandPath;
     if (props.init) {
       props.init(this);
@@ -89,10 +102,105 @@ class Main extends Client {
 }
 
 const dbIndex = require("./database/index.js");
-const { resolve } = require("path");
 dbIndex.start();
 
-const client = new Main();
+const client = new BotTutorial({
+  intents: 32767,
+});
+
+/*
+
+const nodes = [
+  {
+    identifier: "Node 1",
+
+    host: "tutollink.herokuapp.com",
+    port: 80,
+    password: "testando",
+    retryAmount: 30,
+    retryDelay: 3000,
+    secure: false,
+  },
+];
+
+client.LavaLinkPing = new Map();
+
+client.music = new Manager({
+  nodes,
+  send(id, payload) {
+    const guild = client.guilds.cache.get(id);
+    if (guild) guild.shard.send(payload);
+  },
+})
+
+  .on("nodeConnect", (node) => {
+    console.log(c.red(`[LavaLink] - ${node.options.identifier} conectado.`));
+
+    client.LavaLinkPing.set(node.identifier, {});
+
+    const sendPing = () => {
+      node.send({
+        op: "ping",
+      });
+
+      client.LavaLinkPing.get(node.identifier).lastPingSent = Date.now();
+    };
+
+    sendPing();
+    setInterval(() => {
+      sendPing();
+    }, 45000);
+  })
+
+  .on("nodeReconnect", (node, error) => {
+    console.log(
+      c.red(`[LavaLink] - Reconectando no Node ${node.options.identifier}`)
+    );
+  })
+
+  .on("nodeError", (node, error) => {
+    if (error && error.message.includes('"pong"')) {
+      const lavalinkPing = client.LavaLinkPing.get(node.identifier);
+      lavalinkPing.ping = Date.now() - lavalinkPing.lastPingSent;
+      return;
+    }
+
+    console.log(
+      c.red(
+        `[LavaLink] - Erro ao concetar no Node ${node.options.identifier} | ERRO: ${error.message}`
+      )
+    );
+
+    if (error.message.startsWith("Unable to connect after"))
+      client.music.reconnect();
+  })
+  .on("trackStart", async (player, track) => {
+    const channel = client.channels.cache.get(player.textChannel);
+    let t = await client.getTranslate(player.guild);
+
+    if (player.lastPlayingMsgID) {
+      const msg = channel.messages.cache.get(player.lastPlayingMsgID);
+
+      if (msg) msg.delete();
+    }
+
+    player.lastPlayingMsgID = await channel
+      .send(`🎶 | Começando a Tocar: **${track.title}**`)
+      .then((x) => x.id);
+  })
+
+  .on("queueEnd", async (player) => {
+    let t = await client.getTranslate(player.guild);
+
+    client.channels.cache
+      .get(player.textChannel)
+      .send(
+        `📃 | A fila de Música acabou e eu me desconectei do canal de voz.`
+      );
+  });
+
+client.on("raw", (x) => client.music.updateVoiceState(x));
+*/
 
 const onLoad = async () => {
   klaw("src/commands").on("data", (item) => {
@@ -117,4 +225,5 @@ onLoad();
 
 module.exports = {
   Util: require("./utils/index.js"),
+  musicPlayers: this.musicPlayers,
 };

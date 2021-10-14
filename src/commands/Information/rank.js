@@ -53,7 +53,7 @@ module.exports = class Rank extends Command {
               message.author.displayAvatarURL({ dynamic: true, size: 2048 })
             );
 
-          message.quote(EMBED);
+          message.reply({embeds: [EMBED]})
         });
     });
   }

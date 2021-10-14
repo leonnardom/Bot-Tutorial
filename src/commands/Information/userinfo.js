@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const moment = require("moment");
 const Command = require("../../structures/Command");
 const ClientEmbed = require("../../structures/ClientEmbed");
+const Emojis = require("../../utils/Emojis");
 
 module.exports = class UserInfo extends Command {
   constructor(client) {
@@ -27,42 +28,20 @@ module.exports = class UserInfo extends Command {
           message.mentions.members.first() ||
           message.author
       );
-      const ROLES = message.guild
-        .member(user.id)
-        .roles.cache.filter((r) => r.id !== message.guild.id)
-        .map((roles) => roles);
-      const userI = message.guild.member(user.id);
 
-      let roles;
-      if (!ROLES.length) roles = "Nenhum Cargo";
-      else
-        roles =
-          ROLES.length > 10
-            ? ROLES.map((r) => r)
-                .slice(0, 10)
-                .join(", ") + `e mais **${ROLES.length - 10}** cargos.`
-            : ROLES.map((r) => r).join(", ");
+      const flags = [];
+      this.Flags(user, flags);
 
-      function Device(user) {
-        if (!user.presence.clientStatus) return null;
-        let devices = Object.keys(user.presence.clientStatus);
-
-        let deviceList = devices.map((x) => {
-          if (x === "desktop") return "COMPUTADOR";
-          else if (x === "mobile") return "CELULAR";
-          else return "BOT";
-        });
-
-        return deviceList.join(" - ");
-      }
+      const roles = [];
+      this.Roles(user, roles, message);
 
       let presence;
       if (!user.presence.activities.length) presence = "Não está jogando nada";
       else presence = user.presence.activities.join(", ");
 
-      const device = Device(user);
-      const joined = `${moment(userI.joinedAt).format("L")} ( ${moment(
-        userI.joinedAt
+      const device = this.Device(user);
+      const joined = `${moment(user.joinedAt).format("L")} ( ${moment(
+        user.joinedAt
       )
         .startOf("day")
         .fromNow()} )`;
@@ -73,16 +52,13 @@ module.exports = class UserInfo extends Command {
         .fromNow()} )`;
 
       const USERINFO = new ClientEmbed(author)
-        .setAuthor(
-          user.user.username,
-          user.user.displayAvatarURL({ dynamic: true })
-        )
+        .setTitle(flags + user.user.username)
         .addFields(
           { name: "Jogando:", value: `\`\`\`diff\n- ${presence}\`\`\`` },
           { name: "Nome do Usuário:", value: user.user.tag, inline: true },
           {
             name: "Nickname no Servidor:",
-            value: !!userI.nickname ? userI.nickname : "Nenhum Nickname",
+            value: !!user.nickname ? user.nickname : "Nenhum Nickname",
             inline: true,
           },
           { name: "ID do Usuário:", value: user.id },
@@ -93,7 +69,15 @@ module.exports = class UserInfo extends Command {
             name: "Dispositivo:",
             value: String(device).replace("null", "Nenhum"),
           },
-          { name: "É bot?", value: user.user.bot ? "Sim" : "Não", inline: true }
+          {
+            name: "É bot?",
+            value: user.user.bot ? "Sim" : "Não",
+            inline: true,
+          },
+          {
+            name: `Cargos no Servidor`,
+            value: roles,
+          }
         )
         .setThumbnail(user.user.displayAvatarURL({ dynamic: true }))
         .setFooter(
@@ -101,9 +85,64 @@ module.exports = class UserInfo extends Command {
           message.author.displayAvatarURL({ dynamic: true })
         );
 
-      message.quote(USERINFO);
+      message.reply({ embeds: [USERINFO] });
     } catch (err) {
       console.log(`ERRO NO COMANDO USERINFO\nERROR: ${err}`);
     }
+  }
+
+  //================> Parte de Pegar as Badges
+
+  Flags(user, flags) {
+    let list;
+    if (this.client.users.cache.get(user.id).flags == null) list = "";
+    else
+      list = this.client.users.cache
+        .get(user.id)
+        .flags.toArray()
+        .join("")
+        .replace("EARLY_VERIFIED_DEVELOPER", Emojis.Verified_Developer)
+        .replace("HOUSE_BRAVERY", Emojis.Bravery)
+        .replace("HOUSE_BRILLIANCE", Emojis.Brilliance)
+        .replace("HOUSE_BALANCE", Emojis.Balance)
+        .replace("VERIFIED_BOT", Emojis.Verified_Bot)
+        .replace("VERIFIED_DEVELOPER", "");
+
+    flags.push(list);
+  }
+
+  //================> Parte de Pegar os Cargos
+
+  Roles(user, roles, message) {
+    const ROLES = message.guild
+      .member(user.id)
+      .roles.cache.filter((r) => r.id !== message.guild.id)
+      .map((roles) => roles);
+    let list;
+    if (!ROLES.length) list = "Nenhum Cargo";
+    else
+      list =
+        ROLES.length > 10
+          ? ROLES.map((r) => r)
+              .slice(0, 10)
+              .join(", ") + `e mais **${ROLES.length - 10}** cargos.`
+          : ROLES.map((r) => r).join(", ");
+
+    roles.push(list);
+  }
+
+  //================> Parte de Pegar o Dispositivo
+
+  Device(user) {
+    if (!user.presence.clientStatus) return null;
+    let devices = Object.keys(user.presence.clientStatus);
+
+    let deviceList = devices.map((x) => {
+      if (x === "desktop") return `${Emojis.Computer} Computador`;
+      else if (x === "mobile") return `${Emojis.Mobile} Celular`;
+      else return `${Emojis.Robot} Bot`;
+    });
+
+    return deviceList.join(" - ");
   }
 };

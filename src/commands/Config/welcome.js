@@ -22,8 +22,8 @@ module.exports = class Welcome extends (
 
   async run({message, args, prefix, author}, t) {
     Guild.findOne({ idS: message.guild.id }, async function (err, server) {
-      if (!message.member.hasPermission("MANAGE_GUILD"))
-        return message.channel.send(
+      if (!message.member.permissions.has("MANAGE_GUILD"))
+        return message.reply(
           `${message.author} você não tem permissão de executar este comando.`
         );
 
@@ -33,15 +33,15 @@ module.exports = class Welcome extends (
           message.guild.channels.cache.find((x) => x.id == args[1]);
 
         if (!canal) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você não inseriu o ID/não mencionou nenhum canal para eu setar como canal de **welcome**.`
           );
         } else if (canal.id === server.welcome.channel) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o canal inserido é o mesmo setado atualmente.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, ${t('commands:welcome:channel.sucess', {
               canal: canal.id
             })}`
@@ -58,19 +58,19 @@ module.exports = class Welcome extends (
         let msg = args.slice(1).join(" ");
 
         if (!msg) {
-          return message.quote(
+          return message.reply(
             `${message.author}, você não inseriu nenhuma mensagem.`
           );
         } else if (msg.length > 100) {
-          return message.quote(
+          return message.reply(
             `${message.author}, a mensagem inserida é muito grande, o limite de caracteres é de **100**.`
           );
         } else if (msg == server.welcome.msg) {
-          return message.quote(
+          return message.reply(
             `${message.author}, a mensagem inserida é a mesma setada atualmente.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, a mensagem de welcome do servidor foi alterada para\n\`\`\`diff\n- ${msg}\`\`\``
           );
           await Guild.findOneAndUpdate(
@@ -84,11 +84,11 @@ module.exports = class Welcome extends (
 
       if (args[0] == "on") {
         if (server.welcome.status) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o sistema já se encontra ativado.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, sistema de welcome ativado com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -101,11 +101,11 @@ module.exports = class Welcome extends (
 
       if (args[0] == "off") {
         if (!server.welcome.status) {
-          return message.quote(
+          return message.reply(
             `${message.author}, o sistema já se encontra desativado.`
           );
         } else {
-          message.quote(
+          message.reply(
             `${message.author}, sistema de welcome desativado com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -154,7 +154,7 @@ module.exports = class Welcome extends (
         .setThumbnail(message.guild.iconURL({ dynamic: true }))
         .setTimestamp();
 
-      message.quote(INFO);
+      message.reply({embeds: [INFO]})
     });
   }
 };

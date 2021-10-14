@@ -10,7 +10,6 @@ module.exports = class Command {
 
     this.enabled = true;
     this.guildOnly = true;
+    this.isSub = false;
   }
-
-  async run() {}
 };

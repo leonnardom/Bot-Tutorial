@@ -37,15 +37,15 @@ module.exports = class Registrador extends Command {
               message.mentions.roles.first() ||
               message.guild.roles.find((x) => x.id == args[1]);
             if (!ROLE) {
-              return message.quote(
+              return message.reply(
                 `${message.author}, insira o ID/mencione a ROLE desejada para setar como cargo de registrador.`
               );
             } else if (server.registrador.role == ROLE.id) {
-              return message.quote(
+              return message.reply(
                 `${message.author}, este cargo já está setado como cargo de registrador.`
               );
             } else {
-              message.quote(
+              message.reply(
                 `${message.author}, alterei o cargo de registrador para o cargo **${ROLE}** com sucesso.`
               );
               await Guild.findOneAndUpdate(
@@ -59,8 +59,6 @@ module.exports = class Registrador extends Command {
 
           const registrador = server.registrador;
           const registradorU = user.registrador;
-
-          console.log(registradorU);
 
           const HELP = new ClientEmbed(author)
             .setAuthor(
@@ -117,7 +115,7 @@ module.exports = class Registrador extends Command {
               }
             );
 
-          message.quote(HELP);
+          message.reply(HELP);
         }
       );
     });

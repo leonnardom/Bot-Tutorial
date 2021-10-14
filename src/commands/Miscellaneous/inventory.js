@@ -40,6 +40,6 @@ module.exports = class Inventory extends Command {
         .join("\n\n")
     );
 
-    message.channel.send(message.author, EMBED);
+    message.reply({embeds: [EMBED]})
   }
 };

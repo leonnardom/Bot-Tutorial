@@ -40,7 +40,7 @@ module.exports = class Help extends Command {
           commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name));
 
         if (!comando) {
-          return message.quote(
+          return message.reply(
             `${message.author}, não achei nenhum comando com o nome/aliases **\`${name}\`**.`
           );
         }
@@ -71,7 +71,7 @@ module.exports = class Help extends Command {
         );
         if (comando.usage) AJUDA.addField(`Modo de Uso`, comando.usage);
 
-        message.quote(AJUDA);
+        message.reply(AJUDA);
       });
     } else {
       const HELP = new ClientEmbed(author)
@@ -102,7 +102,7 @@ module.exports = class Help extends Command {
         HELP.addField(category, comandos || `Nenhum Comando`, false);
       });
 
-      message.quote(HELP);
+      message.reply({embeds: [HELP]})
     }
   }
 };

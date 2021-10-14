@@ -22,29 +22,30 @@ module.exports = class Divorce extends Command {
     });
 
     if (!doc.marry.has)
-      return message.channel.send(`${message.author}, você não está casado.`);
+      return message.reply(`${message.author}, você não está casado.`);
 
-    message.channel
-      .send(
+    const filter = (reaction, member) => {
+      return (
+        member.id === message.author.id &&
+        [Emojis.Certo, Emojis.Errado].includes(reaction.emoji.name)
+      );
+    };
+    message
+      .reply(
         `${
           message.author
-        }, você deve divorciar do(a) **\`${await this.client.users.fetch(
-          doc.marry.user
-        ).then(x => x.tag)}\`**?`
+        }, você deve divorciar do(a) **\`${await this.client.users
+          .fetch(doc.marry.user)
+          .then((x) => x.tag)}\`**?`
       )
       .then(async (msg) => {
         for (let emoji of [Emojis.Certo, Emojis.Errado]) await msg.react(emoji);
 
         msg
-          .awaitReactions(
-            (reaction, member) =>
-              member.id === message.author.id &&
-              [Emojis.Certo, Emojis.Errado].includes(reaction.emoji.name),
-            { max: 1 }
-          )
+          .awaitReactions({ filter: filter, max: 1 })
           .then(async (collected) => {
             if (collected.first().emoji.name === Emojis.Certo) {
-              message.channel.send(
+              message.reply(
                 `${message.author}, você se divorciou com sucesso.`
               );
 
@@ -75,9 +76,7 @@ module.exports = class Divorce extends Command {
             if (collected.first().emoji.name === Emojis.Errado) {
               msg.delete();
 
-              return message.channel.send(
-                `${message.author}, divorcio cancelado.`
-              );
+              return message.reply(`${message.author}, divorcio cancelado.`);
             }
           });
       });

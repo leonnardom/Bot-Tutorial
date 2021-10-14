@@ -19,38 +19,42 @@ module.exports = class Daily extends Command {
   }
 
   async run({ message, args, prefix, author }, t) {
-    User.findOne({ idU: message.author.id }, async (err, user) => {
-      //================= Imports =================//
-      let cooldown = 8.64e7;
-      let coins = Math.floor(Math.random() * 100);
-      let daily = user.daily;
-      let atual = user.coins;
-      let time = cooldown - (Date.now() - daily);
-
-      //================= Verifcação do Tempo =================//
-
-      if (daily !== null && cooldown - (Date.now() - daily) > 0) {
-        return message.channel.send(
-          `${message.author}, aguarde **${moment
-            .duration(time)
-            .format(
-              "h [horas] m [minutos] e s [segundos]"
-            )}** até pegar o prêmio diário novamente`
-        );
-      } else {
-        message.channel.send(
-          `${
-            message.author
-          }, você resgatou seu prêmio diário de hoje e conseguiu **${coins}** coins.\nAgora você possui **${Utils.toAbbrev(
-            atual + coins
-          )}** coins.`
-        );
-
-        await User.findOneAndUpdate(
-          { idU: message.author.id },
-          { $set: { coins: coins + atual, daily: Date.now() } }
-        );
-      }
+    const user = await this.client.database.users.findOne({
+      idU: message.author.id,
     });
+
+    //================= Imports =================//
+
+    const give = Math.floor(Math.random() * 100);
+    let cooldown = 8.64e7;
+    let coins = user.vip.hasVip ? give + Math.floor(Math.random() * 200) : give;
+    let daily = user.daily;
+    let atual = user.coins;
+    let time = cooldown - (Date.now() - daily);
+
+    //================= Verifcação do Tempo =================//
+
+    if (daily !== null && cooldown - (Date.now() - daily) > 0) {
+      return message.reply(
+        `${message.author}, aguarde **${moment
+          .duration(time)
+          .format(
+            "h [horas] m [minutos] e s [segundos]"
+          )}** até pegar o prêmio diário novamente`
+      );
+    } else {
+      message.reply(
+        `${
+          message.author
+        }, você resgatou seu prêmio diário de hoje e conseguiu **${coins}** coins.\nAgora você possui **${Utils.toAbbrev(
+          atual + coins
+        )}** coins.`
+      );
+
+      await User.findOneAndUpdate(
+        { idU: message.author.id },
+        { $set: { coins: coins + atual, daily: Date.now() } }
+      );
+    }
   }
 };

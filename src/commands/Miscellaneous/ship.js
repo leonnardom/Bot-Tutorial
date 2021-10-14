@@ -41,7 +41,7 @@ module.exports = class Ship extends (
     let max = target.username.length
     let min = max - (max > 5 ? 5 : 3)
 
-    message.channel.send(`${message.author}\n> \`${user.username}\` + \`${target.username}\` = **${user.username.slice(0, 5)}${target.username.slice(min, max)}**\n\n> Eles tem **\`${ship}%\`** de chance de ficarem juntos.\n\n> \`0% [ ${progressBar(ship, 100, 50)} ] 100%\``)
+    message.reply(`${message.author}\n> \`${user.username}\` + \`${target.username}\` = **${user.username.slice(0, 5)}${target.username.slice(min, max)}**\n\n> Eles tem **\`${ship}%\`** de chance de ficarem juntos.\n\n> \`0% [ ${progressBar(ship, 100, 50)} ] 100%\``)
 
   }
 };

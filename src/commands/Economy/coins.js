@@ -53,7 +53,7 @@ module.exports = class Coins extends Command {
           USER.displayAvatarURL({ dynamic: true, size: 2048, format: "jpg" })
         );
 
-      message.quote(EMBED);
+      message.reply({embeds: [EMBED]})
     });
   }
 };

@@ -61,6 +61,6 @@ module.exports = class Reps extends Command {
         }
       );
 
-    message.channel.send(EMBED);
+    message.reply({embeds: [EMBED]});
   }
 };

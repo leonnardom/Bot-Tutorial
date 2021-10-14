@@ -17,15 +17,15 @@ module.exports = class SayEmbed extends Command {
   }
 
   async run({ message, args, prefix, author }, t) {
-    if (!message.member.hasPermission("MANAGE_MESSAGES"))
-      return message.channel.send(
+    if (!message.member.permissions.has("MANAGE_MESSAGES"))
+      return message.reply(
         `${message.author}, você precisa da permissão de gerenciar mensagens para executar este comando.`
       );
 
     const msg = args.join(" ");
 
     if (!msg)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve inserir o que deseja anunciar primeiro.`
       );
 
@@ -36,6 +36,6 @@ module.exports = class SayEmbed extends Command {
         message.author.displayAvatarURL({ dynamic: true })
       );
 
-    message.channel.send(EMBED);
+    message.reply({embeds: [EMBED]});
   }
 };

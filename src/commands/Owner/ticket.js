@@ -29,7 +29,7 @@ module.exports = class Ticket extends Command {
     });
 
     if (!args[0])
-      return message.channel.send(
+      return message.reply(
         `${Emojis.Help} - ${message.author}, comandos do sistema:\n\n> **${prefix}ticket fechar**\n> **${prefix}ticket force-close**\n> **${prefix}ticket msg**.`
       );
 
@@ -67,12 +67,12 @@ module.exports = class Ticket extends Command {
           USER.displayAvatarURL({ dynamic: true, format: "jpg", size: 2048 })
         );
 
-      return message.channel.send(TICKETS);
+      return message.reply({embeds: [TICKETS]});
     }
 
     if (["staff"].includes(args[0].toLowerCase())) {
-      if (!message.member.hasPermission("MANAGE_MESSAGES"))
-        return message.channel.send(
+      if (!message.member.permissions.has("MANAGE_MESSAGES"))
+        return message.reply(
           `${message.author}, você não tem permissão para usar este comando.`
         );
 
@@ -81,16 +81,16 @@ module.exports = class Ticket extends Command {
         message.guild.roles.cache.get(args[1]);
 
       if (!ROLE)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, mencione/insira o ID do cargo desejado para setar no sistema de **TICKET**.`
         );
 
       if (doc.ticket.staff === ROLE.id)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, o cargo inserido é o mesmo setado atualmente.`
         );
 
-      message.channel.send(`${message.author}, cargo alterado com sucesso.`);
+      message.reply(`${message.author}, cargo alterado com sucesso.`);
 
       await this.client.database.guilds.findOneAndUpdate(
         { idS: message.guild.id },
@@ -103,7 +103,7 @@ module.exports = class Ticket extends Command {
         `Olá, está com alguma dúvida? Basta reagir no Emoji abaixo.`
       );
 
-      message.channel.send(TICKET).then(async (msg) => {
+      message.reply(TICKET).then(async (msg) => {
         await this.client.database.guilds.findOneAndUpdate(
           { idS: message.guild.id },
           {
@@ -121,24 +121,24 @@ module.exports = class Ticket extends Command {
 
     if (["forceclose", "force-close", "fc"].includes(args[0].toLowerCase())) {
       try {
-        if (!message.member.hasPermission("MANAGE_MESSAGES"))
-          return message.channel.send(
+        if (!message.member.permissions.has("MANAGE_MESSAGES"))
+          return message.reply(
             `${message.author}, você não tem permissão para usar este comando.`
           );
 
         if (!TARGET)
-          return message.channel.send(
+          return message.reply(
             `${message.author}, você deve mencionar quem deseja fechar o ticket.`
           );
 
         const DT = await this.client.database.users.findOne({ idU: TARGET.id });
 
         if (!DT.ticket.have)
-          return message.channel.send(
+          return message.reply(
             `${message.author}, este membro não possui um **TICKET** em aberto.`
           );
 
-        message.channel.send(
+        message.reply(
           `${message.author}, ok, irei fechar o **TICKET** do membro e deletar o canal.`
         );
 
@@ -147,7 +147,7 @@ module.exports = class Ticket extends Command {
             message.guild.channels.cache.get(DT.ticket.channel).delete();
           } catch (err) {
             if (err)
-              message.channel.send(
+              message.reply(
                 `${message.author}, o canal de **TICKET** já havia sido deletado manualmente, então removi o membro da DataBase de Tickets.`
               );
           }
@@ -159,7 +159,7 @@ module.exports = class Ticket extends Command {
         }, 3000);
       } catch (err) {
         if (err)
-          return message.channel.send(
+          return message.reply(
             `${message.author}, este membro nunca criou um **TICKET** no servidor.`
           );
       }
@@ -167,11 +167,11 @@ module.exports = class Ticket extends Command {
 
     if (["fechar", "close"].includes(args[0].toLowerCase())) {
       if (!doc1.ticket.have)
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você não possui nenhum **TICKET** em aberto.`
         );
 
-      message.channel.send(
+      message.reply(
         `${message.author}, ok, irei fechar o seu **TICKET** e deletar o canal.`
       );
 
@@ -180,7 +180,7 @@ module.exports = class Ticket extends Command {
           message.guild.channels.cache.get(doc1.ticket.channel).delete();
         } catch (err) {
           if (err)
-            message.channel.send(
+            message.reply(
               `${message.author}, o canal de **TICKET** já havia sido deletado manualmente, então removi você da DataBase de Tickets.`
             );
         }

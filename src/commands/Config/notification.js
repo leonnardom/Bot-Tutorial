@@ -21,16 +21,16 @@ module.exports = class Notification extends Command {
 
     if (!args[0]) {
       if (!doc.notification.status) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, este sistema não se encontra ativado no servidor.`
         );
       } else if (message.member.roles.cache.has(doc.notification.role)) {
-        message.channel.send(
+        message.reply(
           `${message.author}, você já tinha este cargo, portanto eu removi ele.`
         );
         return message.member.roles.remove(doc.notification.role);
       } else {
-        message.channel.send(
+        message.reply(
           `${message.author}, cargo adicionado com sucesso..`
         );
         return message.member.roles.add(doc.notification.role);
@@ -43,11 +43,11 @@ module.exports = class Notification extends Command {
         message.guild.roles.cache.get(args[1]);
 
       if (!role) {
-        return message.channel.send(
+        return message.reply(
           `${message.author}, você deve mencionar qual cargo deseja setar.`
         );
       } else if (role.id == doc.notification.role) {
-        message.channel.send(
+        message.reply(
           `${message.author}, o cargo inserido é o mesmo setado atualmente, portanto eu removi ele.`
         );
         return await this.client.database.guilds.findOneAndUpdate(
@@ -57,7 +57,7 @@ module.exports = class Notification extends Command {
           }
         );
       } else {
-        message.channel.send(
+        message.reply(
           `${message.author}, ok, cargo alterado com sucesso.`
         );
         await this.client.database.guilds.findOneAndUpdate(
@@ -71,11 +71,11 @@ module.exports = class Notification extends Command {
 
     if (args[0] == "on") {
       if (doc.notification.status) {
-        return message.quote(
+        return message.reply(
           `${message.author}, o sistema já se encontra ativado.`
         );
       } else {
-        message.quote(
+        message.reply(
           `${message.author}, sistema de notificação ativado com sucesso.`
         );
         await this.client.database.guilds.findOneAndUpdate(
@@ -88,11 +88,11 @@ module.exports = class Notification extends Command {
 
     if (args[0] == "off") {
       if (!doc.notification.status) {
-        return message.quote(
+        return message.reply(
           `${message.author}, o sistema já se encontra desativado.`
         );
       } else {
-        message.quote(
+        message.reply(
           `${message.author}, sistema de notificação desativado com sucesso.`
         );
         await this.client.database.guilds.findOneAndUpdate(

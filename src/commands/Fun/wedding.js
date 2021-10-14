@@ -30,7 +30,7 @@ module.exports = class Wedding extends Command {
     });
 
     if (!doc.marry.has)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você/o usuário não está casado.`
       );
 
@@ -56,6 +56,6 @@ module.exports = class Wedding extends Command {
         }
       );
 
-    message.channel.send(EMBED);
+    message.reply({embeds: [EMBED]})
   }
 };

@@ -22,7 +22,7 @@ module.exports = class Deposit extends Command {
       let coins = parseInt(args[0]);
 
       if (!args[0])
-        return message.quote(
+        return message.reply(
           `${message.author}, ${t('commands:deposit.noArgs', {
             prefix
           } )}`
@@ -30,11 +30,11 @@ module.exports = class Deposit extends Command {
 
       if (["all", "tudo"].includes(args[0].toLowerCase())) {
         if (user.coins == 0) {
-          return message.channel.send(
+          return message.reply(
             `${message.author}, você não possui coins para depositar.`
           );
         } else {
-          message.channel.send(
+          message.reply(
             `${message.author}, ${t('commands:deposit.sucess', {
               coins: `${Utils.toAbbrev(user.coins)}`
             } )}`
@@ -47,19 +47,19 @@ module.exports = class Deposit extends Command {
         return;
       }
       if (coins < 0) {
-        return message.quote(
+        return message.reply(
           `${message.author}, não é possível depositar menos de 1 coins.`
         );
       } else if (isNaN(coins)) {
-        return message.quote(
+        return message.reply(
           `${message.author}, modo correto de utilizar o comando: **${prefix}depositar <quantia/all>**`
         );
       } else if (coins > user.coins) {
-        return message.quote(
+        return message.reply(
           `${message.author}, você não possui essa quantia para depositar.`
         );
       } else {
-        message.quote(
+        message.reply(
           `${message.author}, você depositou **${Utils.toAbbrev(
             coins
           )} coins** com sucesso.`

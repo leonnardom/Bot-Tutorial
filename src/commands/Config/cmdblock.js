@@ -21,8 +21,8 @@ module.exports = class CmdBlock extends Command {
   }
 
   async run({ message, args, prefix, author }, t) {
-    if (!message.member.hasPermission("MANAGE_CHANNELS"))
-      return message.channel.send(
+    if (!message.member.permissions.has("MANAGE_CHANNELS"))
+      return message.reply(
         `${Emojis.Errado} - ${message.author}, você não tem permissão para executar este comando.`
       );
 
@@ -65,7 +65,7 @@ module.exports = class CmdBlock extends Command {
             message.guild.iconURL({ dynamic: true, format: "jpg", size: 2048 })
           );
 
-        message.quote(HELP);
+        message.reply({embeds: [HELP]})
         return;
       }
 
@@ -77,7 +77,7 @@ module.exports = class CmdBlock extends Command {
           message.mentions.channels.first();
 
         if (!channel) {
-          return message.channel.send(
+          return message.reply(
             `${Emojis.Errado} - ${message.author}, você não mencionou/inseriu o ID do canal que deseja adicionar ao sistema.`
           );
         } else {
@@ -86,7 +86,7 @@ module.exports = class CmdBlock extends Command {
               { idS: message.guild.id },
               { $pull: { "cmdblock.channels": channel.id } }
             );
-            return message.channel.send(
+            return message.reply(
               `${Emojis.Certo} - ${message.author}, o canal inserido já estava adicionado à lista, portanto eu removi ele.`
             );
           } else {
@@ -94,7 +94,7 @@ module.exports = class CmdBlock extends Command {
               { idS: message.guild.id },
               { $push: { "cmdblock.channels": channel.id } }
             );
-            message.channel.send(
+            message.reply(
               `${Emojis.Certo} - ${message.author}, o canal ${channel} foi adicionado à lista com sucesso.`
             );
           }
@@ -111,7 +111,7 @@ module.exports = class CmdBlock extends Command {
         ].includes(args[0].toLowerCase())
       ) {
         if (!args[1])
-          return message.channel.send(
+          return message.reply(
             `${Emojis.Errado} - ${message.author}, você não inseriu o nome do comando que deseja adicionar à lista.`
           );
 
@@ -121,7 +121,7 @@ module.exports = class CmdBlock extends Command {
           this.client.commands.get(this.client.aliases.get(command));
 
         if (!cmd) {
-          return message.channel.send(
+          return message.reply(
             `${Emojis.Errado} - ${message.author}, o comando inserido não existe, portanto não é possível adicionar ele.`
           );
         } else {
@@ -130,7 +130,7 @@ module.exports = class CmdBlock extends Command {
               { idS: message.guild.id },
               { $pull: { "cmdblock.cmds": cmd.name } }
             );
-            return message.channel.send(
+            return message.reply(
               `${Emojis.Certo} - ${message.author}, o comando inserido já estava adicionado à lista, portanto eu removi ele.`
             );
           } else {
@@ -138,7 +138,7 @@ module.exports = class CmdBlock extends Command {
               { idS: message.guild.id },
               { $push: { "cmdblock.cmds": cmd.name } }
             );
-            message.channel.send(
+            message.reply(
               `${Emojis.Certo} - ${message.author}, o comando **\`${cmd.name}\`** foi adicionado à lista com sucesso.`
             );
           }
@@ -149,15 +149,15 @@ module.exports = class CmdBlock extends Command {
         let msg = args.slice(1).join(" ");
 
         if (!msg) {
-          return message.channel.send(
+          return message.reply(
             `${Emojis.Errado} - ${message.author}, insira uma mensagem primeiro.`
           );
         } else if (msg == cb.msg) {
-          return message.channel.send(
+          return message.reply(
             `${Emojis.Errado} - ${message.author}, a mensagem inserida é a mesma setada atualmente, não foi possível trocar.`
           );
         } else {
-          message.channel.send(
+          message.reply(
             `${Emojis.Certo} - ${message.author}, mensagem trocada com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -169,11 +169,11 @@ module.exports = class CmdBlock extends Command {
 
       if (["on", "ativar", "ligar"].includes(args[0].toLowerCase())) {
         if (cb.status) {
-          return message.channel.send(
+          return message.reply(
             `${Emojis.Errado} - ${message.author}, o sistema já está ligado.`
           );
         } else {
-          message.channel.send(
+          message.reply(
             `${Emojis.Certo} - ${message.author}, sistema ligado com sucesso.`
           );
           await Guild.findOneAndUpdate(
@@ -185,11 +185,11 @@ module.exports = class CmdBlock extends Command {
 
       if (["off", "desativar", "desligar"].includes(args[0].toLowerCase())) {
         if (!cb.status) {
-          return message.channel.send(
+          return message.reply(
             `${Emojis.Errado} - ${message.author}, o sistema já está desligado.`
           );
         } else {
-          message.channel.send(
+          message.reply(
             `${Emojis.Certo} - ${message.author}, sistema desligado com sucesso.`
           );
           await Guild.findOneAndUpdate(

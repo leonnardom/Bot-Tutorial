@@ -22,7 +22,7 @@ module.exports = class Kiss extends Command {
       this.client.users.cache.get(args[0]) || message.mentions.users.first();
 
     if (!user)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve mencionar quem deseja abraçar primeiro.`
       );
 
@@ -34,6 +34,6 @@ module.exports = class Kiss extends Command {
       .setImage(body.url)
       .setDescription(`${message.author} deu um beijo no(a) ${user}`);
 
-    message.channel.send(EMBED);
+    message.reply({embeds: [EMBED]})
   }
 };

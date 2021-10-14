@@ -24,7 +24,7 @@ module.exports = class McServer extends Command {
     const ip = args[0];
 
     if (!ip)
-      return message.channel.send(
+      return message.reply(
         `${message.author}, você deve inserir o IP de um servidor primeiro.`
       );
 
@@ -61,9 +61,9 @@ module.exports = class McServer extends Command {
         .setImage(`http://status.mclive.eu/${ip}/${ip}/25565/banner.png`)
         .setThumbnail("attachment://ImageBanner.png");
 
-      return message.channel.send(EMBED);
+      return message.reply({embeds: [EMBED]});
     } else {
-      message.channel.send(
+      message.reply(
         `${message.author}, o servidor do IP: **${ip}** encontra-se offline ou não existe.`
       );
     }
