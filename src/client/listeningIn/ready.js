@@ -28,9 +28,130 @@ module.exports = class {
       this.client.user.setActivity(randomStatus.name);
     }, 10 * 1000);
 
+    const GUILDS = await this.client.database.guilds.find();
+
     this.client.user.setStatus("dnd");
-    //this.client.music.init(this.client.user.id);
-    await this.YouTube();
+
+    setTimeout(async () => {
+      await this.YouTube();
+      await this.VerifyCalls(GUILDS);
+    }, 10000);
+  }
+
+  async VerifyCalls(GUILDS) {
+    const filter = GUILDS.filter((x) => x.createCall.users.length >= 1).map(
+      (x) => x.createCall.users
+    );
+
+    if (!filter.length) return;
+
+    const emptyChannels = [];
+    const deletedChannels = [];
+    const CHANNELS = [];
+
+    CHANNELS.push(...filter[0]);
+
+    for (let value of CHANNELS) {
+      try {
+        const guild = await this.client.guilds.fetch(value.guild);
+
+        const channel = guild.channels.cache.get(value.channel);
+
+        if (channel.members.filter((x) => !x.user.bot).size <= 0)
+          emptyChannels.push({ guild: value.guild, channel: channel.id });
+      } catch (err) {
+        if (err)
+          deletedChannels.push({
+            channel: value.channel,
+            guild: value.guild,
+          });
+      }
+    }
+
+    if (deletedChannels.length >= 1) {
+      let sizeDeleted = 0;
+      const intervalDeleted = new setInterval(async () => {
+        if (sizeDeleted >= deletedChannels.length || isNaN(sizeDeleted))
+          return clearInterval(intervalDeleted);
+        else {
+          const guild = deletedChannels[sizeDeleted];
+
+          const doc = await this.client.database.guilds.findOne({
+            idS: guild.guild,
+          });
+
+          await this.client.database.guilds.findOneAndUpdate(
+            { idS: guild.guild },
+            {
+              $pull: {
+                "createCall.users": doc.createCall.users.find(
+                  (x) => x.channel === guild.channel
+                ),
+              },
+            }
+          );
+
+          sizeDeleted++;
+        }
+      }, 5000);
+    }
+
+    if (emptyChannels.length >= 1) {
+      let sizeEmpty = 0;
+      const intervalEmpty = new setInterval(async () => {
+        if (sizeEmpty >= emptyChannels.length || isNaN(sizeEmpty))
+          return clearInterval(intervalEmpty);
+        else {
+          try {
+            const channel = this.client.channels.cache.get(
+              emptyChannels[sizeEmpty].channel
+            );
+
+            await channel.delete();
+
+            const doc = await this.client.database.guilds.findOne({
+              idS: channel.guild.id,
+            });
+
+            await this.client.database.guilds.findOneAndUpdate(
+              { idS: channel.guild.id },
+              {
+                $pull: {
+                  "createCall.users": doc.createCall.users.find(
+                    (x) => x.channel === channel.id
+                  ),
+                },
+              }
+            );
+
+            sizeEmpty++;
+          } catch (err) {
+            if (err) {
+              console.log(err);
+
+              const guild = emptyChannels[sizeEmpty].guild;
+
+              console.log(emptyChannels[sizeEmpty]);
+
+              const doc = await this.client.database.guilds.findOne({
+                idS: guild,
+              });
+
+              await this.client.database.guilds.findOneAndUpdate(
+                { idS: guild },
+                {
+                  $pull: {
+                    "createCall.users": doc.createCall.users.find(
+                      (x) => x.channel === emptyChannels[sizeEmpty].channel
+                    ),
+                  },
+                }
+              );
+            }
+          }
+        }
+      }, 5000);
+    }
   }
 
   async YouTube() {

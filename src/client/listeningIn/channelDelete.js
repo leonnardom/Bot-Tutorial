@@ -6,7 +6,41 @@ module.exports = class {
   }
 
   async run(channel) {
+    const guild = channel.guild;
+
+    const doc = await this.client.database.guilds.findOne({ idS: guild.id });
+
     try {
+      if (doc.createCall.channel == channel.id) {
+        await this.client.database.guilds.findOneAndUpdate(
+          {
+            idS: guild.id,
+          },
+          {
+            $set: {
+              "createCall.status": false,
+              "createCall.channel": "null",
+              "createCall.category": "null",
+            },
+          }
+        );
+      }
+
+      if (doc.createCall.users.find((x) => x.channel === channel.id)) {
+        await this.client.database.guilds.findOneAndUpdate(
+          {
+            idS: guild.id,
+          },
+          {
+            $pull: {
+              "createCall.users": doc.createCall.users.find(
+                (x) => x.channel == channel.id
+              ),
+            },
+          }
+        );
+      }
+
       const channels = await Guild.findOne({
         idS: channel.guild.id,
       }).then((r) => Object.entries(r.serverstats.channels));

@@ -18,6 +18,74 @@ module.exports = class voiceStateUpdate {
 
     const doc = await this.client.database.users.findOne({ idU: user.id });
     const doc1 = await this.client.database.guilds.findOne({ idS: guild.id });
+
+    // ===================> Criação de Canais
+
+    const createCall = doc1.createCall;
+
+    if (
+      createCall.status ||
+      createCall.users.find((x) => x.channel === oldState.channel.id)
+    ) {
+      if (!oldState.channel && newState.channel) {
+        const channel = guild.channels.cache.get(createCall.channel);
+
+        if (newState.channel == channel.id) {
+          const category = guild.channels.cache.get(createCall.category);
+
+          guild.channels
+            .create(!user.nickname ? user.username : user.nickname, {
+              reason: "Sistema de Criar Calls",
+              type: "GUILD_VOICE",
+            })
+            .then(async (x) => {
+              x.setParent(category.id);
+
+              guild.members.cache.get(user.id).voice.setChannel(x);
+
+              await this.client.database.guilds.findOneAndUpdate(
+                { idS: guild.id },
+                {
+                  $push: {
+                    "createCall.users": {
+                      user: user.id,
+                      channel: x.id,
+                      date: Date.now(),
+                      guild: guild.id,
+                    },
+                  },
+                }
+              );
+            });
+        }
+      }
+
+      if (oldState.channel && !newState.channel) {
+        const findChannel = createCall.users.find(
+          (x) => x.channel === oldState.channel.id
+        );
+
+        if (findChannel) {
+          const getChannel = guild.channels.cache.get(oldState.channel.id);
+
+          if (getChannel.members.cache.filter((x) => !x.user.bot).size <= 0) {
+            getChannel.delete();
+
+            await this.client.database.guilds.findOneAndUpdate(
+              { idS: guild.id },
+              {
+                $pull: {
+                  "createCall.users": findChannel,
+                },
+              }
+            );
+          }
+        }
+      }
+    }
+
+    // ===================> Criação de Canais
+
     const call = doc?.infoCall;
     const call2 = doc1?.infoCall;
 
@@ -53,7 +121,7 @@ module.exports = class voiceStateUpdate {
           .setTimestamp()
           .setFooter(user.tag);
 
-          channel.send({ embeds: [EMBED] }).catch(() => {});
+        channel.send({ embeds: [EMBED] }).catch(() => {});
       }
 
       await this.client.database.users.findOneAndUpdate(
