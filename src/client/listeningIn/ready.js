@@ -203,14 +203,15 @@ module.exports = class {
                 return;
               });
 
+            /*
+
+              
             if (message)
-              setTimeout(
-                () =>
-                  /*message.delete().catch(() => {
-                    return;
-                  }),*/
-                  5000
-              );
+              setTimeout(() => message.delete(), 5000).catch(() => {
+                return;
+              });
+
+              */
 
             existingVideos.splice(
               existingVideos.indexOf(
@@ -223,16 +224,25 @@ module.exports = class {
           if (!newVideos.length) return;
 
           newVideos.map(async (f) => {
-            const MSG = await this.client.channels.fetch(x.textChannel);
+            try {
+              const CHANNEL = await this.client.channels.fetch(x.textChannel);
 
-            MSG.send(x.msg).catch(() => {
-              existingVideos.push({
-                link: f.link,
-                messageID: MSG.id,
+              const MSG = await CHANNEL.send(x.msg).catch(() => {
+                existingVideos.push({
+                  link: f.link,
+                  messageID: MSG.id,
+                });
               });
-            });
 
-            existingVideos.push({ link: f.id, messageID: MSG.id });
+              existingVideos.push({ link: f.id, messageID: MSG.id });
+            } catch (err) {
+              if (err) {
+                return existingVideos.push({
+                  link: f.link,
+                  messageID: null,
+                });
+              }
+            }
           });
         }, 30000);
       });
