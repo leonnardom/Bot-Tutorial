@@ -155,25 +155,26 @@ module.exports = class {
   }
 
   async YouTube() {
-    let database = await this.client.database.guilds.find({});
+    let db = await this.client.database.guilds.findAll();
 
-    database = database.filter((x) => x.youtube.length >= 1);
+    db = db.filter((x) => x.youtube.length >= 1);
 
     const array = [];
 
-    if (database.length >= 1)
-      for (const value of database) array.push(...value.youtube);
+    if (db.length >= 1) {
+      for (const value of db) array.push(...value.youtube);
+    }
 
     this.client.youtubeChannels = array;
 
     this.client.existingVideos = new Map();
 
-    const verifyVideos = async () => {
-      this.client.youtubeChannels.map(async (x) => {
+    const verifyNewVideos = async () => {
+      this.client.youtubeChannels.map(async (c, i) => {
         setTimeout(async () => {
           const getVideos = await parser
             .parseURL(
-              `https://www.youtube.com/feeds/videos.xml?channel_id=${x.id}`
+              `https://www.youtube.com/feeds/videos.xml?channel_id=${c.id}`
             )
             .catch(() => {
               return;
@@ -181,41 +182,26 @@ module.exports = class {
 
           if (!getVideos || !getVideos.items.length) return;
 
-          if (!this.client.existingVideos.get(x.id))
-            return this.client.existingVideos.set(x.id, getVideos.items || []);
+          if (!this.client.existingVideos.get(c.id))
+            return this.client.existingVideos.set(c.id, getVideos.items || []);
 
-          const existingVideos = this.client.existingVideos.get(x.id);
+          const existingVideos = this.client.existingVideos.get(c.id);
+
           const newVideos = getVideos.items.filter(
-            (y) => !existingVideos.find((f) => f.link === y.link)
+            (v) => !existingVideos.find((o) => o.link === v.link)
           );
 
-          const removed = existingVideos.filter(
-            (y) =>
-              y.messageID && !getVideos.items.find((f) => f.link === y.link)
+          const removeed = existingVideos.filter(
+            (v) =>
+              v.messageID && !getVideos.items.find((g) => g.link === v.link)
           );
 
-          removed.map(async (f) => {
-            const channel = await this.client.channels.fetch(x.textChannel);
-
-            const message = await channel.messages
-              .fetch(f.messageID)
-              .catch(() => {
-                return;
-              });
-
-            /*
-
-              
-            if (message)
-              setTimeout(() => message.delete(), 5000).catch(() => {
-                return;
-              });
-
-              */
+          removeed.map(async (v) => {
+            const channel = await this.client.channels.fetch(c.textChannel);
 
             existingVideos.splice(
               existingVideos.indexOf(
-                existingVideos.find((y) => y.link === f.link)
+                existingVideos.find((e) => e.link === v.link)
               ),
               1
             );
@@ -223,35 +209,34 @@ module.exports = class {
 
           if (!newVideos.length) return;
 
-          newVideos.map(async (f) => {
+          newVideos.map(async (v) => {
             try {
-              const CHANNEL = await this.client.channels.fetch(x.textChannel);
+              const CHANNEL = await this.client.channels.fetch(c.textChannel);
 
-              const MSG = await CHANNEL.send(x.msg).catch(() => {
-                existingVideos.push({
-                  link: f.link,
-                  messageID: MSG.id,
-                });
-              });
+              const MSG = await CHANNEL.send(c.msg + `\n\n${v.link}`).catch(
+                () => {
+                  existingVideos.push({
+                    link: v.link,
+                    messageID: MSG.id,
+                  });
+                }
+              );
 
-              existingVideos.push({ link: f.id, messageID: MSG.id });
+              existingVideos.push({ link: v.link, messageID: MSG.id });
             } catch (err) {
-              if (err) {
+              if (err)
                 return existingVideos.push({
-                  link: f.link,
+                  link: v.link,
                   messageID: null,
                 });
-              }
             }
           });
         }, 30000);
       });
     };
 
-    verifyVideos();
+    verifyNewVideos();
 
-    setInterval(() => {
-      verifyVideos();
-    }, 30000);
+    setInterval(() => verifyNewVideos(), 60000);
   }
 };
