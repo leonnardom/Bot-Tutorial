@@ -155,7 +155,7 @@ module.exports = class {
   }
 
   async YouTube() {
-    let db = await this.client.database.guilds.findAll();
+    let db = await this.client.database.guilds.find();
 
     db = db.filter((x) => x.youtube.length >= 1);
 
